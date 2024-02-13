@@ -1,15 +1,16 @@
-# Puzzles related to binary (search) trees.abs
+"""Puzzles related to binary (search) trees."""
 
 import math
 
 class Node:
+    "Node of a binary tree."
     def __init__(self, data):
         self.data = data
         self.left = None
         self.right = None
 
 # Determine if a tree is an ordered BST (may be unbalanced)
-def isBST(root: Node) -> bool:
+def is_bst(root: Node) -> bool:
     "True if `root` is a BST."
     def ordered(n: Node, mn, mx) -> bool:
         return not n or (
@@ -23,7 +24,8 @@ def left_view(root: Node) -> list:
     view = []
     max_level = [-1]
     def enum(n: Node, level: int):
-        if not n: return
+        if not n:
+            return
         if level > max_level[0]:
             max_level[0] = level
             view.append(n.data)

@@ -1,4 +1,4 @@
-# Puzzles related to strings.abs
+"""Puzzles related to strings."""
 
 def reverse_words(s: str, sep: str=' ') -> str:
     "Reverse the order of words in `s`, separated by `sep`."

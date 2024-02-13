@@ -1,11 +1,14 @@
+"""Test module for the brackets puzzles."""
 import unittest
-from brackets import *
+import brackets as b
 
 class TestBrackets(unittest.TestCase):
-    
+    """Test class for brackets module."""
+
     def test_balanced(self):
-        self.assertTrue(balanced("({[()[]]})"))
-        self.assertTrue(balanced("{}[]()"))
-        self.assertFalse(balanced("{}[]()["))
-        self.assertFalse(balanced("){}[]()"))
-        self.assertFalse(balanced("{)[]()"))
+        """Tests `balanced` function."""
+        self.assertTrue(b.balanced("({[()[]]})"))
+        self.assertTrue(b.balanced("{}[]()"))
+        self.assertFalse(b.balanced("{}[]()["))
+        self.assertFalse(b.balanced("){}[]()"))
+        self.assertFalse(b.balanced("{)[]()"))

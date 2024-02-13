@@ -1,4 +1,4 @@
-# Puzzles around linked lists.
+"""Puzzles around linked lists."""
 
 from typing import Optional
 
@@ -10,7 +10,8 @@ class Node:
 
 def make_linked(l: list) -> Optional[Node]:
     "Make a linked list out of normal Python list `l`."
-    if not l: return None
+    if not l:
+        return None
     n = h = Node(l[0])
     for i in range(1, len(l)):
         n.next = Node(l[i])

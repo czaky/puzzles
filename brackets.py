@@ -1,7 +1,7 @@
-# Puzzles related to brackets, parentheses, and braces.
+"""Puzzles related to brackets, parentheses, and braces."""
 
 OPENING = {
-    '(':')', '[':']', '{':'}', '<':'>', 
+    '(':')', '[':']', '{':'}', '<':'>',
     '⟨':'⟩', '《':'》', '⌈':'⌉', '⌊':'⌋',
     '【':'】', '〖':'〗', '⧘':'⧙', '⧚':'⧛' }
 

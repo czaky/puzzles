@@ -1,12 +1,14 @@
-# Puzzles related to arrays/lists
+"""Module for the array/list related puzzles."""
 
-import bs
 from collections import Counter
+import bs
 
 def subrev(a: list, s: int=0, e: int=-1):
     "Reverse a subsequence of `a` from `s` to `e` (inclusive)."
-    if s<0: s+=len(a)
-    if e<0: e+=len(a)
+    if s<0:
+        s += len(a)
+    if e<0:
+        e += len(a)
     for i in range((1 + e - s) // 2):
         a[s+i], a[e-i] = a[e-i], a[s+i]
 
@@ -28,7 +30,7 @@ def equilibrium_point(a: list) -> int:
         else:
             h_sum += a[h]
             h -= 1
-    if l_sum == h_sum: 
+    if l_sum == h_sum:
         return l
     return -1
 
@@ -45,7 +47,8 @@ def rotate(a: list, left: int=1):
     "Rotate `a` inplace to the left."
     n = len(a)
     left %= n
-    if left == 0: return
+    if left == 0:
+        return
     subrev(a, 0, left-1)
     subrev(a, left, n-1)
     a.reverse()
