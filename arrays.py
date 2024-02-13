@@ -1,7 +1,7 @@
 """Module for the array/list related puzzles."""
 
 from collections import Counter
-import bs
+import binary_search as bs
 
 def subrev(a: list, s: int=0, e: int=-1):
     "Reverse a subsequence of `a` from `s` to `e` (inclusive)."
@@ -14,7 +14,7 @@ def subrev(a: list, s: int=0, e: int=-1):
 
 def rotated_minimum(a: list) -> int:
     "A sorted list `a` was rotated. Find the minimum element in O(log N)."
-    return a[bs.search(lambda m: a[m-1] < a[m] <= a[-1], 1, len(a)-1, 0)]
+    return a[bs.binary(lambda m: a[m-1] < a[m] <= a[-1], 1, len(a)-1, 0)]
 
 def equilibrium_point(a: list) -> int:
     "Index in `a` where sums of elements before and after are equal."
