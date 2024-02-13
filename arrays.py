@@ -6,9 +6,9 @@ from collections import Counter
 def subrev(a: list, s: int=0, e: int=-1):
     "Reverse a subsequence of `a` from `s` to `e` (inclusive)."
     if s<0: s+=len(a)
-    if e<0: s+=len(a)
+    if e<0: e+=len(a)
     for i in range((1 + e - s) // 2):
-        A[s+i], A[e-i] = A[e-i], A[s+i]
+        a[s+i], a[e-i] = a[e-i], a[s+i]
 
 def rotated_minimum(a: list) -> int:
     "A sorted list `a` was rotated. Find the minimum element in O(log N)."
@@ -45,6 +45,7 @@ def rotate(a: list, left: int=1):
     "Rotate `a` inplace to the left."
     n = len(a)
     left %= n
+    if left == 0: return
     subrev(a, 0, left-1)
     subrev(a, left, n-1)
     a.reverse()
