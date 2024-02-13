@@ -20,3 +20,8 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual([2], duplicates([1, 3, 5, 2, 2]))
         self.assertEqual([1, 2, 3], duplicates([2, 3, 2, 1, 2, 1, 3]))
         self.assertEqual([], duplicates([1, 2, 3]))
+
+    def test_pairs_count(self):
+        self.assertEqual(2, pairs_count([1, 3, 5, 2, 2], 7))
+        self.assertEqual(7, pairs_count([2, 3, 2, 1, 2, 1, 3], 4))
+        self.assertEqual(0, pairs_count([1, 2, 3], 6))

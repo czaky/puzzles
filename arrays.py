@@ -28,3 +28,15 @@ def equilibrium_point(a: list) -> int:
 def duplicates(a: list) -> list:
     "Return elements of the list `a` occurring more than once."
     return sorted((Counter(a) - Counter(set(a))).keys())
+
+def pairs_count(l: list, k: int) -> int:
+    "Return the number of pairs of elements from `l` with sum of `k`."
+    counter = Counter(l)
+    c = 0
+    for a, ac in counter.items():
+        b = k - a
+        if a == b:
+            c += ac * (ac - 1)
+        else: 
+            c += ac * counter[b]
+    return c // 2
