@@ -9,13 +9,25 @@ class Node:  # pylint: disable=too-few-public-methods
         self.left = None
         self.right = None
 
+def make(s: str) -> Node:
+    "Make a binary tree from a string `s`."
+    def des(it):
+        v = next(it, -1)
+        if v < 0:
+            return None
+        n = Node(v)
+        n.left = des(it)
+        n.right = des(it)
+        return n
+    return des(iter(map(int, s.split())))
+
 # Determine if a tree is an ordered BST (may be unbalanced)
 def is_bst(root: Node) -> bool:
     "True if `root` is a BST."
-    def ordered(n: Node, mn, mx) -> bool:
+    def ordered(n: Node, mn: float, mx: float) -> bool:
         return not n or (
             (mn <= n.data <= mx) and
-            ordered(n.left, mn, n.data + 1) and
+            ordered(n.left, mn, n.data - 1) and
             ordered(n.right, n.data + 1, mx))
     return ordered(root, -math.inf, math.inf)
 
