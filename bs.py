@@ -3,7 +3,7 @@
 from typing import Optional
 from collections.abc import Callable
 
-def gt(gt: Callable, l: int, h: int, i: int=None) -> Optional[int]:
+def search(gt: Callable, l: int, h: int, i: int=None) -> Optional[int]:
 """Returns the index of an element which is NOT greater than (`gt`).
 
 Arguments:
