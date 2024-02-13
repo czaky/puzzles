@@ -1,14 +1,15 @@
 # Puzzles related to arrays/lists
 
 import bs
+from collections import Counter
 
 def rotated_minimum(a: list) -> int:
-    # A sorted array was rotated. Find the minimum element in O(log N)
+    "A sorted list `a` was rotated. Find the minimum element in O(log N)."
     return a[bs.search(lambda m: a[m-1] < a[m] <= a[-1], 1, len(a)-1, 0)]
 
 def equilibrium_point(a: list) -> int:
-    # Finds an index in the array where sums of elements before and after
-    # are equal to each other.
+    "Index in `a` where sums of elements before and after are equal."
+    # Uses binary search in O(log N).
     l = 0
     h = len(a) - 1
     l_sum = 0
@@ -23,3 +24,7 @@ def equilibrium_point(a: list) -> int:
     if l_sum == h_sum: 
         return l
     return -1
+
+def duplicates(a: list) -> list:
+    "Return elements of the list `a` occurring more than once."
+    return sorted((Counter(a) - Counter(set(a))).keys())
