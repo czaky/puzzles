@@ -2,7 +2,7 @@
 
 import math
 
-class Node:
+class Node:  # pylint: disable=too-few-public-methods
     "Node of a binary tree."
     def __init__(self, data):
         self.data = data
