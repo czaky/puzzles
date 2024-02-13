@@ -24,3 +24,18 @@ class TestLinkedLists(unittest.TestCase):
         self.assertEqual(2, lists.middle(lists.make_linked([1, 2])).data)
         self.assertEqual(2, lists.middle(lists.make_linked([1, 2, 3])).data)
         self.assertEqual(3, lists.middle(lists.make_linked([1, 2, 3, 4])).data)
+
+    def test_nth(self):
+        "Test `nth` function."
+        l = lists.make_linked([1, 2, 3, 4])
+        self.assertEqual(1, lists.nth(l, 0).data)
+        self.assertEqual(4, lists.nth(l, 3).data)
+        self.assertEqual(4, lists.nth(l, -1).data)
+        self.assertEqual(1, lists.nth(l, -4).data)
+        self.assertIsNone(lists.nth(l, 4))
+        self.assertIsNone(lists.nth(l, -5))
+
+        e = lists.make_linked([])
+        self.assertIsNone(lists.nth(e, 0))
+        self.assertIsNone(lists.nth(e, 1000))
+        self.assertIsNone(lists.nth(e, -1000))

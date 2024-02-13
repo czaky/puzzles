@@ -25,3 +25,26 @@ def middle(head: Node) -> Optional[Node]:
         fast = fast.next.next
         slow = slow.next
     return slow
+
+def nth(head: Node, n: int) -> Optional[Node]:
+    """
+Return nth node from the linked list starting at `head`.
+
+If n is negative, returns the nth node from the end of the list.
+"""
+    if n >= 0:
+        while head and n > 0:
+            head = head.next
+            n -= 1
+        return head
+
+    # from the end
+    fast = nth(head, -n - 1)
+    if not fast:
+        return None
+    fast = fast.next
+    slow = head
+    while fast:
+        fast = fast.next
+        slow = slow.next
+    return slow
