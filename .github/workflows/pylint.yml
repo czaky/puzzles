@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
-    steps:    
+    steps:
     - name: Check out
       uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
@@ -22,6 +22,6 @@ jobs:
     - name: Set PYTHONPATH
       run: |
         echo "PYTHONPATH=`pwd`" >> "$GITHUB_ENV"
-    - name: Analysing the code with pylint
+    - name: Analyzing the code with pylint
       run: |
         python -m pylint $(git ls-files '*.py')
