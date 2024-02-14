@@ -1,6 +1,7 @@
 """Puzzles related to binary (search) trees."""
 
 import math
+from typing import Tuple
 
 class Node:  # pylint: disable=too-few-public-methods
     "Node of a binary tree."
@@ -45,3 +46,15 @@ def left_view(root: Node) -> list:
         enum(n.right, level + 1)
     enum(root, 0)
     return view
+
+def balanced(root: Node) -> bool:
+    "True if tree at `root` is balanced in height."
+    def rank_balance(n: Node) -> Tuple[int, bool]:
+        if not n:
+            return 0, True
+        lr, lb = rank_balance(n.left)
+        if not lb:
+            return lr + 1, False
+        rr, rb = rank_balance(n.right)
+        return  max(lr, rr) + 1, lb and rb and abs(lr - rr) <= 1
+    return rank_balance(root)[1]

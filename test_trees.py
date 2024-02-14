@@ -25,3 +25,10 @@ class TestTrees(unittest.TestCase):
         self.assertEqual([1, 2, 3], t.left_view(t.make('1 2 3')))
         self.assertEqual([1, 2], t.left_view(t.make('1 2 -1 -1 3')))
         self.assertEqual([1, 2, 4], t.left_view(t.make('1 2 -1 -1 3 4')))
+
+    def test_balanced(self):
+        "Test the `balanced` function."
+        self.assertTrue(t.balanced(t.make('1')))
+        self.assertFalse(t.balanced(t.make('1 2 3')))
+        self.assertTrue(t.balanced(t.make('1 2 -1 -1 3')))
+        self.assertFalse(t.balanced(t.make('1 2 -1 -1 3 4 5')))
