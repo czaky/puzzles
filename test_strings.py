@@ -22,3 +22,34 @@ class TestStrings(unittest.TestCase):
 
         self.assertFalse(s.palindrome("abc"))
         self.assertFalse(s.palindrome("ab"))
+
+    def test_common_prefix(self):
+        "Test the `common_prefix` function."
+        self.assertEqual(
+            "",
+            s.common_prefix([])
+        )
+        self.assertEqual(
+            "a",
+            s.common_prefix(["a"])
+        )
+        self.assertEqual(
+            "a",
+            s.common_prefix(["a", "ab", "abc"])
+        )
+        self.assertEqual(
+            "a",
+            s.common_prefix(["abc", "ab", "a"])
+        )
+        self.assertEqual(
+            "abc",
+            s.common_prefix(["abc", "abc", "abc"])
+        )
+        self.assertEqual(
+            "ab",
+            s.common_prefix(["abd", "abc", "abc"])
+        )
+        self.assertEqual(
+            "a",
+            s.common_prefix(["abc", "abc", "aec"])
+        )
