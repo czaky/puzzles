@@ -87,3 +87,10 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual(1, ar.transition_point([0, 0, 1, 1]))
         self.assertEqual(2, ar.transition_point([0, 0, 0, 1]))
         self.assertEqual(3, ar.transition_point([0, 0, 0, 0]))
+
+    def test_min_distance(self):
+        "Test `min_distance` function."
+        self.assertEqual(-1, ar.min_distance([1, 2, 3], 2, 4))
+        self.assertEqual(1, ar.min_distance([1, 2, 3], 2, 3))
+        self.assertEqual(1, ar.min_distance([1, 2, 3], 2, 1))
+        self.assertEqual(2, ar.min_distance([1, 2, 3], 1, 3))

@@ -56,3 +56,19 @@ def rotate(a: list, left: int=1):
 def transition_point(a: list) -> int:
     "Transition index in sorted list `a` of '0's and '1's."
     return bs.binary(lambda m: a[m] == 1, 0, len(a) - 1, -1)
+
+def min_distance(a: list, x: int, y: int) -> int:
+    "Minimum index based distance between `x` and `y` in `a`."
+    xi = yi = -1
+    mn = len(a)
+    for i, e in enumerate(a):
+        measure = False
+        if e == x:
+            xi = i
+            measure = yi >= 0
+        if e == y:
+            yi = i
+            measure = xi >= 0
+        if measure:
+            mn = min(mn, abs(xi-yi))
+    return mn if mn < len(a) else -1

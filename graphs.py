@@ -16,3 +16,29 @@ def breadth_first(adj: List[List[int]], start: int=0) -> List[int]:
                 q.append(d)
                 v.add(d)
     return o
+
+def depth_first(adj: List[List[int]], start: int=0) -> List[int]:
+    "Traverse the graph depth first using stack. Return list of nodes."
+    o = []
+    v = set()
+    s = [start]
+    while s:
+        n = s.pop()
+        if n not in v:
+            v.add(n)
+            o.append(n)
+            s.extend(filter(lambda a: a not in v, reversed(adj[n])))
+    return o
+
+def depth_first_r(adj: List[List[int]], start: int=0) -> List[int]:
+    "Traverse the graph recursively depth first. Return list of nodes."
+    o = []
+    v = set()
+    def dfs(n: int):
+        v.add(n)
+        o.append(n)
+        for a in adj[n]:
+            if not a in v:
+                dfs(a)
+    dfs(start)
+    return o
