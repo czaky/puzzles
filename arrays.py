@@ -79,7 +79,7 @@ def first_repeating_index(a: list):
     return next((i for i, e in enumerate(a) if c[e] > 1), -1)
 
 def dedup_sorted(a: list) -> int:
-    "Remove duplicates. Return end index."
+    "Remove duplicates in-place from a sorted list. Return end index."
     i = 1
     for j in range(1, len(a)):
         if a[j-1] != a[j]:
