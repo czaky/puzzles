@@ -1,7 +1,6 @@
 """Puzzles related to strings."""
 
 from collections import Counter
-from itertools import islice
 from typing import List
 
 def reverse_words(s: str, sep: str=' ') -> str:
