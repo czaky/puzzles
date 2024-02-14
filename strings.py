@@ -22,9 +22,6 @@ def common_prefix(a: List[str]):
     "Return the longest prefix among the strings from `a`."
     if not a:
         return ''
-    if len(a) == 1:
-        return a[0]
     mnl = min(map(len, a))
-    first = a[0]
-    p = next((i for i in range(mnl) for s in a if s[i] != first[i]), mnl)
-    return first[:p]
+    p = next((i for i in range(mnl) for s in a if s[i] != a[0][i]), mnl)
+    return a[0][:p]

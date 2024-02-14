@@ -30,8 +30,8 @@ class TestStrings(unittest.TestCase):
             s.common_prefix([])
         )
         self.assertEqual(
-            "a",
-            s.common_prefix(["a"])
+            "abc",
+            s.common_prefix(["abc"])
         )
         self.assertEqual(
             "a",
