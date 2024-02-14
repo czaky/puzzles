@@ -77,3 +77,12 @@ def first_repeating_index(a: list):
     "Return index of the first repeating element in `a` else -1."
     c = Counter(a)
     return next((i for i, e in enumerate(a) if c[e] > 1), -1)
+
+def dedup_sorted(a: list) -> int:
+    "Remove duplicates. Return end index."
+    i = 1
+    for j in range(1, len(a)):
+        if a[j-1] != a[j]:
+            a[i] = a[j]
+            i += 1
+    return i

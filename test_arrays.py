@@ -101,3 +101,15 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual(0, ar.first_repeating_index([1, 1, 2, 3]))
         self.assertEqual(1, ar.first_repeating_index([1, 2, 3, 2]))
         self.assertEqual(2, ar.first_repeating_index([1, 2, 3, 3]))
+
+    def test_dedup_sorted(self):
+        "Test `dedup_sorted` function."
+        a = [1, 2, 3]
+        self.assertEqual(3, ar.dedup_sorted(a))
+        self.assertEqual([1, 2, 3], a)
+        a = [1, 3, 3, 4]
+        self.assertEqual(3, ar.dedup_sorted(a))
+        self.assertEqual([1, 3, 4, 4], a)
+        a = [2, 2, 2, 3]
+        self.assertEqual(2, ar.dedup_sorted(a))
+        self.assertEqual([2, 3, 2, 3], a)
