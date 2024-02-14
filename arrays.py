@@ -103,6 +103,6 @@ Seats are counted as [1 .. N] inclusive
         # [s[-1], n + (d+1)] we can seat diners ever (d + 1) seats.
         (n - s[-1]) // (d + 1))
 
-def list_floor(a: List[int], x: int) -> int:
+def floor_element(a: List[int], x: int) -> int:
     "Return the largest element smaller or equal to `x` from sorted `a`."
     return bs.binary(lambda m: a[m] > x, 0, len(a)-1, -1)
