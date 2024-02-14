@@ -1,7 +1,7 @@
 """Module for the array/list related puzzles."""
 
 from collections import Counter
-import binary_search as bs
+import search as bs
 
 def subrev(a: list, s: int=0, e: int=-1):
     "Reverse a subsequence of `a` from `s` to `e` (inclusive)."
@@ -52,3 +52,7 @@ def rotate(a: list, left: int=1):
     subrev(a, 0, left-1)
     subrev(a, left, n-1)
     a.reverse()
+
+def transition_point(a: list) -> int:
+    "Transition index in sorted list `a` of '0's and '1's."
+    return bs.binary(lambda m: a[m] == 1, 0, len(a) - 1, -1)

@@ -79,3 +79,11 @@ class TestUnsortedArray(unittest.TestCase):
         a = [1, 2, 3, 4, 5]
         ar.rotate(a, -3)
         self.assertEqual([3, 4, 5, 1, 2], a)
+
+    def test_transition_point(self):
+        "Test `transition_point`."
+        self.assertEqual(-1, ar.transition_point([1, 1, 1, 1]))
+        self.assertEqual(0, ar.transition_point([0, 1, 1, 1]))
+        self.assertEqual(1, ar.transition_point([0, 0, 1, 1]))
+        self.assertEqual(2, ar.transition_point([0, 0, 0, 1]))
+        self.assertEqual(3, ar.transition_point([0, 0, 0, 0]))

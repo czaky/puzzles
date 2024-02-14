@@ -32,3 +32,14 @@ class TestTrees(unittest.TestCase):
         self.assertFalse(t.balanced(t.make('1 2 3')))
         self.assertTrue(t.balanced(t.make('1 2 -1 -1 3')))
         self.assertFalse(t.balanced(t.make('1 2 -1 -1 3 4 5')))
+
+    def test_identical(self):
+        "Test the `identical` function."
+        self.assertTrue(t.identical(t.make('1'), t.make('1')))
+        self.assertFalse(t.identical(t.make('1'), t.make('1 2 3')))
+        self.assertTrue(
+            t.identical(t.make('1 2 -1 -1 3'), t.make('1 2 -1 -1 3')))
+        self.assertFalse(
+            t.identical(
+                t.make('1 2 -1 -1 3'),
+                t.make('1 2 -1 -1 3 4 5')))

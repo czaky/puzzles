@@ -3,12 +3,18 @@
 import math
 from typing import Tuple
 
-class Node:  # pylint: disable=too-few-public-methods
+class Node:
     "Node of a binary tree."
     def __init__(self, data):
         self.data = data
         self.left = None
         self.right = None
+
+    def height(self):
+        "Returns max height of the tree starting from this node."
+        return 1 + max(
+            self.left.height() if self.left else 0,
+            self.right.height() if self.right else 0)
 
 def make(s: str) -> Node:
     "Make a binary tree from a string `s`."
@@ -58,3 +64,11 @@ def balanced(root: Node) -> bool:
         rr, rb = rank_balance(n.right)
         return  max(lr, rr) + 1, lb and rb and abs(lr - rr) <= 1
     return rank_balance(root)[1]
+
+def identical(a: Node, b: Node) -> bool:
+    "True if `a` and `b` have identical structure and data."
+    return a == b or (
+        a and b and
+        a.data == b.data and
+        identical(a.left, b.left) and
+        identical(a.right, b.right))
