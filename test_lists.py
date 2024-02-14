@@ -48,3 +48,13 @@ class TestLinkedLists(unittest.TestCase):
         self.assertEqual([1], list(ll.reverse(ll.make([1]))))
         self.assertEqual([2, 1], list(ll.reverse(ll.make([1, 2]))))
         self.assertEqual([3, 2, 1], list(ll.reverse(ll.make([1, 2, 3]))))
+
+    def test_dedup(self):
+        "Test `dedup` function."
+        self.assertIsNone(ll.dedup(ll.make([])))
+
+        self.assertEqual([1], list(ll.dedup(ll.make([1]))))
+        self.assertEqual([1, 2, 3], list(ll.dedup(ll.make([1, 2, 3]))))
+        self.assertEqual([3, 2], list(ll.dedup(ll.make([3, 2, 3]))))
+        self.assertEqual([1, 3], list(ll.dedup(ll.make([1, 3, 3]))))
+        self.assertEqual([1, 3], list(ll.dedup(ll.make([1, 1, 3]))))

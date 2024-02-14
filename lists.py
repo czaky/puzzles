@@ -61,3 +61,14 @@ def reverse(head: Node) -> Optional[Node]:
     while head:
         prev, head.next, head = head, prev, head.next
     return prev
+
+def dedup(head: Node) -> Node:
+    "Remove nodes with duplicate values in the linked list."
+    s = set()
+    n = head
+    while n:
+        s.add(n.data)
+        while n.next and n.next.data in s:
+            n.next = n.next.next
+        n = n.next
+    return head
