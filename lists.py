@@ -2,13 +2,19 @@
 
 from typing import Optional
 
-class Node:  # pylint: disable=too-few-public-methods
+class Node:
     "Linked List Node."
     def __init__(self, data):
         self.data = data
         self.next = None
 
-def make_linked(l: list) -> Optional[Node]:
+    def __iter__(self):
+        n = self
+        while n:
+            yield n.data
+            n = n.next
+
+def make(l: list) -> Optional[Node]:
     "Make a linked list out of normal Python list `l`."
     if not l:
         return None
@@ -48,3 +54,10 @@ If n is negative, returns the nth node from the end of the list.
         fast = fast.next
         slow = slow.next
     return slow
+
+def reverse(head: Node) -> Optional[Node]:
+    "Reverse a linked starting at `head`."
+    prev = None
+    while head:
+        prev, head.next, head = head, prev, head.next
+    return prev
