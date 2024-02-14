@@ -2,6 +2,8 @@
 
 from collections import Counter
 from typing import List
+from functools import reduce
+from operator import mul
 import search as bs
 
 def subrev(a: list, s: int=0, e: int=-1):
@@ -106,3 +108,16 @@ Seats are counted as [1 .. N] inclusive
 def floor_element(a: List[int], x: int) -> int:
     "Return the largest element smaller or equal to `x` from sorted `a`."
     return bs.binary(lambda m: a[m] > x, 0, len(a)-1, -1)
+
+def product_except_self(nums: List[int]) -> List[int]:
+    """
+Return an array where each element is the product of nums
+except for the element at the given index.
+"""
+    pr = reduce(mul, nums)
+    if pr:
+        return [pr // e for e in nums]
+    zi = nums.index(0)
+    p = [0] * len(nums)
+    p[zi] = reduce(mul, (e for i,e in enumerate(nums) if i != zi))
+    return p

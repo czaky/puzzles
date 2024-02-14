@@ -118,3 +118,12 @@ class TestUnsortedArray(unittest.TestCase):
         "Test `meta_cafeteria` puzzle."
         self.assertEqual(3, ar.meta_cafeteria(10, 1, [2, 6]))
         self.assertEqual(1, ar.meta_cafeteria(15, 2, [11, 6, 14]))
+
+    def test_product_except_self(self):
+        "Test `product_except_self`."
+        self.assertEqual(
+            [0, 0, 0, 1800, 0, 0],
+            ar.product_except_self([10, 3, 5, 0, 6, 2]))
+        self.assertEqual(
+            [180, 600, 360, 300, 900],
+            ar.product_except_self([10, 3, 5, 6, 2]))
