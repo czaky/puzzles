@@ -72,3 +72,8 @@ def min_distance(a: list, x: int, y: int) -> int:
         if measure:
             mn = min(mn, abs(xi-yi))
     return mn if mn < len(a) else -1
+
+def first_repeating_index(a: list):
+    "Return index of the first repeating element in `a` else -1."
+    c = Counter(a)
+    return next((i for i, e in enumerate(a) if c[e] > 1), -1)

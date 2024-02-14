@@ -94,3 +94,10 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual(1, ar.min_distance([1, 2, 3], 2, 3))
         self.assertEqual(1, ar.min_distance([1, 2, 3], 2, 1))
         self.assertEqual(2, ar.min_distance([1, 2, 3], 1, 3))
+
+    def test_first_repeating_index(self):
+        "Test `first_repeating_index` function."
+        self.assertEqual(-1, ar.first_repeating_index([1, 2, 3]))
+        self.assertEqual(0, ar.first_repeating_index([1, 1, 2, 3]))
+        self.assertEqual(1, ar.first_repeating_index([1, 2, 3, 2]))
+        self.assertEqual(2, ar.first_repeating_index([1, 2, 3, 3]))
