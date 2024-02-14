@@ -1,6 +1,7 @@
 """Module for the array/list related puzzles."""
 
 from collections import Counter
+from typing import List
 import search as bs
 
 def subrev(a: list, s: int=0, e: int=-1):
@@ -86,3 +87,19 @@ def dedup_sorted(a: list) -> int:
             a[i] = a[j]
             i += 1
     return i
+
+def meta_cafeteria(n: int, d: int, s: List[int]) -> int:
+    """
+Return number of new diners to be seated at distance `d` from
+each other at a row of `n` seats. `s` is a list of taken seats.
+Seats are counted as [1 .. N] inclusive
+"""
+    s.sort()
+    # [1 - (d+1), S[0]] we can seat diners every (d + 1) seats
+    c = max(0, -1 + (s[0] + d) // (d + 1))
+    for i in range(1, len(s)):
+        # We can seat a diner ever (d + 1) seats
+        c += max(0, -1 + (s[i] - s[i-1]) // (d + 1))
+    # [s[-1], n + (d+1)] we can seat diners ever (d + 1) seats.
+    c += (n - s[-1]) // (d + 1)
+    return c

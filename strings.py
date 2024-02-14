@@ -24,3 +24,13 @@ def common_prefix(a: List[str]):
     mnl = min(map(len, a))
     p = next((i for i in range(mnl) for s in a if s[i] != a[0][i]), mnl)
     return a[0][:p]
+
+def equal_rotated(a: str, b: str, n: int) -> bool:
+    "True if `a` and `b` are rotated by `n` in any direction."
+    n %= min(len(a), len(b))
+    return a == b[n:] + b[:n] or b == a[n:] + a[:n]
+
+def first_unique(s: str) -> str:
+    "First unique character in the string `s`."
+    c = Counter(s)
+    return next((x for x in s if c[x]==1), '$')

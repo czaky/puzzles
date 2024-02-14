@@ -113,3 +113,8 @@ class TestUnsortedArray(unittest.TestCase):
         a = [2, 2, 2, 3]
         self.assertEqual(2, ar.dedup_sorted(a))
         self.assertEqual([2, 3, 2, 3], a)
+
+    def test_meta_cafeteria(self):
+        "Test `meta_cafeteria` puzzle."
+        self.assertEqual(3, ar.meta_cafeteria(10, 1, [2, 6]))
+        self.assertEqual(1, ar.meta_cafeteria(15, 2, [11, 6, 14]))

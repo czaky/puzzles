@@ -1,6 +1,7 @@
 """Puzzles related to binary (search) trees."""
 
 import math
+from collections import deque
 from typing import Tuple
 
 class Node:  # pylint: disable=too-few-public-methods
@@ -41,17 +42,50 @@ def is_bst(root: Node) -> bool:
 def left_view(root: Node) -> list:
     "Return the projected left view of the binary tree from `root`."
     view = []
-    max_level = [-1]
     def enum(n: Node, level: int):
         if not n:
             return
-        if level > max_level[0]:
-            max_level[0] = level
+        if level > len(view):
             view.append(n.data)
         enum(n.left, level + 1)
         enum(n.right, level + 1)
-    enum(root, 0)
+    enum(root, 1)
     return view
+
+def breadth_first(t: Node) -> list:
+    """Return the node values in breadth first order."""
+    q = deque([t])
+    o = []
+    while q:
+        for _ in range(len(q)):
+            n = q.popleft()
+            o.append(n.data)
+            if n.left:
+                q.append(n.left)
+            if n.right:
+                q.append(n.right)
+    return o
+
+def spiral_order(t: Node) -> list:
+    """
+Return the node values in spiral.
+Spiral order is alternating from left to right on each level.
+"""
+    q = deque([t])
+    o = []
+    lvl = 0
+    while q:
+        lvl += 1
+        ro = []
+        for _ in range(len(q)):
+            n = q.popleft()
+            (ro if lvl%2 else o).append(n.data)
+            if n.left:
+                q.append(n.left)
+            if n.right:
+                q.append(n.right)
+        o.extend(reversed(ro))
+    return o
 
 def balanced(root: Node) -> bool:
     "True if tree at `root` is balanced in height."

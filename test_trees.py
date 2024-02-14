@@ -43,3 +43,12 @@ class TestTrees(unittest.TestCase):
             t.identical(
                 t.make('1 2 -1 -1 3'),
                 t.make('1 2 -1 -1 3 4 5')))
+
+    def test_breadth_first(self):
+        "Test `breadth_first` enumeration."
+        self.assertEqual([1], t.breadth_first(t.make('1')))
+        self.assertEqual([1, 2, 3], t.breadth_first(t.make('1 2 3')))
+        self.assertEqual([1, 2, 3], t.breadth_first(t.make('1 2 -1 -1 3')))
+        self.assertEqual(
+            [1, 2, 3, 4],
+            t.breadth_first(t.make('1 2 -1 4 -1 -1 3')))

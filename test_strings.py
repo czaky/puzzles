@@ -53,3 +53,21 @@ class TestStrings(unittest.TestCase):
             "a",
             s.common_prefix(["abc", "abc", "aec"])
         )
+
+    def test_equal_rotated(self):
+        "Test the `equal_rotated` function."
+        self.assertTrue(s.equal_rotated("a", "a", 0))
+        self.assertTrue(s.equal_rotated("a", "a", 1))
+        self.assertTrue(s.equal_rotated("a", "a", 2))
+        self.assertTrue(s.equal_rotated("ab", "ba", 1))
+        self.assertTrue(s.equal_rotated("aba", "aab", 2))
+        self.assertTrue(s.equal_rotated("abba", "baab", 2))
+
+        self.assertFalse(s.equal_rotated("abc", "abc", 1))
+        self.assertFalse(s.equal_rotated("ab", "ab", 1))
+
+    def test_first_unique(self):
+        "Test the `first_unique` function."
+        self.assertEqual("h", s.first_unique("hallo"))
+        self.assertEqual("$", s.first_unique("abba"))
+        self.assertEqual("u", s.first_unique("babassus"))
