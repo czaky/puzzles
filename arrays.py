@@ -19,6 +19,10 @@ def rotated_minimum(a: list) -> int:
     "A sorted list `a` was rotated. Find the minimum element in O(log N)."
     return a[bs.binary(lambda m: a[m-1] < a[m] <= a[-1], 1, len(a)-1, 0)]
 
+def find_rotation(a: List[int]) -> int:
+    "A sorted list `a` was rotated. Find the rotation index in O(log N)."
+    return bs.binary(lambda m: a[m-1] < a[m] <= a[-1], 1, len(a)-1, 0)
+
 def equilibrium_point(a: list) -> int:
     "Index in `a` where sums of elements before and after are equal."
     # Uses binary search in O(log N).
