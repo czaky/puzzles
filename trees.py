@@ -142,7 +142,7 @@ def insert(r: Node, value: int) -> Node:
     return r
 
 def find_ancestor(r: Node, a: int, b: int) -> Optional[Node]:
-    "Find lowest common ancestor of `b` and `b` valued nodes."
+    "Find lowest common ancestor of `a` and `b` valued nodes."
     mn = min(a, b)
     mx = max(a, b)
     while r:
