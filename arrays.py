@@ -126,3 +126,10 @@ def count_triplets(a: List[int]) -> int:
     "Count distinct triplets on numbers in an array of distinct numbers."
     s = set(a)
     return sum(x < y and x+y in s for x in a for y in a)
+
+def find_difference(a: List[int], d: int) -> bool:
+    "Find element `e` from `a` where `d` - `e` is also in `a`."
+    c = Counter(a)
+    if 0 in c:
+        return d in c
+    return next(filter(lambda e: c[e + d] > int(d == 0), a), False)
