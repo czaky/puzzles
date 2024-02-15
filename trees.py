@@ -52,6 +52,19 @@ def left_view(root: Node) -> list:
     enum(root, 1)
     return view
 
+def right_view(root: Node) -> list:
+    "Return the projected right view of the binary tree from `root`."
+    view = []
+    def enum(n: Node, level: int):
+        if not n:
+            return
+        if level > len(view):
+            view.append(n.data)
+        enum(n.right, level + 1)
+        enum(n.left, level + 1)
+    enum(root, 1)
+    return view
+
 def breadth_first(t: Node) -> list:
     """Return the node values in breadth first order."""
     q = deque([t])
@@ -59,10 +72,9 @@ def breadth_first(t: Node) -> list:
     while q:
         for _ in range(len(q)):
             n = q.popleft()
-            o.append(n.data)
-            if n.left:
+            if n:
+                o.append(n.data)
                 q.append(n.left)
-            if n.right:
                 q.append(n.right)
     return o
 
@@ -106,3 +118,10 @@ def identical(a: Node, b: Node) -> bool:
         a.data == b.data and
         identical(a.left, b.left) and
         identical(a.right, b.right))
+
+def mirror(r: Node):
+    "Mirror the tree at `r` in place."
+    if r:
+        r.left, r.right = r.right, r.left
+        mirror(r.left)
+        mirror(r.right)

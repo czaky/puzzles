@@ -79,3 +79,9 @@ class TestStrings(unittest.TestCase):
         self.assertEqual("h", s.first_unique("hallo"))
         self.assertEqual("$", s.first_unique("abba"))
         self.assertEqual("u", s.first_unique("babassus"))
+
+    def test_roman_to_decimal(self):
+        "Test the `roman_to_decimal` function."
+        self.assertEqual(5, s.roman_to_decimal("V"))
+        self.assertEqual(4, s.roman_to_decimal("IV"))
+        self.assertEqual(1519, s.roman_to_decimal("MDXIX"))

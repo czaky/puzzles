@@ -43,3 +43,15 @@ def first_unique(s: str) -> str:
     "First unique character in the string `s`."
     c = Counter(s)
     return next((x for x in s if c[x]==1), '$')
+
+R2D = {'I':1, 'V':5, 'X':10, 'L':50, 'C':100, 'D':500, 'M':1000}
+
+def roman_to_decimal(r: str) -> int:
+    "Return the decimal value of the roman literal `r`."
+    d = 0
+    prev = 0
+    for char in r:
+        curr = R2D[char]
+        d += prev if prev >= curr else -prev
+        prev = curr
+    return d + prev
