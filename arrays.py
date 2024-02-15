@@ -15,13 +15,13 @@ def subrev(a: list, s: int=0, e: int=-1):
     for i in range((1 + e - s) // 2):
         a[s+i], a[e-i] = a[e-i], a[s+i]
 
-def rotated_minimum(a: list) -> int:
-    "A sorted list `a` was rotated. Find the minimum element in O(log N)."
-    return a[bs.binary(lambda m: a[m-1] < a[m] <= a[-1], 1, len(a)-1, 0)]
-
 def find_rotation(a: List[int]) -> int:
     "A sorted list `a` was rotated. Find the rotation index in O(log N)."
     return bs.binary(lambda m: a[m-1] < a[m] <= a[-1], 1, len(a)-1, 0)
+
+def rotated_minimum(a: list) -> int:
+    "A sorted list `a` was rotated. Find the minimum element in O(log N)."
+    return a[find_rotation(a)]
 
 def equilibrium_point(a: list) -> int:
     "Index in `a` where sums of elements before and after are equal."
