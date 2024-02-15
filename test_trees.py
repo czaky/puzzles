@@ -44,6 +44,13 @@ class TestTrees(unittest.TestCase):
                 t.make('1 2 -1 -1 3'),
                 t.make('1 2 -1 -1 3 4 5')))
 
+    def test_symmetric(self):
+        "Test the `symmetric` function."
+        self.assertTrue(t.symmetric(t.make('1')))
+        self.assertFalse(t.symmetric(t.make('1 2 3')))
+        self.assertTrue(t.symmetric(t.make('1 2 -1 -1 2')))
+        self.assertFalse(t.symmetric(t.make('1 2 -1 -1 2 2 2')))
+
     def test_breadth_first(self):
         "Test `breadth_first` enumeration."
         self.assertEqual([1], t.breadth_first(t.make('1')))

@@ -131,6 +131,16 @@ def mirror(r: Node):
         mirror(r.left)
         mirror(r.right)
 
+def symmetric(r: Node) -> bool:
+    "True if tree starting at `r` is symmetric."
+    def sym(a, b):
+        return a == b or (
+            a and b and
+            a.data == b.data and
+            sym(a.left, b.right) and
+            sym(b.left, a.right))
+    return not r or sym(r.left, r.right)
+
 def insert(r: Node, value: int) -> Node:
     "Insert `value` into a BST starting at `r`."
     if not r:
