@@ -127,3 +127,8 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual(
             [180, 600, 360, 300, 900],
             ar.product_except_self([10, 3, 5, 6, 2]))
+
+    def test_count_triplets(self):
+        "Test `count_triplets`."
+        self.assertEqual(2, ar.count_triplets([1, 5, 3, 2]))
+        self.assertEqual(1, ar.count_triplets([10, 3, 5, 6, 2]))

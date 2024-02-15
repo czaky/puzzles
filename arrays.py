@@ -121,3 +121,8 @@ except for the element at the given index.
     p = [0] * len(nums)
     p[zi] = reduce(mul, (e for i,e in enumerate(nums) if i != zi))
     return p
+
+def count_triplets(a: List[int]) -> int:
+    "Count distinct triplets on numbers in an array of distinct numbers."
+    s = set(a)
+    return sum(x < y and x+y in s for x in a for y in a)
