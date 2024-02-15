@@ -5,5 +5,8 @@
         "pylint",
         "PYTHONPATH",
         "subrev"
+    ],
+    "cSpell.ignoreWords": [
+        "baab"
     ]
 }
