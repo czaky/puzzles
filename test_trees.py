@@ -71,3 +71,14 @@ class TestTrees(unittest.TestCase):
             [2, 1, 3, 4], list(t.insert(t.make('2 1 -1 -1 3'), 4)))
         self.assertEqual(
             [5, 3, 6, 2, 4], list(t.insert(t.make('5 3 -1 4 -1 -1 6'), 2)))
+
+    def test_find_ancestor(self):
+        "Test `find_ancestor` function."
+        self.assertEqual(1, t.find_ancestor(t.make('1 2'), 1, 2).data)
+        self.assertEqual(2, t.find_ancestor(t.make('2 1 3'), 3, 1).data)
+        self.assertEqual(
+            5, t.find_ancestor(t.make('5 3 2 -1 -1 4 -1 -1 6'), 4, 6).data)
+        self.assertEqual(
+            3, t.find_ancestor(t.make('5 3 2 -1 -1 4 -1 -1 6'), 3, 4).data)
+        self.assertEqual(
+            3, t.find_ancestor(t.make('5 3 2 -1 -1 4 -1 -1 6'), 2, 4).data)

@@ -137,3 +137,8 @@ def find_difference(a: List[int], d: int) -> bool:
     if 0 in c:
         return d in c
     return next(filter(lambda e: c[e + d] > int(d == 0), a), False)
+
+def pairs_equal_sum(a: List[int], b: List[int], s: int) -> list:
+    "Return (sorted) pairs of elements from `a` and `b` with sum = `s`."
+    sa = set(a)
+    return sorted((s-y, y) for y in b if s-y in sa)

@@ -2,7 +2,7 @@
 
 import math
 from collections import deque
-from typing import Tuple
+from typing import Tuple, Optional
 
 class Node:  # pylint: disable=too-few-public-methods
     "Node of a binary tree."
@@ -139,4 +139,17 @@ def insert(r: Node, value: int) -> Node:
         r.left = insert(r.left, value)
     elif value > r.data:
         r.right = insert(r.right, value)
+    return r
+
+def find_ancestor(r: Node, a: int, b: int) -> Optional[Node]:
+    "Find lowest common ancestor of `b` and `b` valued nodes."
+    mn = min(a, b)
+    mx = max(a, b)
+    while r:
+        if r.data > mx:
+            r = r.left
+        elif r.data < mn:
+            r = r.right
+        else:
+            break
     return r
