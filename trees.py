@@ -193,3 +193,19 @@ def find_ancestor(r: Node, a: int, b: int) -> Optional[Node]:
         else:
             break
     return r
+
+def no_siblings_nodes(t: Node) -> list:
+    "Return nodes' values which have no sibling node from tree `t`."
+    syb = []
+    def enum(l, r):
+        if l:
+            if not r:
+                syb.append(l.data)
+            enum(l.left, l.right)
+        if r:
+            if not l:
+                syb.append(r.data)
+            enum(r.left, r.right)
+    if t:
+        enum(t.left, t.right)
+    return sorted(syb)
