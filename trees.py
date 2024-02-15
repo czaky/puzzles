@@ -17,6 +17,15 @@ class Node:  # pylint: disable=too-few-public-methods
             self.left.height() if self.left else 0,
             self.right.height() if self.right else 0)
 
+    def __iter__(self):
+        # level order (breadth first)
+        q = deque([self])
+        while q:
+            n = q.popleft()
+            yield n.data
+            _ = n.left and q.append(n.left)
+            _ = n.right and q.append(n.right)
+
 def make(s: str) -> Node:
     "Make a binary tree from a string `s`."
     def des(it):
@@ -70,12 +79,10 @@ def breadth_first(t: Node) -> list:
     q = deque([t])
     o = []
     while q:
-        for _ in range(len(q)):
-            n = q.popleft()
-            if n:
-                o.append(n.data)
-                q.append(n.left)
-                q.append(n.right)
+        n = q.popleft()
+        o.append(n.data)
+        _ = n.left and q.append(n.left)
+        _ = n.right and q.append(n.right)
     return o
 
 def spiral_order(t: Node) -> list:
@@ -92,10 +99,8 @@ Spiral order is alternating from left to right on each level.
         for _ in range(len(q)):
             n = q.popleft()
             (ro if lvl%2 else o).append(n.data)
-            if n.left:
-                q.append(n.left)
-            if n.right:
-                q.append(n.right)
+            _ = n.left and q.append(n.left)
+            _ = n.right and q.append(n.right)
         o.extend(reversed(ro))
     return o
 
@@ -125,3 +130,13 @@ def mirror(r: Node):
         r.left, r.right = r.right, r.left
         mirror(r.left)
         mirror(r.right)
+
+def insert(r: Node, value: int) -> Node:
+    "Insert `value` into a BST starting at `r`."
+    if not r:
+        return Node(value)
+    if value < r.data:
+        r.left = insert(r.left, value)
+    elif value > r.data:
+        r.right = insert(r.right, value)
+    return r

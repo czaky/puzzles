@@ -52,3 +52,22 @@ class TestTrees(unittest.TestCase):
         self.assertEqual(
             [1, 2, 3, 4],
             t.breadth_first(t.make('1 2 -1 4 -1 -1 3')))
+
+    def test_iter(self):
+        "Test the level order iterator."
+        self.assertEqual([1], list(t.make('1')))
+        self.assertEqual([2, 1, 3], list(t.make('2 1 3')))
+        self.assertEqual(
+            [3, 1, 2], list(t.make('3 1 -1 -1 2')))
+        self.assertEqual(
+            [5, 3, 2, 4], list(t.make('5 3 -1 4 -1 -1 2')))
+
+    def test_insert(self):
+        "Test `insert` function."
+        self.assertEqual([1, 2], list(t.insert(t.make('1'), 2)))
+        self.assertEqual(
+            [2, 1, 3], list(t.insert(t.make('2 1 -1 -1 3'), 3)))
+        self.assertEqual(
+            [2, 1, 3, 4], list(t.insert(t.make('2 1 -1 -1 3'), 4)))
+        self.assertEqual(
+            [5, 3, 6, 2, 4], list(t.insert(t.make('5 3 -1 4 -1 -1 6'), 2)))
