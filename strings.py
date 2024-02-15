@@ -17,6 +17,15 @@ def anagram(a: str, b: str) -> bool:
     "True if `a` and `b` contain the same characters."
     return Counter(a) == Counter(b)
 
+def isomorphic(a: str, b: str) -> bool:
+    "True if characters in `a` and `b` can be mapped 1:1 to each other."
+    if len(a) != len(b):
+        return False
+    ab = dict(zip(a, b))
+    ba = dict(zip(b, a))
+    return next(
+        (False for x, y in zip(a, b) if ab[x] != y or ba[y] != x), True)
+
 def common_prefix(a: List[str]):
     "Return the longest prefix among the strings from `a`."
     if not a:

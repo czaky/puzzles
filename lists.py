@@ -72,3 +72,9 @@ def dedup(head: Node) -> Node:
             n.next = n.next.next
         n = n.next
     return head
+
+def delete_node(n: Node):
+    "Remove node without reference to `head`."
+    assert n.next
+    n.data = n.next.data
+    n.next = n.next.next

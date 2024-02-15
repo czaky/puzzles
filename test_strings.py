@@ -23,6 +23,14 @@ class TestStrings(unittest.TestCase):
         self.assertFalse(s.palindrome("abc"))
         self.assertFalse(s.palindrome("ab"))
 
+    def test_isomorphic(self):
+        "Test the `isomorphic` function."
+        self.assertTrue(s.isomorphic("aba", "xyx"))
+        self.assertTrue(s.isomorphic("aa", "bb"))
+
+        self.assertFalse(s.isomorphic("abb", "xxy"))
+        self.assertFalse(s.isomorphic("aba", "xxy"))
+
     def test_common_prefix(self):
         "Test the `common_prefix` function."
         self.assertEqual(
