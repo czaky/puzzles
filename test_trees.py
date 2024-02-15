@@ -60,6 +60,15 @@ class TestTrees(unittest.TestCase):
             [1, 2, 3, 4],
             t.breadth_first(t.make('1 2 -1 4 -1 -1 3')))
 
+    def test_depth_first(self):
+        "Test `depth_first` enumeration."
+        self.assertEqual([1], t.depth_first(t.make('1')))
+        self.assertEqual([3, 2, 1], t.depth_first(t.make('1 2 3')))
+        self.assertEqual([2, 1, 3], t.depth_first(t.make('1 2 -1 -1 3')))
+        self.assertEqual(
+            [2, 4, 1, 3],
+            t.depth_first(t.make('1 2 -1 4 -1 -1 3')))
+
     def test_iter(self):
         "Test the level order iterator."
         self.assertEqual([1], list(t.make('1')))
@@ -81,11 +90,25 @@ class TestTrees(unittest.TestCase):
 
     def test_find_ancestor(self):
         "Test `find_ancestor` function."
-        self.assertEqual(1, t.find_ancestor(t.make('1 2'), 1, 2).data)
-        self.assertEqual(2, t.find_ancestor(t.make('2 1 3'), 3, 1).data)
+        self.assertEqual(2, t.find_ancestor(t.make('2 1'), 1, 2).data)
+        self.assertEqual(
+            2, t.find_ancestor(t.make('2 1 -1 -1 3'), 3, 1).data)
         self.assertEqual(
             5, t.find_ancestor(t.make('5 3 2 -1 -1 4 -1 -1 6'), 4, 6).data)
         self.assertEqual(
             3, t.find_ancestor(t.make('5 3 2 -1 -1 4 -1 -1 6'), 3, 4).data)
         self.assertEqual(
             3, t.find_ancestor(t.make('5 3 2 -1 -1 4 -1 -1 6'), 2, 4).data)
+
+    def test_largest(self):
+        "Test `largest` function."
+        self.assertEqual(2, t.largest(t.make('2 1')))
+        self.assertEqual(3, t.largest(t.make('2 1 -1 -1 3')))
+        self.assertEqual(1, t.largest(t.make('2 1 -1 -1 3'), 3))
+        self.assertEqual(-1, t.largest(t.make('2 1 -1 -1 3'), 4))
+        self.assertEqual(
+            6, t.largest(t.make('5 3 2 -1 -1 4 -1 -1 6'), 1))
+        self.assertEqual(
+            5, t.largest(t.make('5 3 2 -1 -1 4 -1 -1 6'), 2))
+        self.assertEqual(
+            4, t.largest(t.make('5 3 2 -1 -1 4 -1 -1 6'), 3))

@@ -85,6 +85,36 @@ def breadth_first(t: Node) -> list:
         _ = n.right and q.append(n.right)
     return o
 
+def depth_first(t: Node) -> list:
+    """Return the node values in depth first order."""
+    o = []
+    s = []
+    c = t
+    while s or c:
+        while c:
+            s.append(c)
+            c = c.left
+        c = s.pop()
+        o.append(c.data)
+        c = c.right
+    return o
+
+def largest(r: Node, k: int=1, default: int=-1) -> int:
+    "Return k-largest element from a BST at `r`."
+    # Depth First Search on the right side.
+    s = []
+    c = r
+    while s or c:
+        while c:
+            s.append(c)
+            c = c.right
+        c = s.pop()
+        k -= 1
+        if k == 0:
+            return c.data
+        c = c.left
+    return default
+
 def spiral_order(t: Node) -> list:
     """
 Return the node values in spiral.
