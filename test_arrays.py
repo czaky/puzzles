@@ -158,3 +158,15 @@ class TestUnsortedArray(unittest.TestCase):
             3, ar.smallest_sub_with_greater_sum([1, 4, 3, 6, 42, 4], 51))
         self.assertEqual(
             3, ar.smallest_sub_with_greater_sum([45, 4, 3, 6, 2, 4], 51))
+
+    def test_window_distinct_count(self):
+        "Test `window_distinct_count`."
+        self.assertEqual(
+            [5, 5],
+            ar.window_distinct_count([10, 3, 5, 0, 6, 2], 5))
+        self.assertEqual(
+            [2, 2, 2, 2],
+            ar.window_distinct_count([10, 3, 5, 6, 2], 2))
+        self.assertEqual(
+            [3, 4, 4, 3],
+            ar.window_distinct_count([1, 2, 1, 3, 4, 2, 3], 4))

@@ -168,3 +168,27 @@ def smallest_sub_with_greater_sum(a: List[int], k: int) -> int:
             s -= a[i]
             i += 1
     return ln if ln < n + 1 else 0
+
+def window_distinct_count(a: List[int], k: int) -> List[int]:
+    "Returns count of distinct elements for every `k` window in `a`."
+    if k > len(a):
+        return []
+    d = {}
+    for i in range(k):
+        d[a[i]] = d.get(a[i], 0) + 1
+
+    n = len(a)
+    cnt = [0] * (n - k + 1)
+    cnt[0] = len(d)
+    for i in range(n - k):
+        # delete beginning
+        c1 = a[i]
+        d[c1] -= 1
+        if d[c1] == 0:
+            del d[c1]
+        # add ending
+        c2 = a[i + k]
+        d[c2] = d.get(c2, 0) + 1
+        # update count array
+        cnt[i + 1] = len(d)
+    return cnt
