@@ -85,3 +85,12 @@ class TestStrings(unittest.TestCase):
         self.assertEqual(5, s.roman_to_decimal("V"))
         self.assertEqual(4, s.roman_to_decimal("IV"))
         self.assertEqual(1519, s.roman_to_decimal("MDXIX"))
+
+    def test_max_distinct_char_substring(self):
+        "Test the `max_distinct_char_substring` function."
+        self.assertEqual(1, s.max_distinct_char_substring("aa"))
+        self.assertEqual(3, s.max_distinct_char_substring("hallo"))
+        self.assertEqual(2, s.max_distinct_char_substring("abba"))
+        self.assertEqual(
+            10, s.max_distinct_char_substring(
+                "aldshflasghdfasgfkhgasdfasdgvfyweofyewyrtyefgv"))

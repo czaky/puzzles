@@ -55,3 +55,14 @@ def roman_to_decimal(r: str) -> int:
         d += prev if prev >= curr else -prev
         prev = curr
     return d + prev
+
+def max_distinct_char_substring(s: str) -> int:
+    "Returns length of the longest substring with distinct characters."
+    seen = dict()
+    i = -1
+    x = 0
+    for j, c in enumerate(s):
+        i = max(i, seen.get(c, i))
+        x = max(x, j - i)
+        seen[c] = j
+    return x
