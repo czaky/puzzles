@@ -7,7 +7,7 @@ from typing import List #, Optional
 #from itertools import accumulate, islice
 
 def find_sorted(hay: List[List[int]], needle: int) -> bool:
-    "True if `needle` is in the `hay` matrix."
+    "True if `needle` is in the sorted `hay` matrix."
     n = len(hay)
     m = len(hay[0])
     i = n-1

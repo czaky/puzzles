@@ -42,6 +42,10 @@ def equilibrium_point(a: list) -> int:
         return l
     return -1
 
+def bitonic_point(a: List[int]) -> int:
+    "Maximum of strictly increasing array then maybe strictly decreasing."
+    return a[bs.binary(lambda m: a[m-1] > a[m], 1, len(a)-1, len(a)-1)]
+
 def duplicates(a: list) -> list:
     "Return elements of the list `a` occurring more than once."
     return sorted((Counter(a) - Counter(set(a))).keys())

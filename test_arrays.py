@@ -20,6 +20,12 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual(2, ar.equilibrium_point([1, 2, 3, 3]))
         self.assertEqual(-1, ar.equilibrium_point([1, 2, 3]))
 
+    def test_bitonic_point(self):
+        "Test `bitonic_point` function."
+        self.assertEqual(5, ar.bitonic_point([1, 3, 5]))
+        self.assertEqual(5, ar.bitonic_point([1, 3, 5, 4]))
+        self.assertEqual(1, ar.bitonic_point([1]))
+
     def test_duplicates(self):
         "Test `duplicates` function."
         self.assertEqual([2], ar.duplicates([1, 3, 5, 2, 2]))
