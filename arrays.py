@@ -44,6 +44,7 @@ def equilibrium_point(a: list) -> int:
 
 def bitonic_point(a: List[int]) -> int:
     "Maximum of strictly increasing array then maybe strictly decreasing."
+    # Runs in O(log N)
     return a[bs.binary(lambda m: a[m-1] > a[m], 1, len(a)-1, len(a)-1)]
 
 def duplicates(a: list) -> list:
@@ -107,11 +108,11 @@ Seats are counted as [1 .. N] inclusive
 """
     s.sort()
     return (
-        # [1 - (d+1), S[0]] we can seat diners every (d + 1) seats
+        # [1 - (d+1), S[0]] we can seat ppl every (d + 1) seats
         -1 + (s[0] + d) // (d + 1) +
-        # We can seat a diner ever (d + 1) seats
+        # We can seat ppl every (d + 1) seats
         sum(-1 + (s[i] - s[i-1]) // (d + 1) for i in range(1, len(s))) +
-        # [s[-1], n + (d+1)] we can seat diners ever (d + 1) seats.
+        # [s[-1], n + (d+1)] we can seat ppl every (d + 1) seats.
         (n - s[-1]) // (d + 1))
 
 def floor_element(a: List[int], x: int) -> int:
@@ -137,7 +138,7 @@ def count_triplets(a: List[int]) -> int:
     return sum(x < y and x+y in s for x in a for y in a)
 
 def find_difference(a: List[int], d: int) -> bool:
-    "Find element `e` from `a` where `d` - `e` is also in `a`."
+    "True if there is an `e` from `a` where `d` - `e` is also in `a`."
     c = Counter(a)
     if 0 in c:
         return d in c
