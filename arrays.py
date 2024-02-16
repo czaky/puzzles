@@ -4,7 +4,8 @@ from collections import Counter
 from typing import List, Optional
 from functools import reduce
 from operator import mul
-from itertools import accumulate, islice
+from itertools import accumulate
+from iter import skip
 import search as bs
 
 def subrev(a: list, s: int=0, e: int=-1):
@@ -150,6 +151,6 @@ def pairs_equal_sum(a: List[int], b: List[int], s: int) -> list:
 
 def greater_smaller(a: List[int]) -> Optional[int]:
     "Return element greater than all previous and smaller than all following."
-    mn = islice(accumulate(reversed(a), min), 1, None)
-    it = islice(zip(reversed(list(mn)), accumulate(a, max)), 1, None)
+    mn = skip(accumulate(reversed(a), min))
+    it = skip(zip(reversed(list(mn)), accumulate(a, max)))
     return next((n for n, x in it if n == x), None)

@@ -1,10 +1,6 @@
 "Puzzles around matrices."
 
-#from collections import Counter
-from typing import List #, Optional
-# from functools import reduce
-#from operator import mul
-#from itertools import accumulate, islice
+from typing import List
 
 def find_sorted(hay: List[List[int]], needle: int) -> bool:
     "True if `needle` is in the sorted `hay` matrix."
