@@ -17,6 +17,29 @@ class TestLinkedLists(unittest.TestCase):
         self.assertEqual(2, n.data)
         self.assertIsNone(n.next)
 
+
+    def test_make_linked_loop(self):
+        "Test `make_linked`."
+        self.assertIsNone(ll.make([], 0))
+
+        n = ll.make([0, 1, 2], 0)
+        self.assertEqual(0, n.data)
+        n = n.next
+        self.assertEqual(1, n.data)
+        n = n.next
+        self.assertEqual(2, n.data)
+        n = n.next
+        self.assertEqual(0, n.data)
+
+        n = ll.make([0, 1, 2], 2)
+        self.assertEqual(0, n.data)
+        n = n.next
+        self.assertEqual(1, n.data)
+        n = n.next
+        self.assertEqual(2, n.data)
+        n = n.next
+        self.assertEqual(2, n.data)
+
     def test_middle(self):
         "Test `middle` node function."
         self.assertIsNone(ll.middle(ll.make([])))
@@ -58,3 +81,13 @@ class TestLinkedLists(unittest.TestCase):
         self.assertEqual([3, 2], list(ll.dedup(ll.make([3, 2, 3]))))
         self.assertEqual([1, 3], list(ll.dedup(ll.make([1, 3, 3]))))
         self.assertEqual([1, 3], list(ll.dedup(ll.make([1, 1, 3]))))
+
+    def test_loop_length(self):
+        "Test the `loop_length` function."
+        self.assertEqual(0, ll.loop_length(ll.make([])))
+        self.assertEqual(0, ll.loop_length(ll.make([1])))
+        self.assertEqual(1, ll.loop_length(ll.make([1], 0)))
+        self.assertEqual(0, ll.loop_length(ll.make([1, 2, 3])))
+        self.assertEqual(1, ll.loop_length(ll.make([1, 2, 3], 2)))
+        self.assertEqual(2, ll.loop_length(ll.make([1, 2, 3], 1)))
+        self.assertEqual(3, ll.loop_length(ll.make([1, 2, 3], 0)))
