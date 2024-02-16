@@ -127,10 +127,9 @@ def loop_length(head: Node) -> int:
         if fast == slow:
             loop = True
             break
-
     if not loop:
         return 0
-
+    # measure loop
     c = 1
     fast = fast.next
     while fast != slow:
