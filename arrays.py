@@ -207,5 +207,5 @@ def pascal_triangle_row(n: int) -> List[int]:
     for i in range(2, n):
         cr, pr = pr, cr
         for j in range(1, i):
-            cr[j] = (pr[j-1] + pr[j])
+            cr[j] = pr[j-1] + pr[j]
     return cr
