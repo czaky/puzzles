@@ -64,6 +64,14 @@ class TestLinkedLists(unittest.TestCase):
         self.assertIsNone(ll.nth(e, 1000))
         self.assertIsNone(ll.nth(e, -1000))
 
+    def test_insert_sorted(self):
+        "Test `insert_sorted`."
+        self.assertEqual([1], list(ll.insert_sorted(ll.make([]), 1)))
+        self.assertEqual([1, 2], list(ll.insert_sorted(ll.make([1]), 2)))
+        self.assertEqual([1, 2], list(ll.insert_sorted(ll.make([2]), 1)))
+        self.assertEqual(
+            [1, 2, 3], list(ll.insert_sorted(ll.make([1, 3]), 2)))
+
     def test_reverse(self):
         "Test `reverse`."
         self.assertIsNone(ll.reverse(ll.make([])))

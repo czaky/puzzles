@@ -65,6 +65,19 @@ If n is negative, returns the nth node from the end of the list.
         slow = slow.next
     return slow
 
+def insert_sorted(head: Node, value: int) -> Node:
+    "Insert `value` into list starting at `head`. Return new head."
+    nn = Node(value)
+    if not head or head.data > value:
+        nn.next = head
+        return nn
+    n = head
+    while n.next and n.next.data < value:
+        n = n.next
+    nn.next = n.next
+    n.next = nn
+    return head
+
 def reverse(head: Node) -> Optional[Node]:
     "Reverse a linked starting at `head`."
     prev = None
