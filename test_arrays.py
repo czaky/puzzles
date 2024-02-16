@@ -182,3 +182,10 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual(0, ar.find_extra_element([1, 2, 3], [2, 3]))
         self.assertEqual(
             2, ar.find_extra_element([1, 2, 3, 4, 5], [1, 2, 4, 5]))
+
+    def test_pascal_triangle_row(self):
+        "Test `test_pascal_triangle_row` function."
+        self.assertEqual([1], ar.pascal_triangle_row(1))
+        self.assertEqual([1, 1], ar.pascal_triangle_row(2))
+        self.assertEqual([1, 2, 1], ar.pascal_triangle_row(3))
+        self.assertEqual([1, 3, 3, 1], ar.pascal_triangle_row(4))

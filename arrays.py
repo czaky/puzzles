@@ -199,3 +199,13 @@ def find_extra_element(a: List[int], b: List[int]) -> int:
     if len(a) < len(b):
         a, b = b, a
     return bs.binary(lambda m: a[m] < b[m], 0, len(b) - 1, -1) + 1
+
+def pascal_triangle_row(n: int) -> List[int]:
+    "Return the nth row of pascal triangle."
+    pr = [1] * n
+    cr = [1] * n
+    for i in range(2, n):
+        cr, pr = pr, cr
+        for j in range(1, i):
+            cr[j] = (pr[j-1] + pr[j])
+    return cr
