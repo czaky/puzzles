@@ -85,6 +85,18 @@ def breadth_first(t: Node) -> list:
         _ = n.right and q.append(n.right)
     return o
 
+def reversed_level_order(t: Node) -> list:
+    "Return reversed breadth first (level order) enumeration."
+    q = deque([t])
+    r = []
+    while q:
+        n = q.popleft()
+        r.append(n.data)
+        # append right first
+        _ = n.right and q.append(n.right)
+        _ = n.left and q.append(n.left)
+    return list(reversed(r))
+
 def depth_first(t: Node) -> list:
     """Return the node values in depth first order."""
     o = []

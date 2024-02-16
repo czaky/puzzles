@@ -192,3 +192,10 @@ def window_distinct_count(a: List[int], k: int) -> List[int]:
         # update count array
         cnt[i + 1] = len(d)
     return cnt
+
+def find_extra_element(a: List[int], b: List[int]) -> int:
+    "Return index of an extra element in sorted arrays `a` and `b`."
+    # Runs in O(log N)
+    if len(a) < len(b):
+        a, b = b, a
+    return bs.binary(lambda m: a[m] < b[m], 0, len(b) - 1, -1) + 1

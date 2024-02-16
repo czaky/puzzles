@@ -170,3 +170,15 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual(
             [3, 4, 4, 3],
             ar.window_distinct_count([1, 2, 1, 3, 4, 2, 3], 4))
+
+    def test_find_extra_element(self):
+        "Test `find_extra_element` function."
+        self.assertEqual(0, ar.find_extra_element([1], []))
+        self.assertEqual(1, ar.find_extra_element([1, 2], [1]))
+        self.assertEqual(0, ar.find_extra_element([1, 2], [2]))
+        self.assertEqual(1, ar.find_extra_element([1], [1, 2]))
+        self.assertEqual(0, ar.find_extra_element([2], [1, 2]))
+        self.assertEqual(2, ar.find_extra_element([1, 2, 3], [1, 2]))
+        self.assertEqual(0, ar.find_extra_element([1, 2, 3], [2, 3]))
+        self.assertEqual(
+            2, ar.find_extra_element([1, 2, 3, 4, 5], [1, 2, 4, 5]))
