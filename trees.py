@@ -99,6 +99,22 @@ def depth_first(t: Node) -> list:
         c = c.right
     return o
 
+def successor(t: Node, x: int) -> Optional[Node]:
+    "Return the successor Node in `t` for value `x` in order enumeration."
+    s = []
+    n = t
+    found = False
+    while s or n:
+        while n:
+            s.append(n)
+            n = n.left
+        n = s.pop()
+        if found:
+            return n
+        found = n.data == x
+        n = n.right
+    return None
+
 def largest(r: Node, k: int=1, default: int=-1) -> int:
     "Return k-largest element from a BST at `r`."
     # Depth First Search on the right side.

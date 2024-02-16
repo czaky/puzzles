@@ -119,3 +119,15 @@ class TestTrees(unittest.TestCase):
             5, t.largest(t.make('5 3 2 -1 -1 4 -1 -1 6'), 2))
         self.assertEqual(
             4, t.largest(t.make('5 3 2 -1 -1 4 -1 -1 6'), 3))
+
+    def test_successor(self):
+        "Test `successor` function."
+        self.assertEqual(2, t.successor(t.make('2 1'), 1).data)
+        self.assertEqual(
+            2, t.successor(t.make('2 1 -1 -1 3'), 1).data)
+        self.assertEqual(
+            5, t.successor(t.make('5 3 2 -1 -1 4 -1 -1 6'), 4).data)
+        self.assertEqual(
+            4, t.successor(t.make('5 3 2 -1 -1 4 -1 -1 6'), 3).data)
+        self.assertEqual(
+            3, t.successor(t.make('5 3 2 -1 -1 4 -1 -1 6'), 2).data)
