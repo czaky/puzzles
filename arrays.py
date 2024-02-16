@@ -1,9 +1,10 @@
 """Module for the array/list related puzzles."""
 
 from collections import Counter
-from typing import List
+from typing import List, Optional
 from functools import reduce
 from operator import mul
+from itertools import accumulate, islice
 import search as bs
 
 def subrev(a: list, s: int=0, e: int=-1):
@@ -142,3 +143,9 @@ def pairs_equal_sum(a: List[int], b: List[int], s: int) -> list:
     "Return (sorted) pairs of elements from `a` and `b` with sum = `s`."
     sa = set(a)
     return sorted((s-y, y) for y in b if s-y in sa)
+
+def greater_smaller(a: List[int]) -> Optional[int]:
+    "Return element greater than all previous and smaller than all following."
+    mn = islice(accumulate(reversed(a), min), 1, None)
+    it = islice(zip(reversed(list(mn)), accumulate(a, max)), 1, None)
+    return next((n for n, x in it if n == x), None)

@@ -132,3 +132,12 @@ class TestUnsortedArray(unittest.TestCase):
         "Test `count_triplets`."
         self.assertEqual(2, ar.count_triplets([1, 5, 3, 2]))
         self.assertEqual(1, ar.count_triplets([10, 3, 5, 6, 2]))
+
+    def test_greater_smaller(self):
+        "Validate `greater_smaller` puzzle solution."
+        self.assertEqual(
+            11, ar.greater_smaller([10, 6, 3, 1, 5, 11, 6, 1, 11, 12]))
+        self.assertIsNone(
+            ar.greater_smaller([10, 6, 3, 1, 5, 13, 6, 1, 11, 12]))
+        self.assertIsNone(ar.greater_smaller([10, 6, 3]))
+        self.assertIsNone(ar.greater_smaller([6, 3, 10]))
