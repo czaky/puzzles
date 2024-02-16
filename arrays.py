@@ -154,3 +154,17 @@ def greater_smaller(a: List[int]) -> Optional[int]:
     mn = skip(accumulate(reversed(a), min))
     it = skip(zip(reversed(list(mn)), accumulate(a, max)))
     return next((n for n, x in it if n == x), None)
+
+def smallest_sub_with_greater_sum(a: List[int], k: int) -> int:
+    "Returns smallest sublist length with sum above `k`."
+    i = 0
+    s = 0
+    n = len(a)
+    ln = n + 1
+    for j, e in enumerate(a):
+        s += e
+        while s > k:
+            ln = min(ln, j - i + 1)
+            s -= a[i]
+            i += 1
+    return ln if ln < n + 1 else 0

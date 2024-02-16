@@ -147,3 +147,14 @@ class TestUnsortedArray(unittest.TestCase):
             ar.greater_smaller([10, 6, 3, 1, 5, 13, 6, 1, 11, 12]))
         self.assertIsNone(ar.greater_smaller([10, 6, 3]))
         self.assertIsNone(ar.greater_smaller([6, 3, 10]))
+
+    def test_smallest_sub_with_greater_sum(self):
+        "Test `smallest_sub_with_greater_sum` function."
+        self.assertEqual(0, ar.smallest_sub_with_greater_sum([255], 333))
+        self.assertEqual(1, ar.smallest_sub_with_greater_sum([255], 111))
+        self.assertEqual(
+            3, ar.smallest_sub_with_greater_sum([1, 4, 45, 6, 0, 19], 51))
+        self.assertEqual(
+            3, ar.smallest_sub_with_greater_sum([1, 4, 3, 6, 42, 4], 51))
+        self.assertEqual(
+            3, ar.smallest_sub_with_greater_sum([45, 4, 3, 6, 2, 4], 51))
