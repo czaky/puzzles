@@ -171,6 +171,19 @@ def symmetric(r: Node) -> bool:
             sym(b.left, a.right))
     return not r or sym(r.left, r.right)
 
+def flat(r: Node) -> bool:
+    "True if all leaves are at the same level."
+    lvl = [-1]
+    def eql(n, cl):
+        if not n:
+            return True
+        if not n.left and not n.right:
+            if lvl[0] == -1:
+                lvl[0] = cl
+            return cl == lvl[0]
+        return eql(n.left, cl+1) and eql(n.right, cl+1)
+    return eql(r, 0)
+
 def insert(r: Node, value: int) -> Node:
     "Insert `value` into a BST starting at `r`."
     if not r:
