@@ -250,3 +250,11 @@ def no_siblings_nodes(t: Node) -> list:
     if t:
         enum(t.left, t.right)
     return sorted(syb)
+
+def has_path_sum(n: Node, s: int) -> bool:
+    "True if there is a path from root `n` a leaf with sum = `s`."
+    s -= n.data
+    return s > 0 and (
+        n.left and has_path_sum(n.left, s) or
+        n.right and has_path_sum(n.right, s)) or (
+        s == 0 and not n.left and not n.right)

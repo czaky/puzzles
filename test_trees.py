@@ -131,3 +131,10 @@ class TestTrees(unittest.TestCase):
             4, t.successor(t.make('5 3 2 -1 -1 4 -1 -1 6'), 3).data)
         self.assertEqual(
             3, t.successor(t.make('5 3 2 -1 -1 4 -1 -1 6'), 2).data)
+
+    def test_has_path_sum(self):
+        "Test the `has_path_sum` function."
+        self.assertTrue(t.has_path_sum(t.make('1'), 1))
+        self.assertTrue(t.has_path_sum(t.make('1 2 3'), 6))
+        self.assertTrue(t.has_path_sum(t.make('2 1 -1 -1 2'), 3))
+        self.assertFalse(t.has_path_sum(t.make('1 2 -1 -1 3 4 5'), 6))
