@@ -30,3 +30,7 @@ def binary_string_by_three(s: str) -> bool:
     # difference of even and odd "1"s is divisible by 3
     return (sum(c == "1" for i, c in enumerate(s) if i%2) -
             sum(c == "1" for i, c in enumerate(s) if i%2 == 0))%3 == 0
+
+def josephus(n: int, k: int) -> int:
+    "Return zero-based index of survivor in Josephus problem."
+    return (josephus(n-1, k) + k) % n if n > 1 else 0

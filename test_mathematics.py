@@ -23,3 +23,8 @@ class TestNumbers(unittest.TestCase):
         self.assertEqual(7, m.frog_hops(4))
         self.assertEqual(13, m.frog_hops(5))
         self.assertEqual(24, m.frog_hops(6))
+
+    def test_josephus(self):
+        "Validated solution to `josephus` problem."
+        self.assertEqual(0, m.josephus(0, 10))
+        self.assertEqual(6, m.josephus(7, 2))
