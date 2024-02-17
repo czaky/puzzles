@@ -149,3 +149,29 @@ def loop_length(head: Node) -> int:
         c += 1
         fast = fast.next
     return c
+
+def swap_pairs(h: Node) -> Node:
+    "Swap pairs of nodes in the `h` list."
+    if not h or not h.next:
+        return h
+    n = h
+    nn = n.next
+    n3 = nn.next
+    # swap
+    # h=n->nn->n3
+    # h=nn->n->n3
+    h = nn
+    nn.next = n
+    n.next = n3
+    while n3 and n3.next:
+        # shift
+        # nn->n->n3->n4->n5
+        #     p->n ->nn->n3
+        p, n, nn, n3 = n, n3, n3.next, n3.next.next
+        # swap
+        # p->n->nn->n3
+        # p->nn->n->n3
+        p.next = nn
+        nn.next = n
+        n.next = n3
+    return h

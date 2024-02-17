@@ -99,3 +99,13 @@ class TestLinkedLists(unittest.TestCase):
         self.assertEqual(1, ll.loop_length(ll.make([1, 2, 3], 2)))
         self.assertEqual(2, ll.loop_length(ll.make([1, 2, 3], 1)))
         self.assertEqual(3, ll.loop_length(ll.make([1, 2, 3], 0)))
+
+    def test_swap_pairs(self):
+        "Test `swap_pairs` function."
+        self.assertIsNone(ll.swap_pairs(ll.make([])))
+
+        self.assertEqual([1], list(ll.swap_pairs(ll.make([1]))))
+        self.assertEqual([2, 1], list(ll.swap_pairs(ll.make([1, 2]))))
+        self.assertEqual([2, 1, 3], list(ll.swap_pairs(ll.make([1, 2, 3]))))
+        self.assertEqual(
+            [2, 1, 4, 3], list(ll.swap_pairs(ll.make([1, 2, 3, 4]))))
