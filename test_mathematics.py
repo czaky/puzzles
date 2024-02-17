@@ -28,3 +28,9 @@ class TestNumbers(unittest.TestCase):
         "Validated solution to `josephus` problem."
         self.assertEqual(0, m.josephus(0, 10))
         self.assertEqual(6, m.josephus(7, 2))
+
+    def test_factorial_trailing_zeros(self):
+        "Validated solution to `factorial_trailing_zeros` problem."
+        self.assertEqual(0, m.factorial_trailing_zeros(3))
+        self.assertEqual(1, m.factorial_trailing_zeros(5))
+        self.assertEqual(6, m.factorial_trailing_zeros(25))

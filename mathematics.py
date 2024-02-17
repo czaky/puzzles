@@ -34,3 +34,17 @@ def binary_string_by_three(s: str) -> bool:
 def josephus(n: int, k: int) -> int:
     "Return zero-based index of survivor in Josephus problem."
     return (josephus(n-1, k) + k) % n if n > 1 else 0
+
+def factorial_trailing_zeros(n: int) -> int:
+    "Returns number of trailing zeros in a factorial of `n`."
+    # Zeros come from 5 * 2.
+    # Count only 5s as there will be more 2s.
+    # 1! to 24! has n // 5 fives as factor.
+    # 25! to 124! has 2 * n // 5 fives as factor.
+    # ...
+    c = 0
+    j = 5
+    while j <= n:
+        c += n // j
+        j *= 5
+    return c
