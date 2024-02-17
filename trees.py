@@ -252,7 +252,7 @@ def no_siblings_nodes(t: Node) -> list:
     return sorted(syb)
 
 def has_path_sum(n: Node, s: int) -> bool:
-    "True if there is a path from root `n` a leaf with sum = `s`."
+    "True if there is a path from root `n` to a leaf with sum = `s`."
     s -= n.data
     return s > 0 and (
         n.left and has_path_sum(n.left, s) or
