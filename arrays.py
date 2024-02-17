@@ -209,3 +209,12 @@ def pascal_triangle_row(n: int) -> List[int]:
         for j in range(1, i):
             cr[j] = pr[j-1] + pr[j]
     return cr
+
+def min_diff(a: List[int], k: int) -> int:
+    "Smallest difference in a sublist of `a` of `k` elements."
+    a.sort()
+    d = a[-1] - a[0]
+    k -= 1
+    for i in range(len(a) - k):
+        d = min(d, a[i+k] - a[i])
+    return d

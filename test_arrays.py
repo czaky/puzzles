@@ -189,3 +189,9 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual([1, 1], ar.pascal_triangle_row(2))
         self.assertEqual([1, 2, 1], ar.pascal_triangle_row(3))
         self.assertEqual([1, 3, 3, 1], ar.pascal_triangle_row(4))
+
+    def test_min_diff(self):
+        "Test `min_diff` function."
+        self.assertEqual(4, ar.min_diff([1, 9, 5, 11, 2], 3))
+        self.assertEqual(7, ar.min_diff([2, 30, 8, 11, 20, 1, 3], 4))
+        self.assertEqual(2, ar.min_diff([1, 7, 3], 2))
