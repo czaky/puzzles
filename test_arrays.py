@@ -3,7 +3,7 @@
 import unittest
 import arrays as ar
 
-class TestRotatedArray(unittest.TestCase):
+class TestRotatedArray(unittest.TestCase): # pylint: disable=too-many-public-methods
     """Test class for sorted, rotated array puzzles."""
     def test_rotated_minimum(self):
         "Test `rotated_minimum` function."
