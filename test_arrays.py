@@ -195,3 +195,12 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual(4, ar.min_diff([1, 9, 5, 11, 2], 3))
         self.assertEqual(7, ar.min_diff([2, 30, 8, 11, 20, 1, 3], 4))
         self.assertEqual(2, ar.min_diff([1, 7, 3], 2))
+
+    def test_duplicated_sorted_find_unique(self):
+        "Test `duplicated_sorted_find_unique` function."
+        self.assertEqual(
+            5, ar.duplicated_sorted_find_unique([1, 1, 5, 8, 8]))
+        self.assertEqual(
+            1, ar.duplicated_sorted_find_unique([1, 3, 3, 4, 4, 5, 5]))
+        self.assertEqual(
+            3, ar.duplicated_sorted_find_unique([1, 1, 3]))

@@ -225,3 +225,9 @@ def bubble_sort(a: List[int]):
     for i in range(n-1):
         j = min(range(i, n), key=lambda j: a[j])
         a[i], a[j] = a[j], a[i]
+
+def duplicated_sorted_find_unique(a: List[int]) -> int:
+    "In a sorted array find the unique one with every other duplicated."
+    # 1 1 2 2 3 4 4 5 5
+    # 1=1 2=2 3<4 4<5 5
+    return a[bs.binary(lambda m: a[2*m]<a[2*m+1], 0, len(a)//2 -1, -1)*2 + 2]
