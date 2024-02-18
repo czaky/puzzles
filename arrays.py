@@ -243,3 +243,10 @@ def duplicated_sorted_find_unique(a: List[int]) -> int:
     # 1 1 2 2 3 4 4 5 5
     # 1=1 2=2 3<4 4<5 5
     return a[bs.binary(lambda m: a[2*m]<a[2*m+1], 0, len(a)//2 -1, -1)*2 + 2]
+
+def max_equal_zero_and_one_length(a: List[int]) -> int:
+    "Return the max length of a sublist containing equal number of 0 and 1."
+    d = {0:-1}
+    return reduce(max, (
+        j - d.setdefault(cs, j)
+        for j, cs in enumerate(accumulate(map(lambda x: 2*x-1, a)))), 0)

@@ -204,3 +204,16 @@ class TestUnsortedArray(unittest.TestCase):
             1, ar.duplicated_sorted_find_unique([1, 3, 3, 4, 4, 5, 5]))
         self.assertEqual(
             3, ar.duplicated_sorted_find_unique([1, 1, 3]))
+
+    def test_max_equal_zero_and_one_length(self):
+        "Test `max_equal_zero_and_one_length` function."
+        self.assertEqual(
+            4, ar.max_equal_zero_and_one_length([1, 0, 1, 0, 1]))
+        self.assertEqual(
+            6, ar.max_equal_zero_and_one_length([1, 0, 1, 1, 1, 0, 0]))
+        self.assertEqual(
+            2, ar.max_equal_zero_and_one_length([0, 0, 1]))
+        self.assertEqual(
+            0, ar.max_equal_zero_and_one_length([0]))
+        self.assertEqual(
+            0, ar.max_equal_zero_and_one_length([]))
