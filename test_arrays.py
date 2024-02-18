@@ -222,5 +222,5 @@ class TestRotatedArray2(unittest.TestCase):
 
     def test_toys_with_budget(self):
         "Test `toys_with_budget` function."
-        self.assertEqual(4, ar.toys_with_budget([5, 4, 3, 2, 20], 15))
+        self.assertEqual(4, ar.toys_with_budget([60, 5, 4, 3, 2, 20], 15))
         self.assertEqual(3, ar.toys_with_budget([30, 20, 50], 100))
