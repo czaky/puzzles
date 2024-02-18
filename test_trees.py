@@ -138,3 +138,15 @@ class TestTrees(unittest.TestCase):
         self.assertTrue(t.has_path_sum(t.make('1 2 3'), 6))
         self.assertTrue(t.has_path_sum(t.make('2 1 -1 -1 2'), 3))
         self.assertFalse(t.has_path_sum(t.make('1 2 -1 -1 3 4 5'), 6))
+
+    def test_count_in_range(self):
+        "Test `count_in_range` function."
+        self.assertEqual(2, t.count_in_range(t.make('2 1'), 1, 2))
+        self.assertEqual(
+            2, t.count_in_range(t.make('2 1 -1 -1 3'), 1, 2))
+        self.assertEqual(
+            3, t.count_in_range(t.make('5 3 2 -1 -1 4 -1 -1 6'), 2, 4))
+        self.assertEqual(
+            2, t.count_in_range(t.make('5 3 2 -1 -1 4 -1 -1 6'), 3, 4))
+        self.assertEqual(
+            2, t.count_in_range(t.make('5 3 2 -1 -1 4 -1 -1 6'), 2, 3))

@@ -258,3 +258,10 @@ def has_path_sum(n: Node, s: int) -> bool:
         n.left and has_path_sum(n.left, s) or
         n.right and has_path_sum(n.right, s)) or (
         s == 0 and not n.left and not n.right)
+
+def count_in_range(n: Node, l: int, h: int) -> int:
+    "Count number of nodes form `n` in range (`l`...`h`)."
+    return (int(l <= n.data <= h) +
+        (count_in_range(n.left, l, h) if n.data > l else 0) +
+        (count_in_range(n.right, l, h) if n.data < h else 0)
+        ) if n else 0
