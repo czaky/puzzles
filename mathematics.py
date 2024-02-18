@@ -1,5 +1,8 @@
 """Module for number and arithmetic related puzzles."""
 
+from functools import reduce
+from operator import mul
+
 def floor_sqrt(x: int) -> int:
     "Return the floor of `sqrt(x)`."
     if x in (0, 1):
@@ -48,3 +51,8 @@ def factorial_trailing_zeros(n: int) -> int:
         c += n // j
         j *= 5
     return c
+
+def paths_in_matrix(m: int, n: int) -> int:
+    "Return number of unique paths from (1,1) to (m,n)."
+    # (m+n-2)! / (m-1)! / (n-1)!
+    return reduce(mul, range(m, m+n-1), 1) // reduce(mul, range(2, n), 1)

@@ -34,3 +34,9 @@ class TestNumbers(unittest.TestCase):
         self.assertEqual(0, m.factorial_trailing_zeros(3))
         self.assertEqual(1, m.factorial_trailing_zeros(5))
         self.assertEqual(6, m.factorial_trailing_zeros(25))
+
+    def test_paths_in_matrix(self):
+        "Validated solution to `paths_in_matrix` problem."
+        self.assertEqual(1, m.paths_in_matrix(1, 1))
+        self.assertEqual(6, m.paths_in_matrix(3, 3))
+        self.assertEqual(705432, m.paths_in_matrix(12, 12))
