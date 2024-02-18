@@ -219,8 +219,8 @@ def min_diff(a: List[int], k: int) -> int:
         d = min(d, a[i+k] - a[i])
     return d
 
-def bubble_sort(a: List[int]):
-    "Sort array a using bubble sort."
+def selection_sort(a: List[int]):
+    "Sort array `a` using selection sort."
     n = len(a)
     for i in range(n-1):
         j = min(range(i, n), key=lambda j: a[j])
