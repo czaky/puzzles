@@ -52,7 +52,7 @@ def roman_to_decimal(r: str) -> int:
     prev = 0
     for char in r:
         curr = R2D[char]
-        d += prev if prev >= curr else -prev
+        d += prev * (int(prev >= curr)*2 - 1)
         prev = curr
     return d + prev
 
