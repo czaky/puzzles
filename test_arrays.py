@@ -3,7 +3,7 @@
 import unittest
 import arrays as ar
 
-class TestRotatedArray(unittest.TestCase):  # pylint: disable-msg=R0904
+class TestRotatedArray(unittest.TestCase):
     """Test class for sorted, rotated array puzzles."""
     def test_rotated_minimum(self):
         "Test `rotated_minimum` function."
@@ -205,6 +205,8 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual(
             3, ar.duplicated_sorted_find_unique([1, 1, 3]))
 
+class TestRotatedArray2(unittest.TestCase):
+    """Test class for sorted, rotated array puzzles."""
     def test_max_equal_zero_and_one_length(self):
         "Test `max_equal_zero_and_one_length` function."
         self.assertEqual(
