@@ -74,16 +74,18 @@ def right_view(root: Node) -> list:
     enum(root, 1)
     return view
 
-def breadth_first(t: Node) -> list:
-    """Return the node values in breadth first order."""
+def bfo(t: Node):
+    "Yield node values in breadth first order."
     q = deque([t])
-    o = []
     while q:
         n = q.popleft()
-        o.append(n.data)
+        yield n.data
         _ = n.left and q.append(n.left)
         _ = n.right and q.append(n.right)
-    return o
+
+def breadth_first(t: Node) -> list:
+    """Return the node values in breadth first order."""
+    return list(bfo(t))
 
 def reversed_level_order(t: Node) -> list:
     "Return reversed breadth first (level order) enumeration."
@@ -97,9 +99,8 @@ def reversed_level_order(t: Node) -> list:
         _ = n.left and q.append(n.left)
     return list(reversed(r))
 
-def depth_first(t: Node) -> list:
-    """Return the node values in depth first order."""
-    o = []
+def dfo(t: Node):
+    "Yield node values in depth first order."
     s = []
     c = t
     while s or c:
@@ -107,9 +108,12 @@ def depth_first(t: Node) -> list:
             s.append(c)
             c = c.left
         c = s.pop()
-        o.append(c.data)
+        yield c.data
         c = c.right
-    return o
+
+def depth_first(t: Node) -> list:
+    """Return the node values in depth first order."""
+    return list(dfo(t))
 
 def successor(t: Node, x: int) -> Optional[Node]:
     "Return the successor Node in `t` for value `x` in order enumeration."
