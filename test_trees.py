@@ -150,3 +150,9 @@ class TestTrees(unittest.TestCase):
             2, t.count_in_range(t.make('5 3 2 -1 -1 4 -1 -1 6'), 3, 4))
         self.assertEqual(
             2, t.count_in_range(t.make('5 3 2 -1 -1 4 -1 -1 6'), 2, 3))
+
+    def test_median(self):
+        "Test `median` function."
+        self.assertEqual(1.5, t.median(t.make('2 1')))
+        self.assertEqual(2, t.median(t.make('2 1 -1 -1 3')))
+        self.assertEqual(4, t.median(t.make('5 3 2 -1 -1 4 -1 -1 6')))

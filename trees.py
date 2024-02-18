@@ -3,6 +3,7 @@
 import math
 from collections import deque
 from typing import Tuple, Optional
+from itertools import islice
 
 class Node:  # pylint: disable=too-few-public-methods
     "Node of a binary tree."
@@ -269,3 +270,9 @@ def count_in_range(n: Node, l: int, h: int) -> int:
         (count_in_range(n.left, l, h) if n.data > l else 0) +
         (count_in_range(n.right, l, h) if n.data < h else 0)
         ) if n else 0
+
+def median(t: Node) -> float:
+    "Return median value for tree starting at `t`."
+    n = sum(1 for _ in dfo(t))
+    it = islice(dfo(t), (n-1)//2, None)
+    return next(it) if n%2 else (next(it) + next(it)) / 2
