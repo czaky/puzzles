@@ -226,6 +226,18 @@ def selection_sort(a: List[int]):
         j = min(range(i, n), key=lambda j: a[j])
         a[i], a[j] = a[j], a[i]
 
+def bubble_sort(a: List[int]):
+    "Sort array `a` using bubble sort."
+    n = len(a)
+    for i in range(1, n):
+        swapped = False
+        for j in range(n - i):
+            if a[j] > a[j+1]:
+                a[j], a[j+1] = a[j+1], a[j]
+                swapped = True
+        if not swapped:
+            break
+
 def duplicated_sorted_find_unique(a: List[int]) -> int:
     "In a sorted array find the unique one with every other duplicated."
     # 1 1 2 2 3 4 4 5 5
