@@ -250,3 +250,8 @@ def max_equal_zero_and_one_length(a: List[int]) -> int:
     return reduce(max, (
         j - d.setdefault(cs, j)
         for j, cs in enumerate(accumulate(map(lambda x: 2*x-1, a)))), 0)
+
+def toys_with_budget(a: List[int], b: int) -> int:
+    "Returns number of toys from `a` that can be bought with budget `b`."
+    return next(
+        (i for i, c in enumerate(accumulate(sorted(a))) if c > b), len(a))

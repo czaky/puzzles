@@ -219,3 +219,8 @@ class TestRotatedArray2(unittest.TestCase):
             0, ar.max_equal_zero_and_one_length([0]))
         self.assertEqual(
             0, ar.max_equal_zero_and_one_length([]))
+
+    def test_toys_with_budget(self):
+        "Test `toys_with_budget` function."
+        self.assertEqual(4, ar.toys_with_budget([5, 4, 3, 2, 20], 15))
+        self.assertEqual(3, ar.toys_with_budget([30, 20, 50], 100))
