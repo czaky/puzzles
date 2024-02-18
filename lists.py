@@ -42,6 +42,19 @@ def middle(head: Node) -> Optional[Node]:
         slow = slow.next
     return slow
 
+def delete_middle(head: Node) -> Optional[Node]:
+    "Delete the middle from the list starting at `head`."
+    slow = fast = head
+    prev = None
+    while fast and fast.next:
+        fast = fast.next.next
+        prev = slow
+        slow = slow.next
+    if prev:
+        prev.next = slow.next
+        return head
+    return slow and slow.next
+
 def nth(head: Node, n: int) -> Optional[Node]:
     """
 Return nth node from the linked list starting at `head`.

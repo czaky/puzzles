@@ -49,6 +49,16 @@ class TestLinkedLists(unittest.TestCase):
         self.assertEqual(2, ll.middle(ll.make([1, 2, 3])).data)
         self.assertEqual(3, ll.middle(ll.make([1, 2, 3, 4])).data)
 
+    def test_delete_middle(self):
+        "Test `delete_middle` node function."
+        self.assertIsNone(ll.delete_middle(ll.make([])))
+        self.assertIsNone(ll.delete_middle(ll.make([1])))
+
+        self.assertEqual([1], list(ll.delete_middle(ll.make([1, 2]))))
+        self.assertEqual([1, 3], list(ll.delete_middle(ll.make([1, 2, 3]))))
+        self.assertEqual(
+            [1, 2, 4], list(ll.delete_middle(ll.make([1, 2, 3, 4]))))
+
     def test_nth(self):
         "Test `nth` function."
         l = ll.make([1, 2, 3, 4])
