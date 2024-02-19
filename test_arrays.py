@@ -224,3 +224,12 @@ class TestRotatedArray2(unittest.TestCase):
         "Test `toys_with_budget` function."
         self.assertEqual(4, ar.toys_with_budget([60, 5, 4, 3, 2, 20], 15))
         self.assertEqual(3, ar.toys_with_budget([30, 20, 50], 100))
+
+    def test_first_last(self):
+        "Test `first_last` function."
+        self.assertEqual((0, 0), ar.first_last([1, 2, 3, 3, 3, 4], 1))
+        self.assertEqual((2, 4), ar.first_last([1, 2, 3, 3, 3, 4], 3))
+        self.assertEqual((0, 1), ar.first_last([1, 1, 2, 3, 3, 3, 4], 1))
+        self.assertEqual((6, 6), ar.first_last([1, 1, 2, 3, 3, 3, 4], 4))
+        self.assertEqual((4, 6), ar.first_last([1, 1, 2, 3, 4, 4, 4], 4))
+        self.assertEqual((-1, -1), ar.first_last([1, 1, 2, 3, 4, 4, 4], 5))

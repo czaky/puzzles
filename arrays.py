@@ -1,7 +1,7 @@
 """Module for the array/list related puzzles."""
 
 from collections import Counter
-from typing import List, Optional
+from typing import List, Optional, Tuple
 from functools import reduce
 from operator import mul
 from itertools import accumulate
@@ -255,3 +255,9 @@ def toys_with_budget(a: List[int], b: int) -> int:
     "Returns number of toys from `a` that can be bought with budget `b`."
     return next(
         (i for i, c in enumerate(accumulate(sorted(a))) if c > b), len(a))
+
+def first_last(a: List[int], x: int) -> Tuple[int, int]:
+    "Return the first and last index of `x` in a sorted array `a`."
+    l = bs.binary(lambda m: a[m] >= x, 0, len(a)-1, -1) + 1
+    h = bs.binary(lambda m: a[m] > x, l, len(a)-1, -1)
+    return (l, h) if l<=h else (-1,-1)
