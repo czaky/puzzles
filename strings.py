@@ -2,6 +2,7 @@
 
 from collections import Counter
 from typing import List
+from functools import lru_cache
 
 def reverse_words(s: str, sep: str=' ') -> str:
     "Reverse the order of words in `s`, separated by `sep`."
@@ -71,15 +72,23 @@ def edit_distance(s: str, t: str) -> int:
     "Edit distance between two strings `s` and `t`."
     # The `dp` matrix is |s|x|t| in size.
     # The execution takes O(|s|*|t|) steps.
-    dp = [[-1] * len(t) for _ in s]
+    @lru_cache(None)
     def dist(i, j):
-        if i < 0 or j < 0:
-            # both empty or add/remove letters
-            return abs(i - j)
-        if dp[i][j] < 0:
-            dp[i][j] = min(
-                dist(i-1, j) + 1,  # add
-                dist(i, j-1) + 1,  # remove
-                dist(i-1, j-1) + int(s[i] != t[j]))  # swap
-        return dp[i][j]
+        return min(
+                dist(i-1, j) + 1,
+                dist(i, j-1) + 1,
+                dist(i-1, j-1) + int(s[i] != t[j])
+                ) if min(i,j) >= 0 else abs(i - j)
     return dist(len(s)-1, len(t)-1)
+
+def word_break(s: str, d) -> bool:
+    "Can the string `s` be broken in words from dictionary `d`?"
+    d = set(d)
+    d.add('')
+    mx = max(map(len, d))
+    @lru_cache(None)
+    def rec(sub):
+        return sub in d or any(
+            sub[:i] in d and rec(sub[i:])
+            for i in range(min(mx, len(sub)), 0, -1))
+    return rec(s)
