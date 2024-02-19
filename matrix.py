@@ -17,3 +17,13 @@ def find_sorted(hay: List[List[int]], needle: int) -> bool:
         else:
             return True
     return False
+
+def rotate90cc(m: List[List[int]]):
+    "Rotate matrix `m` 90deg counter-clockwise."
+    # Transpose
+    n = len(m)
+    for i in range(n):
+        for j in range(i, n):
+            m[i][j],m[j][i] = m[j][i],m[i][j]
+    # Reverse the rows.
+    m.reverse()

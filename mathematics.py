@@ -21,13 +21,6 @@ def floor_sqrt(x: int) -> int:
             h = m - 1
     return r
 
-def frog_hops(n: int) -> int:
-    "In how many ways a frog can cover N tiles when jumping: 1, 2, or 3?"
-    ways = [0, 1, 2, 4]
-    for i in range(4, n + 1):
-        ways[i%4] = ways[(i-1)%4] + ways[(i-2)%4] + ways[(i-3)%4]
-    return ways[n%4]
-
 def binary_string_by_three(s: str) -> bool:
     "True if binary number in `s` is divisible by 3."
     # difference of even and odd "1"s is divisible by 3
@@ -56,3 +49,19 @@ def paths_in_matrix(m: int, n: int) -> int:
     "Return number of unique paths from (1,1) to (m,n)."
     # (m+n-2)! / (m-1)! / (n-1)!
     return reduce(mul, range(m, m+n-1), 1) // reduce(mul, range(2, n), 1)
+
+def frog_hops(n: int) -> int:
+    "In how many ways a frog can cover N tiles when jumping: 1, 2, or 3?"
+    if n == 0:
+        return 0
+    a, b, c = 1, 1, 2
+    for _ in range(n):
+        a, b, c = b, c, a + b + c
+    return a
+
+def fibonacci(n: int) -> int:
+    "Returns nth Fibonacci number."
+    a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b
+    return a
