@@ -289,3 +289,18 @@ def width(t: Node) -> int:
                 _ = n.left and q.append(n.left)
                 _ = n.right and q.append(n.right)
     return reduce(max, level_width())
+
+def max_path_sum(t: Node) -> int:
+    "Return max path sum between nodes of rank 1."
+    mx = [-math.inf]
+    def rec(n):
+        if not n:
+            return 0
+        ls = rec(n.left)
+        rs = rec(n.right)
+        if (n.left and n.right) or n == t:
+            mx[0] = max(mx[0], n.data + ls + rs)
+            return n.data + max(ls, rs)
+        return n.data + ls + rs
+    rec(t)
+    return mx[0]
