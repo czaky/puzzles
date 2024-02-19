@@ -233,3 +233,15 @@ class TestRotatedArray2(unittest.TestCase):
         self.assertEqual((6, 6), ar.first_last([1, 1, 2, 3, 3, 3, 4], 4))
         self.assertEqual((4, 6), ar.first_last([1, 1, 2, 3, 4, 4, 4], 4))
         self.assertEqual((-1, -1), ar.first_last([1, 1, 2, 3, 4, 4, 4], 5))
+
+    def test_merge(self):
+        "Test `merge` function."
+        a = [4, 5, 6, 12, 13]
+        b = [0, 7, 8, 13, 12, 15]
+        ar.merge(a, b)
+        self.assertEqual([0, 4,  5,  6,  7], a)
+        self.assertEqual([8, 12, 12, 13, 13, 15], b)
+        a,b = b,a
+        ar.merge(a, b)
+        self.assertEqual([0, 4,  5,  6,  7, 8], a)
+        self.assertEqual([12, 12, 13, 13, 15], b)

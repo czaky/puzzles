@@ -261,3 +261,14 @@ def first_last(a: List[int], x: int) -> Tuple[int, int]:
     l = bs.binary(lambda m: a[m] >= x, 0, len(a)-1, -1) + 1
     h = bs.binary(lambda m: a[m] > x, l, len(a)-1, -1)
     return (l, h) if l<=h else (-1,-1)
+
+def minmax(t):
+    "Return the min and max values of `t`."
+    return min(t), max(t)
+
+def merge(a: List[int], b: List[int]):
+    "Merge two sorted lists in place. `a` gets the lower elements."
+    l = min(len(a), len(b))
+    a[:-l-1:-1], b[:l] = zip(*map(minmax, zip(reversed(a), b)))
+    a.sort()
+    b.sort()
