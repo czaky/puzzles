@@ -94,3 +94,9 @@ class TestStrings(unittest.TestCase):
         self.assertEqual(
             10, s.max_distinct_char_substring(
                 "aldshflasghdfasgfkhgasdfasdgvfyweofyewyrtyefgv"))
+
+    def test_edit_distance(self):
+        "Test the `edit_distance` function."
+        self.assertEqual(0, s.edit_distance("aa", "aa"))
+        self.assertEqual(4, s.edit_distance("hallo", "hey"))
+        self.assertEqual(2, s.edit_distance("abba", "baba"))

@@ -66,3 +66,20 @@ def max_distinct_char_substring(s: str) -> int:
         x = max(x, j - i)
         seen[c] = j
     return x
+
+def edit_distance(s: str, t: str) -> int:
+    "Edit distance between two strings `s` and `t`."
+    # The `dp` matrix is |s|x|t| in size.
+    # The execution takes O(|s|*|t|) steps.
+    dp = [[-1] * len(t) for _ in s]
+    def dist(i, j):
+        if i < 0 or j < 0:
+            # both empty or add/remove letters
+            return abs(i - j)
+        if dp[i][j] < 0:
+            dp[i][j] = min(
+                dist(i-1, j) + 1,  # add
+                dist(i, j-1) + 1,  # remove
+                dist(i-1, j-1) + int(s[i] != t[j]))  # swap
+        return dp[i][j]
+    return dist(len(s)-1, len(t)-1)
