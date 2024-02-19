@@ -4,6 +4,7 @@ import math
 from collections import deque
 from typing import Tuple, Optional
 from itertools import islice
+from functools import reduce
 
 class Node:  # pylint: disable=too-few-public-methods
     "Node of a binary tree."
@@ -276,3 +277,15 @@ def median(t: Node) -> float:
     n = sum(1 for _ in dfo(t))
     it = islice(dfo(t), (n-1)//2, None)
     return next(it) if n%2 else (next(it) + next(it)) / 2
+
+def width(t: Node) -> int:
+    "Max width at any level in tree `t`."
+    def level_width():
+        q = deque([t])
+        while q:
+            yield len(q)
+            for _ in range(len(q)):
+                n = q.popleft()
+                _ = n.left and q.append(n.left)
+                _ = n.right and q.append(n.right)
+    return reduce(max, level_width())

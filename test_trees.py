@@ -156,3 +156,9 @@ class TestTrees(unittest.TestCase):
         self.assertEqual(1.5, t.median(t.make('2 1')))
         self.assertEqual(2, t.median(t.make('2 1 -1 -1 3')))
         self.assertEqual(4, t.median(t.make('5 3 2 -1 -1 4 -1 -1 6')))
+
+    def test_width(self):
+        "Test `width` function."
+        self.assertEqual(1, t.width(t.make('2 1')))
+        self.assertEqual(2, t.width(t.make('2 1 -1 -1 3')))
+        self.assertEqual(3, t.width(t.make('5 3 2 -1 -1 4 -1 -1 7 6')))
