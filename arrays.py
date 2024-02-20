@@ -272,3 +272,11 @@ def merge(a: List[int], b: List[int]):
     a[:-l-1:-1], b[:l] = zip(*map(minmax, zip(reversed(a), b)))
     a.sort()
     b.sort()
+
+def meta_frog_jumps(frogs: List[int], pads: int) -> int:
+    "Return min hops for `frogs` traversing `pads`, jumping over each other."
+    frogs.sort()
+    jumps = pads - frogs[-1]
+    for fi in range(1, len(frogs)):
+        jumps += frogs[fi] - frogs[fi-1]
+    return jumps
