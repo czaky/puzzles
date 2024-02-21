@@ -4,9 +4,12 @@ from collections import Counter
 from typing import List, Optional, Tuple
 from functools import reduce, lru_cache
 from operator import mul
-from itertools import accumulate
-from iter import skip
+from itertools import accumulate, starmap, islice
 import search as bs
+
+def skip(it, n: int=1):
+    "Skip `n` elements in iterator `it`."
+    return islice(it, n, None)
 
 def subrev(a: list, s: int=0, e: int=-1):
     "Reverse a subsequence of `a` from `s` to `e` (inclusive)."
@@ -294,9 +297,9 @@ def min_partition_diff(a: List[int]) -> int:
 def max_histogram_rectangle(h: list) -> int:
     "Return the max rectangular area under the histogram `h`."
     s = []
-    def it(j, v):
+    def it(j, v=0):
         while s and h[s[-1]] > v:
             yield h[s.pop()] * ((j - s[-1] -1) if s else j)
         s.append(j)
-    rect = lambda jv: max(it(*jv), default=0)
-    return max(*map(rect, enumerate(h)), rect((len(h), 0)))
+        yield 0
+    return max(*map(max, starmap(it, enumerate(h))), *it(len(h)))
