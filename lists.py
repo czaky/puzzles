@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-class Node:  # pylint: disable=too-few-public-methods
+class Node:
     "Linked List Node."
     def __init__(self, data):
         self.data = data

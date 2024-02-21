@@ -6,7 +6,7 @@ from typing import Tuple, Optional
 from itertools import islice
 from functools import reduce
 
-class Node:  # pylint: disable=too-few-public-methods
+class Node:
     "Node of a binary tree."
     def __init__(self, data):
         self.data = data

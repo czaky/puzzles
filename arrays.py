@@ -1,5 +1,4 @@
 """Module for the array/list related puzzles."""
-# pylint: disable=unnecessary-lambda-assignment
 
 from collections import Counter
 from typing import List, Optional, Tuple
