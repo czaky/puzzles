@@ -291,24 +291,12 @@ def min_partition_diff(a: List[int]) -> int:
         return min(rec(i-1, s1 + a[i]), rec(i-1, s1))
     return rec(len(a)-1, 0)
 
-def max_histogram_rectangle(h: List[int]) -> int:
+def max_histogram_rectangle(h: list) -> int:
     "Return the max rectangular area under the histogram `h`."
-    s = []  # list of indexes to elements in increasing value
-    mx = [0]  # accumulator
-    def measure(j, v):
-        # Remove all indexes to larger elements
-        # before appending this one.
+    s = []
+    def it(j, v):
         while s and h[s[-1]] > v:
-            # Use the previous stack index as height of the rectangle.
-            t = s.pop()
-            # the start is indexed on the previous stack position.
-            i = s[-1] if s else -1
-            # the end is the current `j` position.
-            # `i` and and `j` are exclusive of the area.
-            mx[0] = max(mx[0], (j - i -1) * h[t])
-
-    for j, v in enumerate(h):
-        measure(j, v)
+            yield h[s.pop()] * ((j - s[-1] -1) if s else j)
         s.append(j)
-    measure(len(h), 0)
-    return mx[0]
+    rect = lambda jv: reduce(max, it(*jv), 0)
+    return max(*map(rect, enumerate(h)), rect((len(h), 0)))
