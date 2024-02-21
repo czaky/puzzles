@@ -111,7 +111,7 @@ class TestStrings(unittest.TestCase):
         self.assertEqual("ll", s.largest_palindrome("hallo"))
         self.assertEqual("aba", s.largest_palindrome("aba"))
         self.assertEqual("abba", s.largest_palindrome("abba"))
-        self.assertEqual("bab", s.largest_palindrome("babassus"))
+        self.assertEqual("aba", s.largest_palindrome("babassus"))
         self.assertEqual("aba", s.largest_palindrome("12aba"))
         self.assertEqual("abba", s.largest_palindrome("12abba"))
         self.assertEqual("aba", s.largest_palindrome("aba12"))

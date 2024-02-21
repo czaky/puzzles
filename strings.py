@@ -98,15 +98,21 @@ def largest_palindrome(s: str) -> str:
     sub = [0, 0]
     n = len(s)
     def is_palindrome(i, even):
-        for j in range(min(i, n-i + even -1) + 1):
+        r = min(i, n-i + even -1)
+        if r*2 - even < sub[1] - sub[0]:
+            return
+        for j in range(1, r+1):
             a = i-j
             b = i+j - even
             if s[a] != s[b]:
                 break
             if sub[1] - sub[0] < b - a:
                 sub[:] = [a, b]
-    for i in range(1, n):
-        is_palindrome(i, even=0)
-        is_palindrome(i, even=1)
+    m = n//2
+    for i in range(1, m + 1):
+        is_palindrome(m - i, even=0)
+        is_palindrome(m - i, even=1)
+        is_palindrome(m + i -1, even=0)
+        is_palindrome(m + i -1, even=1)
 
     return s[sub[0]:sub[1] + 1]
