@@ -255,3 +255,15 @@ class TestRotatedArray2(unittest.TestCase):
         self.assertEqual(3, ar.min_partition_diff([2, 5]))
         self.assertEqual(26 , ar.min_partition_diff([60, 5, 4, 3, 2, 20]))
         self.assertEqual(0, ar.min_partition_diff([30, 20, 50]))
+
+    def test_max_histogram_rectangle(self):
+        "Test `max_histogram_rectangle` function."
+        self.assertEqual(6, ar.max_histogram_rectangle([6]))
+        self.assertEqual(4, ar.max_histogram_rectangle([3, 2]))
+        self.assertEqual(4, ar.max_histogram_rectangle([2, 3]))
+        self.assertEqual(4, ar.max_histogram_rectangle([3, 2, 1]))
+        self.assertEqual(4, ar.max_histogram_rectangle([2, 3, 1]))
+        self.assertEqual(4, ar.max_histogram_rectangle([1, 3, 2]))
+        self.assertEqual(4, ar.max_histogram_rectangle([1, 2, 3]))
+        self.assertEqual(12 , ar.max_histogram_rectangle([6,2,5,4,5,1,6]))
+        self.assertEqual(7, ar.max_histogram_rectangle([1, 2, 1, 2, 1, 2, 1]))
