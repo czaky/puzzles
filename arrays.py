@@ -11,6 +11,10 @@ def skip(it, n: int=1):
     "Skip `n` elements in iterator `it`."
     return islice(it, n, None)
 
+def minmax(t):
+    "Return the min and max values of `t`."
+    return min(t), max(t)
+
 def subrev(a: list, s: int=0, e: int=-1):
     "Reverse a subsequence of `a` from `s` to `e` (inclusive)."
     if s<0:
@@ -260,10 +264,6 @@ def first_last(a: List[int], x: int) -> Tuple[int, int]:
     l = bs.binary(lambda m: a[m] >= x, 0, len(a)-1, -1) + 1
     h = bs.binary(lambda m: a[m] > x, l, len(a)-1, -1)
     return (l, h) if l<=h else (-1,-1)
-
-def minmax(t):
-    "Return the min and max values of `t`."
-    return min(t), max(t)
 
 def merge(a: List[int], b: List[int]):
     "Merge two sorted lists in place. `a` gets the lower elements."
