@@ -1,4 +1,5 @@
 """Module for the array/list related puzzles."""
+# pylint: disable=unnecessary-lambda-assignment
 
 from collections import Counter
 from typing import List, Optional, Tuple
@@ -298,6 +299,5 @@ def max_histogram_rectangle(h: list) -> int:
         while s and h[s[-1]] > v:
             yield h[s.pop()] * ((j - s[-1] -1) if s else j)
         s.append(j)
-    def rect(jv):
-        reduce(max, it(*jv), 0)
+    rect = lambda jv: max(it(*jv), default=0)
     return max(*map(rect, enumerate(h)), rect((len(h), 0)))
