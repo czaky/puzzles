@@ -245,3 +245,13 @@ class TestRotatedArray2(unittest.TestCase):
         ar.merge(a, b)
         self.assertEqual([0, 4,  5,  6,  7, 8], a)
         self.assertEqual([12, 12, 13, 13, 15], b)
+
+    def test_min_partition_diff(self):
+        "Test `min_partition_diff` function."
+        self.assertEqual(1, ar.min_partition_diff([1]))
+        self.assertEqual(1, ar.min_partition_diff([1, 2]))
+        self.assertEqual(1, ar.min_partition_diff([2, 1]))
+        self.assertEqual(3, ar.min_partition_diff([5, 2]))
+        self.assertEqual(3, ar.min_partition_diff([2, 5]))
+        self.assertEqual(26 , ar.min_partition_diff([60, 5, 4, 3, 2, 20]))
+        self.assertEqual(0, ar.min_partition_diff([30, 20, 50]))

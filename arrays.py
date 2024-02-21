@@ -2,7 +2,7 @@
 
 from collections import Counter
 from typing import List, Optional, Tuple
-from functools import reduce
+from functools import reduce, lru_cache
 from operator import mul
 from itertools import accumulate
 from iter import skip
@@ -280,3 +280,13 @@ def meta_frog_jumps(frogs: List[int], pads: int) -> int:
     for fi in range(1, len(frogs)):
         jumps += frogs[fi] - frogs[fi-1]
     return jumps
+
+def min_partition_diff(a: List[int]) -> int:
+    "Minimum difference between two partitions of `a`."
+    s = sum(a)
+    @lru_cache(None)
+    def rec(i, s1):
+        if i < 0:
+            return abs(s - 2*s1)
+        return min(rec(i-1, s1 + a[i]), rec(i-1, s1))
+    return rec(len(a)-1, 0)
