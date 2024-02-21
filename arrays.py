@@ -298,5 +298,6 @@ def max_histogram_rectangle(h: list) -> int:
         while s and h[s[-1]] > v:
             yield h[s.pop()] * ((j - s[-1] -1) if s else j)
         s.append(j)
-    rect = lambda jv: reduce(max, it(*jv), 0)
+    def rect(jv):
+        reduce(max, it(*jv), 0)
     return max(*map(rect, enumerate(h)), rect((len(h), 0)))
