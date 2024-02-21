@@ -4,7 +4,7 @@ from collections import Counter
 from typing import List, Optional, Tuple
 from functools import reduce, lru_cache
 from operator import mul
-from itertools import accumulate, starmap, islice
+from itertools import accumulate, starmap, islice, chain
 import search as bs
 
 def skip(it, n: int=1):
@@ -216,11 +216,8 @@ def pascal_triangle_row(n: int) -> List[int]:
 def min_diff(a: List[int], k: int) -> int:
     "Smallest difference in a sublist of `a` of `k` elements."
     a.sort()
-    d = a[-1] - a[0]
     k -= 1
-    for i in range(len(a) - k):
-        d = min(d, a[i+k] - a[i])
-    return d
+    return reduce(min, (a[i+k] -a[i] for i in range(len(a) -k)), a[-1] -a[0])
 
 def selection_sort(a: List[int]):
     "Sort array `a` using selection sort."
@@ -302,4 +299,4 @@ def max_histogram_rectangle(h: list) -> int:
             yield h[s.pop()] * ((j - s[-1] -1) if s else j)
         s.append(j)
         yield 0
-    return max(*map(max, starmap(it, enumerate(h))), *it(len(h)))
+    return max(chain(map(max, starmap(it, enumerate(h))), it(len(h))))
