@@ -216,8 +216,7 @@ def pascal_triangle_row(n: int) -> List[int]:
 def min_diff(a: List[int], k: int) -> int:
     "Smallest difference in a sublist of `a` of `k` elements."
     a.sort()
-    k -= 1
-    return reduce(min, (a[i+k] -a[i] for i in range(len(a) -k)), a[-1] -a[0])
+    return reduce(min, (a[i+k-1]-a[i] for i in range(len(a)+1-k)), a[-1]-a[0])
 
 def selection_sort(a: List[int]):
     "Sort array `a` using selection sort."
