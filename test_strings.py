@@ -100,3 +100,23 @@ class TestStrings(unittest.TestCase):
         self.assertEqual(0, s.edit_distance("aa", "aa"))
         self.assertEqual(4, s.edit_distance("hallo", "hey"))
         self.assertEqual(2, s.edit_distance("abba", "baba"))
+
+    def test_largest_palindrome(self):
+        "Test the `largest_palindrome` function."
+        self.assertEqual("", s.largest_palindrome(""))
+        self.assertEqual("a", s.largest_palindrome("a"))
+        self.assertEqual("aa", s.largest_palindrome("aa"))
+        self.assertEqual("a", s.largest_palindrome("ab"))
+        self.assertEqual("a", s.largest_palindrome("abc"))
+        self.assertEqual("ll", s.largest_palindrome("hallo"))
+        self.assertEqual("aba", s.largest_palindrome("aba"))
+        self.assertEqual("abba", s.largest_palindrome("abba"))
+        self.assertEqual("bab", s.largest_palindrome("babassus"))
+        self.assertEqual("aba", s.largest_palindrome("12aba"))
+        self.assertEqual("abba", s.largest_palindrome("12abba"))
+        self.assertEqual("aba", s.largest_palindrome("aba12"))
+        self.assertEqual("abba", s.largest_palindrome("abba12"))
+        self.assertEqual("cd@dc", s.largest_palindrome("12abacd@dc"))
+        self.assertEqual("cd@@dc", s.largest_palindrome("12abbacd@@dc"))
+        self.assertEqual("cd@dc", s.largest_palindrome("cd@dcaba12"))
+        self.assertEqual("cd@@dc", s.largest_palindrome("cd@@dcabba12"))

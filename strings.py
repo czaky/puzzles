@@ -92,3 +92,21 @@ def word_break(s: str, d) -> bool:
             sub[:i] in d and rec(sub[i:])
             for i in range(min(mx, len(sub)), 0, -1))
     return rec(s)
+
+def largest_palindrome(s: str) -> str:
+    "Return largest palindrome substring from `s`."
+    sub = [0, 0]
+    n = len(s)
+    def is_palindrome(i, even):
+        for j in range(min(i, n-i + even -1) + 1):
+            a = i-j
+            b = i+j - even
+            if s[a] != s[b]:
+                break
+            if sub[1] - sub[0] < b - a:
+                sub[:] = [a, b]
+    for i in range(1, n):
+        is_palindrome(i, even=0)
+        is_palindrome(i, even=1)
+
+    return s[sub[0]:sub[1] + 1]
