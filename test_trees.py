@@ -162,3 +162,16 @@ class TestTrees(unittest.TestCase):
         self.assertEqual(1, t.width(t.make('2 1')))
         self.assertEqual(2, t.width(t.make('2 1 -1 -1 3')))
         self.assertEqual(3, t.width(t.make('5 3 2 -1 -1 4 -1 -1 7 6')))
+
+    def test_to_linked_list(self):
+        "Test `to_linked_list` function."
+        def it(n):
+            while n:
+                yield n.data
+                n = n.right
+        self.assertEqual([1, 2], list(it(t.to_linked_list(t.make('2 1')))))
+        self.assertEqual(
+            [1, 3, 1, 2], list(it(t.to_linked_list(t.make('2 1 1 -1 3')))))
+        self.assertEqual(
+            [2, 3, 1, 6, 7, 4, 5],
+            list(it(t.to_linked_list(t.make('5 3 2 -1 -1 4 1 -1 7 6')))))

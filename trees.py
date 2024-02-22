@@ -101,16 +101,26 @@ def reversed_level_order(t: Node) -> list:
         _ = n.left and q.append(n.left)
     return list(reversed(r))
 
-def dfo(t: Node):
+def dfo(c: Node):
     "Yield node values in depth first order."
     s = []
-    c = t
     while s or c:
         while c:
             s.append(c)
             c = c.left
         c = s.pop()
         yield c.data
+        c = c.right
+
+def df_nodes(c: Node):
+    "Yield nodes in depth first order."
+    s = []
+    while s or c:
+        while c:
+            s.append(c)
+            c = c.left
+        c = s.pop()
+        yield c
         c = c.right
 
 def depth_first(t: Node) -> list:
@@ -304,3 +314,15 @@ def max_path_sum(t: Node) -> int:
         return n.data + ls + rs
     rec(t)
     return mx[0]
+
+def to_linked_list(r: Node) -> Node:
+    "Transform tree `r` into a double linked list in order."
+    h = t = None
+    for n in df_nodes(r):
+        h = h or n
+        if t:
+            t.right = n
+        n.left, t = t, n
+    if t:
+        t.right = None
+    return h
