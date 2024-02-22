@@ -12,7 +12,7 @@ def palindrome(s: str) -> bool:
     "True if `s` is a palindrome."
     # s == s[::-1]
     # Runs in O(N) time and O(1) space.
-    return next((False for i in range(len(s)//2) if s[i] != s[-1-i]), True)
+    return not any(s[i] != s[-1-i] for i in range(len(s)//2))
 
 def anagram(a: str, b: str) -> bool:
     "True if `a` and `b` contain the same characters."
@@ -24,8 +24,7 @@ def isomorphic(a: str, b: str) -> bool:
         return False
     ab = dict(zip(a, b))
     ba = dict(zip(b, a))
-    return next(
-        (False for x, y in zip(a, b) if ab[x] != y or ba[y] != x), True)
+    return not any(ab[x] != y or ba[y] != x for x, y in zip(a, b))
 
 def common_prefix(a: List[str]):
     "Return the longest prefix among the strings from `a`."
