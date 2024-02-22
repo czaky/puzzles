@@ -2,7 +2,7 @@
 
 from collections import Counter
 from typing import List
-from functools import lru_cache
+from functools import lru_cache, reduce
 
 def reverse_words(s: str, sep: str=' ') -> str:
     "Reverse the order of words in `s`, separated by `sep`."
@@ -12,7 +12,7 @@ def palindrome(s: str) -> bool:
     "True if `s` is a palindrome."
     # s == s[::-1]
     # Runs in O(N) time and O(1) space.
-    return not any(s[i] != s[-1-i] for i in range(len(s)//2))
+    return all(s[i] == s[-1-i] for i in range(len(s)//2))
 
 def anagram(a: str, b: str) -> bool:
     "True if `a` and `b` contain the same characters."
@@ -24,7 +24,7 @@ def isomorphic(a: str, b: str) -> bool:
         return False
     ab = dict(zip(a, b))
     ba = dict(zip(b, a))
-    return not any(ab[x] != y or ba[y] != x for x, y in zip(a, b))
+    return all(ab[x] == y and ba[y] == x for x, y in zip(a, b))
 
 def common_prefix(a: List[str]):
     "Return the longest prefix among the strings from `a`."
@@ -115,3 +115,25 @@ def largest_palindrome(s: str) -> str:
         is_palindrome(m + i -1, even=1)
 
     return s[sub[0]:sub[1] + 1]
+
+def subsequence_count(s: str, t: str) -> int:
+    "Number of times `t` shows in `s` as a loose subsequence."
+    @lru_cache(None)
+    def sub(i, j):
+        return (sub(i-1, j) + int(s[i] == t[j] and sub(i-1, j-1))
+                if i >= 0 and j >= 0 else int(j < 0))
+    return sub(len(s)-1, len(t)-1)
+
+def palindromic_partitions(s: str) -> int:
+    "Return the minimum number of cuts to partition `s` into palindromes."
+    @lru_cache(None)
+    def isp(i, j):
+        return i>=j or s[i] == s[j] and isp(i+1, j-1)
+
+    n = len(s)
+    dp = [0] * n
+    for j in range(n):
+        dp[j] = int(isp(0, j)) or reduce(
+            min, (dp[k] + 1 for k in range(1,j) if isp(k+1, j)), j+1)
+
+    return (int(n==0) or dp[n-1]) -1
