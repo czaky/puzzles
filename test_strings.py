@@ -160,3 +160,26 @@ class TestStrings(unittest.TestCase):
         self.assertEqual(1, s.subsequence_count("baba5", "aa"))
         self.assertEqual(1, s.subsequence_count("abcdefg", "bdf"))
         self.assertEqual(4, s.subsequence_count("abcdefg@abcdefg", "bdf"))
+
+    def test_smallest_window_with_all_characters(self):
+        "Test the `smallest_window_with_all_characters` function."
+        self.assertEqual("", s.smallest_window_with_all_characters("aa", ""))
+        self.assertEqual(None, s.smallest_window_with_all_characters("", "a"))
+        self.assertEqual(None, s.smallest_window_with_all_characters("b", "a"))
+        self.assertEqual(None, s.smallest_window_with_all_characters("bcd", "a"))
+        self.assertEqual("a", s.smallest_window_with_all_characters("aa", "a"))
+        self.assertEqual("aa", s.smallest_window_with_all_characters("aa", "aa"))
+        self.assertEqual("aba", s.smallest_window_with_all_characters("aba", "aa"))
+        self.assertEqual("aba", s.smallest_window_with_all_characters("baba", "aa"))
+        self.assertEqual("aba", s.smallest_window_with_all_characters("abab", "aa"))
+        self.assertEqual("aba", s.smallest_window_with_all_characters("baba5", "aa"))
+        self.assertEqual(
+            "bc@de4f", s.smallest_window_with_all_characters("abc@de4fg", "bdf"))
+        self.assertEqual(
+            "bc@def", s.smallest_window_with_all_characters("abc3de4fg@abc@def2g", "bdf"))
+
+    def test_boolean_parentheses(self):
+        "Test the `boolean_parentheses` function."
+        self.assertEqual(1, s.boolean_parentheses("T|F"))
+        self.assertEqual(5, s.boolean_parentheses("T|F^F&T"))
+        self.assertEqual(99632640, s.boolean_parentheses("T|F^F&T|F^F^F^T|T&T^T|F^T^F&F^T|T^F"))

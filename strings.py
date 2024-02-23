@@ -1,7 +1,7 @@
 """Puzzles related to strings."""
 
 from collections import Counter
-from typing import List
+from typing import List, Optional
 from functools import lru_cache, reduce
 
 def reverse_words(s: str, sep: str=' ') -> str:
@@ -137,3 +137,51 @@ def palindromic_partitions(s: str) -> int:
             min, (dp[k] + 1 for k in range(1,j) if isp(k+1, j)), j+1)
 
     return (int(n==0) or dp[n-1]) -1
+
+def smallest_window_with_all_characters(s: str, p: str) -> Optional[str]:
+    "Return the smallest window into `s` containing all the chars in `p`."
+    sl = len(s)
+    pl = len(p)
+    if sl < pl:
+        return None
+    sc = [0] * 256
+    pc = Counter(p)
+    z = pl
+    i = 0
+    mi, mj = 0, sl
+    for j, ch in enumerate(s):
+        sc[ord(ch)] += 1
+        if z > 0:
+            z -= int(sc[ord(ch)] <= pc.get(ch, 0))
+            if z > 0:
+                continue
+
+        while i<=j and sc[ord(s[i])] > pc.get(s[i], 0):
+            sc[ord(s[i])] -= 1
+            i+=1
+        if j - i < mj - mi:
+            mi, mj = i, j
+
+    return s[mi:mj+1] if mj < sl else None
+
+def boolean_parentheses(s: str) -> int:
+    """
+For an expression of the type `T|F&T^F`, consisting of literals `T` and `F`,
+and consisting of boolean operators `&` (and), `|` (or), `^` (xor),
+count the ways the expression can be parenthesized to generate a true value.
+    """
+    op = {'&':[1,0], '|':[1,1], '^':[0,1]}
+    @lru_cache(None)
+    def sub(i, j):
+        if i == j - 1:
+            return int(s[i] == 'T'), int(s[i] == 'F')
+        t, f = 0, 0
+        for k in range(i+1, j-1, 2):
+            t1, f1  = sub(i, k)
+            t2, f2  = sub(k+1, j)
+            xor = t1 * f2 + f1 * t2
+            m = op[s[k]]
+            t +=   m[0] * t1*t2 +   m[1] * xor
+            f += (1-m[0])*t1*t2 + (1-m[1])*xor + f1*f2
+        return t, f
+    return sub(0, len(s))[0]
