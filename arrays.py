@@ -1,5 +1,6 @@
 """Module for the array/list related puzzles."""
 
+import math
 from collections import Counter
 from typing import List, Optional, Tuple
 from functools import reduce, lru_cache
@@ -299,3 +300,35 @@ def max_histogram_rectangle(h: list) -> int:
         s.append(j)
         yield 0
     return max(chain(map(max, starmap(it, enumerate(h))), it(len(h))))
+
+def median2(a: List[int], b: List[int]) -> float:
+    "Return median of two lists `a` and `b` in O(log N)."
+    if len(a) > len(b):
+        a, b = b, a
+    n = len(a) + len(b)
+    if n == 0:
+        return 0
+    l, h = 0, len(a)
+    p = (n + 1) // 2
+    if h == 0:
+        return b[p-1] if n%2 else (b[p-1] + b[p]) / 2
+
+    while l <= h:
+        ma = (l + h) // 2
+        mb = p - ma
+
+        la = a[ma-1] if ma > 0      else -math.inf
+        lb = b[mb-1] if mb > 0      else -math.inf
+        ra = a[ma]   if ma < len(a) else  math.inf
+        rb = b[mb]   if mb < len(b) else  math.inf
+
+        if la <= rb and lb <= ra:
+            y, x = max(la, lb), min(ra, rb)
+            return y if n%2 else (x + y) / 2
+
+        if la > rb:
+            h = ma - 1
+        else:
+            l = ma + 1
+
+    return 0
