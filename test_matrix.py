@@ -31,3 +31,9 @@ class TestMatrixPuzzles(unittest.TestCase):
             [[3, 30, 38],
             [44, 52, 54],
             [57, 60, 69]], 62))
+
+
+    def test_optimum_multiplications(self):
+        "Test `optimum_multiplications`."
+        self.assertEqual(580, m.optimum_multiplications([2, 40, 2, 40, 5]))
+        self.assertEqual(26000, m.optimum_multiplications([40, 20, 30, 10, 30]))
