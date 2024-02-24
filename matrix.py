@@ -1,7 +1,12 @@
 "Puzzles around matrices."
 
 from typing import List
-from functools import lru_cache
+from itertools import product, tee
+from functools import lru_cache, reduce
+
+def at(m, *indexes):
+    "Return element of `m` at the specific indexes."
+    return reduce(lambda m, i: m[i], indexes, m)
 
 def find_sorted(hay: List[List[int]], needle: int) -> bool:
     "True if `needle` is in the sorted `hay` matrix."
@@ -40,3 +45,34 @@ return minimum number of operations.
             min(sub(i,k) + sub(k+1,j) + a[i-1]*a[k]*a[j]
                 for k in range(i, j)))
     return sub(1, len(a)-1)
+
+def sudoku(grid: List[List[int]]) -> bool:
+    "Fill in the grid and return True if solved."
+    rows, cols, boxes = [0]*9, [0]*9, [0]*9
+    left = []
+
+    def flip(n, i, j):
+        v = 1 << n
+        rows[i] ^= v
+        cols[j] ^= v
+        boxes[i//3 + 3*(j//3)] ^= v
+
+    for i, j in product(*tee(range(9))):
+        flip(grid[i][j] or left.append((i,j)) or 0, i, j)
+
+    def solve(pos):
+        if pos < 0:
+            return True
+        i, j = left[pos]
+        unsafe = rows[i] | cols[j] | boxes[i//3 + 3*(j//3)]
+        for n in range(1, 10):
+            if unsafe & (1 << n):
+                continue
+            flip(n, i, j)
+            grid[i][j] = n
+            if solve(pos-1):
+                return True
+            flip(n, i, j)
+            grid[i][j] = 0
+        return False
+    return solve(len(left)-1)

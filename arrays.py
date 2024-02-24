@@ -2,9 +2,9 @@
 
 import math
 from collections import Counter
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Iterable
 from functools import reduce, lru_cache
-from operator import mul
+from operator import mul, neg
 from itertools import accumulate, starmap, islice, chain
 import search as bs
 
@@ -301,6 +301,13 @@ def max_histogram_rectangle(h: list) -> int:
         yield 0
     return max(chain(map(max, starmap(it, enumerate(h))), it(len(h))))
 
+def max_matrix_area(m: List[List[int]]) -> int:
+    "Matrix `m` contains 1 and 0. Find the largest rectangle."
+    def hist(h, r):
+        h[:] = ((x+1)*y for x,y in zip(h, r))
+        return h
+    return max(map(max_histogram_rectangle, accumulate(m, hist, initial=m[0][:])))
+
 def median2(a: List[int], b: List[int]) -> float:
     "Return median of two lists `a` and `b` in O(log N)."
     if len(a) > len(b):
@@ -332,3 +339,12 @@ def median2(a: List[int], b: List[int]) -> float:
             l = ma + 1
 
     return 0
+
+def max_sub_sum(a: Iterable[int]) -> int:
+    "Return the max sum of a sub-array from `a`."
+    # Kadane’s Algorithm
+    return max(accumulate(a, lambda x,y: max(0, x+y), initial=0))
+
+def max_circular_sub_sum(a: List[int]) -> int:
+    "Return the max sum of a circular sub-array from `a`."
+    return max(max_sub_sum(a), max_sub_sum(map(neg, a)) + sum(a)) or max(a)

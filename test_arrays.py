@@ -265,5 +265,10 @@ class TestRotatedArray2(unittest.TestCase):
         self.assertEqual(4, ar.max_histogram_rectangle([2, 3, 1]))
         self.assertEqual(4, ar.max_histogram_rectangle([1, 3, 2]))
         self.assertEqual(4, ar.max_histogram_rectangle([1, 2, 3]))
-        self.assertEqual(12 , ar.max_histogram_rectangle([6,2,5,4,5,1,6]))
+        self.assertEqual(12, ar.max_histogram_rectangle([6, 2, 5, 4, 5, 1, 6]))
         self.assertEqual(7, ar.max_histogram_rectangle([1, 2, 1, 2, 1, 2, 1]))
+
+    def test_median2(self):
+        "Test `median2` function."
+        self.assertEqual(3, ar.median2([1, 2, 3], [4, 6]))
+        self.assertEqual(3.5, ar.median2([1, 2, 3], [4, 5, 6]))
