@@ -1,7 +1,7 @@
 """Module for the array/list related puzzles."""
 
 import math
-from collections import Counter
+from collections import Counter, deque
 from typing import List, Optional, Tuple, Iterable
 from functools import reduce, lru_cache
 from operator import mul, neg
@@ -348,3 +348,18 @@ def max_sub_sum(a: Iterable[int]) -> int:
 def max_circular_sub_sum(a: List[int]) -> int:
     "Return the max sum of a circular sub-array from `a`."
     return max(max_sub_sum(a), max_sub_sum(map(neg, a)) + sum(a)) or max(a)
+
+def kaiten_sushi(belt: List[int], distance: int) -> int:
+    "Count dishes on the `belt` which are unique within the `distance`."
+    dishes = set()
+    order = deque()
+    count = 0
+    for d in belt:
+        if d in dishes:
+            continue
+        count += 1
+        dishes.add(d)
+        order.append(d)
+        if len(dishes) > distance:
+            dishes.remove(order.popleft())
+    return count

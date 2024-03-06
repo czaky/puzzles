@@ -3,6 +3,7 @@
 from typing import List
 from itertools import product, tee
 from functools import lru_cache, reduce
+from bisect import bisect_right
 
 def at(m, *indexes):
     "Return element of `m` at the specific indexes."
@@ -76,3 +77,16 @@ def sudoku(grid: List[List[int]]) -> bool:
             grid[i][j] = 0
         return False
     return solve(len(left)-1)
+
+def sorted_median(m: List[List[int]]) -> int:
+    "Return a median of a row-wise sorted matrix."
+    mid = (len(m)*len(m[0]) + 1) // 2
+    l = min(r[0] for r in m)
+    h = max(r[-1] for r in m)
+    while l <= h:
+        x = (l + h) // 2
+        if sum(bisect_right(r, x) for r in m) >= mid:
+            h = x - 1
+        else:
+            l = x + 1
+    return l

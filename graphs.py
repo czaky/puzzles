@@ -1,6 +1,6 @@
 """Puzzles related to graphs."""
 
-from typing import List
+from typing import List, Iterable
 from collections import deque
 
 def breadth_first(adj: List[List[int]], start: int=0) -> List[int]:
@@ -42,3 +42,15 @@ def depth_first_r(adj: List[List[int]], start: int=0) -> List[int]:
                 dfs(a)
     dfs(start)
     return o
+
+def topological_order(vertexes: list, edges: dict) -> Iterable:
+    "Return `vertexes` in topological order based on `edges` relation."
+    s = []
+    v = set()
+    def sort(n):
+        if not n in v:
+            v.add(n)
+            any(map(sort, edges.get(n, [])))
+            s.append(n)
+    any(map(sort, vertexes))
+    return reversed(s)

@@ -3,6 +3,7 @@
 from collections import Counter
 from typing import List, Optional
 from functools import lru_cache, reduce
+from itertools import pairwise, accumulate
 
 def reverse_words(s: str, sep: str=' ') -> str:
     "Reverse the order of words in `s`, separated by `sep`."
@@ -20,11 +21,11 @@ def anagram(a: str, b: str) -> bool:
 
 def isomorphic(a: str, b: str) -> bool:
     "True if characters in `a` and `b` can be mapped 1:1 to each other."
-    if len(a) != len(b):
-        return False
-    ab = dict(zip(a, b))
-    ba = dict(zip(b, a))
-    return all(ab[x] == y and ba[y] == x for x, y in zip(a, b))
+    ab, ba = {}, {}
+    return len(a) == len(b) and all(
+        cb == ab.setdefault(ca, cb) and
+        ca == ba.setdefault(cb, ca)
+        for ca, cb in zip(a, b))
 
 def common_prefix(a: List[str]):
     "Return the longest prefix among the strings from `a`."
@@ -116,6 +117,28 @@ def largest_palindrome(s: str) -> str:
 
     return s[sub[0]:sub[1] + 1]
 
+def largest_palindrome_dp(s: str) -> str:
+    "Return largest palindrome substring from `s`."
+    # Uses dynamic programming table. O(N^2)
+    n = len(s)
+    table = [[False] * n for _ in s]
+
+    for i in range(n-1):
+        table[i][i] = True
+        table[i][i+1] = s[i] == s[i+1]
+    table[n-1][n-1] = True
+
+    mi = mj = 0
+    for cl in range(3, n + 1):
+        for i in range(n - cl + 1):
+            j = i + cl - 1
+            if (s[i] == s[j] and table[i + 1][j - 1]):
+                table[i][j] = True
+                mi, mj = i, j
+
+    # return longest palindrome
+    return s[mi:mj+1]
+
 def subsequence_count(s: str, t: str) -> int:
     "Number of times `t` shows in `s` as a loose subsequence."
     @lru_cache(None)
@@ -185,3 +208,58 @@ count the ways the expression can be parenthesized to generate a true value.
             f += (1-m[0])*t1*t2 + (1-m[1])*xor + f1*f2
         return t, f
     return sub(0, len(s))[0]
+
+def alien_alphabet(words):
+    "For a sorted list of `words` return the alien alphabet used to sort it."
+    chars = set(words[0])
+    edges = {}
+    for a, b in pairwise(words):
+        chars.update(b)
+        ca, cb = next((ab for ab in zip(a, b) if ab[0]!=ab[1]), (None, None))
+        if ca and cb:
+            s = edges.get(ca) or edges.setdefault(ca, set())
+            s.add(cb)
+    s = []
+    v = set()
+    def sort(n):
+        if not n in v:
+            v.add(n)
+            any(map(sort, edges.get(n, [])))
+            s.append(n)
+    any(map(sort, chars))
+    return ''.join(reversed(s))
+
+def fix_palindrome(s: str) -> str:
+    "Return number of characters to be added to make a string a palindrome."
+    @lru_cache(None)
+    def count(i, j):
+        return int(i<j and (
+            count(i+1, j-1)
+            if s[i] == s[j]
+            else min(count(i+1, j), count(i, j-1)) + 1))
+    return count(0, len(s)-1)
+
+def artistic_photo_count(s: str, x: int, y: int) -> int:
+    """
+String `s` contains a photography set including positions for:
+    P - the photographer,
+    A - the actor/model,
+    B - the backdrop.
+A valid photo can be made if the actor is placed between the
+photographer and the backdrop.
+An artistic photo keeps the (index) distance between each
+of them to the inclusive interval [x, y].
+
+Return number of artistic photos.
+"""
+    l = len(s)-1
+    ps = list(accumulate(map(lambda c: int(c=='P'), s)))
+    bs = list(accumulate(map(lambda c: int(c=='B'), s)))
+    p = lambda i: int(i>=0 and ps[min(i, l)])
+    b = lambda i: int(i>=0 and bs[min(i, l)])
+    actors = [i for i, c in enumerate(s) if c == 'A']
+
+    pab = sum((p(a-x) - p(a-y-1)) * (b(a+y) - b(a+x-1)) for a in actors)
+    bap = sum((b(a-x) - b(a-y-1)) * (p(a+y) - p(a+x-1)) for a in actors)
+
+    return pab + bap

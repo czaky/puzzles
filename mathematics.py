@@ -1,5 +1,7 @@
 """Module for number and arithmetic related puzzles."""
 
+import math
+from math import floor, log
 from functools import reduce
 from operator import mul
 
@@ -65,3 +67,15 @@ def fibonacci(n: int) -> int:
     for _ in range(n):
         a, b = b, a + b
     return a
+
+def uniform_integers(a: int, b: int) -> int:
+    """
+Count number of integers between `[a, b]` with same digits.
+
+Uniform integers are of the form: 111, 222, ..., 999.
+They are made of the same digit in decimal notation.
+"""
+    def uniform(n):
+        l = floor(log(max(n, 1), 10)) + 1
+        return 9 * (l-1) + n // ((10**l -1) // 9)
+    return uniform(b) - uniform(a-1)
