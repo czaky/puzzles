@@ -88,7 +88,8 @@ disable=raw-checker-failed,
         use-symbolic-message-instead,
         unnecessary-lambda-assignment,
         too-few-public-methods,
-        nested-min-max
+        nested-min-max,
+        expression-not-assigned
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
