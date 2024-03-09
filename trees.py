@@ -2,7 +2,7 @@
 
 import math
 from collections import deque
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List
 from itertools import islice
 from functools import reduce
 
@@ -326,3 +326,35 @@ def to_linked_list(r: Node) -> Node:
     if t:
         t.right = None
     return h
+
+def nodes_at_distance(r: Node, target: int, k: int) -> List[int]:
+    "Return nodes from tree `r` at distance `k` from `target` node."
+    result = []
+    def descend(r: Node, kn: int):
+        if not r or kn < 0:
+            return
+        if kn == 0:
+            result.append(r.data)
+            return
+        descend(r.left, kn -1)
+        descend(r.right, kn -1)
+
+    def search(r: Node):
+        if not r:
+            return None
+        if r.data == target:
+            descend(r, k)
+            return 1
+        d = search(r.left)
+        if d:
+            descend(r.right, k-d-1)
+        else:
+            d = search(r.right)
+            if d:
+                descend(r.left, k-d-1)
+        if k == d:
+            result.append(r.data)
+            return None
+        return d + 1 if d else None
+    search(r)
+    return sorted(result)

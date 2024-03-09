@@ -175,3 +175,22 @@ class TestTrees(unittest.TestCase):
         self.assertEqual(
             [2, 3, 1, 6, 7, 4, 5],
             list(it(t.to_linked_list(t.make('5 3 2 -1 -1 4 1 -1 7 6')))))
+
+    def test_nodes_at_distance(self):
+        "Test `nodes_at_distance`."
+        self.assertEqual(
+            [10, 14, 22],
+            t.nodes_at_distance(t.make('20 8 4 -1 -1 12 10 -1 -1 14 -1 -1 22'), 8, 2)
+        )
+        self.assertEqual(
+            [1, 24],
+            t.nodes_at_distance(t.make('20 7 4 -1 -1 3 1 -1 -1 -1 24'), 7, 2)
+        )
+        self.assertEqual(
+            [3, 4, 20],
+            t.nodes_at_distance(t.make('20 7 4 -1 -1 3 1 -1 -1 -1 24'), 7, 1)
+        )
+        self.assertEqual(
+            [7],
+            t.nodes_at_distance(t.make('20 7 4 -1 -1 3 1 -1 -1 -1 24'), 7, 0)
+        )
