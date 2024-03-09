@@ -7,7 +7,7 @@ class TestBoardGames(unittest.TestCase):
     """Test class for the board games puzzles."""
     def test_queens(self):
         "Test the `queens` puzzle."
-        self.assertEqual([], b.queens(0))
+        self.assertEqual([[]], b.queens(0))
         self.assertEqual([[1]], b.queens(1))
         self.assertEqual([], b.queens(2))
         self.assertEqual([], b.queens(3))
