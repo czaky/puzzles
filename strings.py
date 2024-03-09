@@ -3,9 +3,16 @@
 from collections import Counter
 from typing import List, Optional
 from functools import lru_cache, reduce
-from itertools import pairwise, accumulate
+from itertools import tee, accumulate
 
 from graphs import topological_order
+
+# Python 3.10
+def pairwise(iterable):
+    "pairwise('ABCDEFG') --> AB BC CD DE EF FG"
+    a, b = tee(iterable)
+    next(b, None)
+    return zip(a, b)
 
 def reverse_words(s: str, sep: str=' ') -> str:
     "Reverse the order of words in `s`, separated by `sep`."
