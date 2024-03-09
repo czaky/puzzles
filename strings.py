@@ -5,6 +5,8 @@ from typing import List, Optional
 from functools import lru_cache, reduce
 from itertools import pairwise, accumulate
 
+from graphs import topological_order
+
 def reverse_words(s: str, sep: str=' ') -> str:
     "Reverse the order of words in `s`, separated by `sep`."
     return sep.join(reversed(s.split(sep)))
@@ -219,15 +221,7 @@ def alien_alphabet(words):
         if ca and cb:
             s = edges.get(ca) or edges.setdefault(ca, set())
             s.add(cb)
-    s = []
-    v = set()
-    def sort(n):
-        if not n in v:
-            v.add(n)
-            any(map(sort, edges.get(n, [])))
-            s.append(n)
-    any(map(sort, chars))
-    return ''.join(reversed(s))
+    return ''.join(topological_order(chars, edges))
 
 def fix_palindrome(s: str) -> str:
     "Return number of characters to be added to make a string a palindrome."

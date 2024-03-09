@@ -208,7 +208,7 @@ def subtract_lists(l1: Node, l2: Node) -> Node:
         while h1 and h2:
             if h1.data < h2.data:
                 return -1
-            elif h1.data > h2.data:
+            if h1.data > h2.data:
                 return 1
             h1, h2 = h1.next, h2.next
         return 0
