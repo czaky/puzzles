@@ -188,3 +188,56 @@ def swap_pairs(h: Node) -> Node:
         nn.next = n
         n.next = n3
     return h
+
+
+def subtract_lists(l1: Node, l2: Node) -> Node:
+    "Subtract the smaller from the larger list representing numbers."
+    # This exercise uses Node traversal instead of simple arithmetic.
+
+    def compare(l1: Node, l2: Node) -> int:
+        "Determine longest/largest list."
+        h1, h2 = l1, l2
+        while h1 and h2:
+            h1, h2 = h1.next, h2.next
+        if h2:
+            return -1
+        if h1:
+            return 1
+
+        h1, h2 = l1, l2
+        while h1 and h2:
+            if h1.data < h2.data:
+                return -1
+            elif h1.data > h2.data:
+                return 1
+            h1, h2 = h1.next, h2.next
+        return 0
+
+    def trim(l: Node) -> Node:
+        "Skip leading zeros."
+        while l and l.data == 0:
+            l = l.next
+        return l
+
+    # remove leading zeros
+    l1, l2 = trim(l1), trim(l2)
+
+    cmp = compare(l1, l2)
+    if cmp == 0:
+        return Node(0)
+    if cmp == -1:
+        l1, l2 = l2, l1
+
+    # h1 is longer/larger
+    h1 = reverse(l1)
+    h2 = reverse(l2)
+
+    d = 0
+    r = None
+    while h1:
+        d = -int(d<0) + h1.data - (h2.data if h2 else 0)
+        n = Node(d if d >= 0 else 10 + d)
+        n.next = r
+        r = n
+        h1, h2 = h1.next, h2 and h2.next
+    return trim(r) or Node(0)
