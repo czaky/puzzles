@@ -2,21 +2,18 @@
 
 def queens(n: int) -> list:
     "Return a list of queen combinations for an `NxN` board."
-    col = [0] * n
-    rdg = [0] * 2 * n
-    ldg = [0] * 2 * n
+    n4 = n*4
     solutions = []
     s = [0] * n
-    def rec(r: int):
+    def rec(r: int, invalid: int):
         for c in range(n):
-            if col[c] or rdg[n + c - r] or ldg[c + r]:
+            place = (1 << c) + + (1 << (n + c + r)) + (1 << (n4 + c - r))
+            if invalid & place:
                 continue
             s[r] = c + 1
             if r == 0:
                 solutions.append(s[:])
                 return
-            col[c] = rdg[n + c - r] = ldg[c + r] = 1
-            rec(r-1)
-            col[c] = rdg[n + c - r] = ldg[c + r] = 0
-    rec(n-1)
+            rec(r-1, invalid | place)
+    rec(n-1, 0)
     return sorted(solutions)
