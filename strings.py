@@ -257,7 +257,7 @@ Return number of artistic photos.
     bs = list(accumulate(map(lambda c: int(c=='B'), s)))
     p = lambda i: int(i>=0 and ps[min(i, l)])
     b = lambda i: int(i>=0 and bs[min(i, l)])
-    actors = [i for i, c in enumerate(s) if c == 'A']
+    actors = [i for i, c in enumerate(s) if c == 'A' and  x <= i <= l-x]
 
     pab = sum((p(a-x) - p(a-y-1)) * (b(a+y) - b(a+x-1)) for a in actors)
     bap = sum((b(a-x) - b(a-y-1)) * (p(a+y) - p(a+x-1)) for a in actors)

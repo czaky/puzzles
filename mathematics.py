@@ -1,6 +1,5 @@
 """Module for number and arithmetic related puzzles."""
 
-import math
 from math import floor, log
 from functools import reduce
 from operator import mul
