@@ -4,7 +4,7 @@ import math
 from collections import Counter, deque
 from typing import List, Optional, Tuple, Iterable
 from functools import reduce, lru_cache
-from operator import mul, neg
+from operator import mul, neg, add
 from itertools import accumulate, starmap, islice, chain
 import search as bs
 
@@ -363,3 +363,24 @@ def kaiten_sushi(belt: List[int], distance: int) -> int:
         if len(dishes) > distance:
             dishes.remove(order.popleft())
     return count
+
+def mail_room_theft(arrivals: List[int], cost: int, theft: float) -> float:
+    """
+Retrieve arriving packages from mail room at `cost` of entering
+and in face of `theft` factor.
+
+Each time the packages are retrieved from the mail room a `cost` needs
+to be paid. There is a probability of `theft` with each new arrival,
+where the packages stored before disappear.
+
+Return the expected collected value of retrieved packages.
+"""
+    mr = [0]  # mail_room_value
+    cl = [0]  # collected value
+    for p in arrivals:
+        # theft plus new package
+        mr[:] = (mrv * (1-theft) + p for mrv in mr)
+        # pickup
+        cl.append(max(map(add, mr, cl)) - cost)
+        mr.append(0)
+    return max(cl)
