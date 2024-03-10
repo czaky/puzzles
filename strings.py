@@ -264,3 +264,13 @@ Return number of artistic photos.
     bap = sum((b(a-x) - b(a-y-1)) * (p(a+y) - p(a+x-1)) for a in actors)
 
     return pab + bap
+
+def distinct_subsequence_count(s: str) -> int:
+    "Return number of distinct (loose) subsequences in `s`."
+    m = {}
+    # subsequence is any sequence with any characters removed.
+    # E.g.: aba => '' a ab aa b ba aba => 7
+    # Each new character doubles the count of subsequences before.
+    # If the character is repeated, we deduplicate
+    # by subtracting previous count stored in `m`
+    return reduce(lambda a, c: (2*a - m.get(c, 0), m.update({c:a}))[0], s, 1)

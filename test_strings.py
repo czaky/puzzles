@@ -184,10 +184,17 @@ class TestStrings(unittest.TestCase):
         self.assertEqual(5, s.boolean_parentheses("T|F^F&T"))
         self.assertEqual(99632640, s.boolean_parentheses("T|F^F&T|F^F^F^T|T&T^T|F^T^F&F^T|T^F"))
 
-
     def test_artistic_photo_count(self):
         "Test the `artistic_photo_count` function."
         self.assertEqual(1, s.artistic_photo_count('APABA', 1, 2))
         self.assertEqual(0, s.artistic_photo_count('APABA', 2, 3))
         self.assertEqual(3, s.artistic_photo_count('PBAAP.B', 1, 3))
         self.assertEqual(3, s.artistic_photo_count('.PBAAP.B', 1, 3))
+
+    def test_distinct_subsequence_count(self):
+        "Test the `distinct_subsequence_count` function."
+        self.assertEqual(1, s.distinct_subsequence_count(''))
+        self.assertEqual(2, s.distinct_subsequence_count('a'))
+        self.assertEqual(4, s.distinct_subsequence_count('ab'))
+        self.assertEqual(3, s.distinct_subsequence_count('aa'))
+        self.assertEqual(7, s.distinct_subsequence_count('aba'))
