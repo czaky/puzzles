@@ -280,14 +280,14 @@ def permutations(s: str) -> list:
     sols=[]
     n=len(s)
     s = list(s)
-    def f(i):
+    def rec(i):
         if i >= n:
             sols.append(''.join(s))
             return
-        f(i+1)
+        rec(i+1)
         for j in range(i+1, n):
             s[j],s[i] = s[i],s[j]
-            f(i+1)
+            rec(i+1)
             s[j],s[i] = s[i],s[j]
-    f(0)
+    rec(0)
     return sorted(sols)
