@@ -198,3 +198,13 @@ class TestStrings(unittest.TestCase):
         self.assertEqual(4, s.distinct_subsequence_count('ab'))
         self.assertEqual(3, s.distinct_subsequence_count('aa'))
         self.assertEqual(7, s.distinct_subsequence_count('aba'))
+
+    def test_permutations(self):
+        "Test the `permutations` function."
+        self.assertEqual([''], s.permutations(''))
+        self.assertEqual(['a'], s.permutations('a'))
+        self.assertEqual(['ab', 'ba'], s.permutations('ab'))
+        self.assertEqual(
+            ['abc', 'acb', 'bac', 'bca', 'cab', 'cba'],
+            s.permutations('abc'))
+        self.assertEqual(24, len(s.permutations('abcd')))

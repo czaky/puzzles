@@ -274,3 +274,20 @@ def distinct_subsequence_count(s: str) -> int:
     # If the character is repeated, we deduplicate
     # by subtracting previous count stored in `m`
     return reduce(lambda a, c: (2*a - m.get(c, 0), m.update({c:a}))[0], s, 1)
+
+def permutations(s: str) -> list:
+    "Return a sorted list of permutations of string `s`."
+    sols=[]
+    n=len(s)
+    s = list(s)
+    def f(i):
+        if i >= n:
+            sols.append(''.join(s))
+            return
+        f(i+1)
+        for j in range(i+1, n):
+            s[j],s[i] = s[i],s[j]
+            f(i+1)
+            s[j],s[i] = s[i],s[j]
+    f(0)
+    return sorted(sols)
