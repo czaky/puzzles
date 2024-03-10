@@ -272,3 +272,17 @@ class TestRotatedArray2(unittest.TestCase):
         "Test `median2` function."
         self.assertEqual(3, ar.median2([1, 2, 3], [4, 6]))
         self.assertEqual(3.5, ar.median2([1, 2, 3], [4, 5, 6]))
+
+    def test_next_smallest_palindrome(self):
+        "Test `next_smallest_palindrome` function."
+        self.assertEqual([], ar.next_smallest_palindrome_number([]))
+        self.assertEqual([1], ar.next_smallest_palindrome_number([0]))
+        self.assertEqual([8], ar.next_smallest_palindrome_number([7]))
+        self.assertEqual([1, 1], ar.next_smallest_palindrome_number([9]))
+        self.assertEqual([6, 6], ar.next_smallest_palindrome_number([6, 1]))
+        self.assertEqual([1, 0, 1], ar.next_smallest_palindrome_number([9, 9]))
+        self.assertEqual([2, 4, 4, 2], ar.next_smallest_palindrome_number([2, 3, 4, 5]))
+        self.assertEqual([2, 3, 6, 3, 2], ar.next_smallest_palindrome_number([2, 3, 5, 4, 5]))
+        self.assertEqual(
+            [9, 4, 1, 8, 8, 0, 8, 8, 1, 4, 9],
+            ar.next_smallest_palindrome_number([9, 4, 1, 8, 7, 9, 7, 8, 3, 2, 2]))

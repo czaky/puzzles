@@ -384,3 +384,39 @@ Return the expected collected value of retrieved packages.
         cl.append(max(map(add, mr, cl)) - cost)
         mr.append(0)
     return max(cl)
+
+def next_smallest_palindrome_number(num: list) -> list:
+    """
+Return the next smallest palindrome number from `num`.
+
+Num is a sequence of digits [0-9].
+"""
+    n = len(num)
+    if n == 0:
+        return []
+    if all(d == 9 for d in num):
+        # 9..9 => 10..01
+        return [1] + ([0] * (n - 1)) + [1]
+
+    i, j = (n-1)//2, n//2
+    while i >= 0 and num[i] == num[j]:
+        i -= 1
+        j += 1
+    if i < 0:
+        # original is a palindrome
+        # look for the next one
+        i, j = 0, n-1
+        num[-1] += 1
+    if num[i] < num[j]:
+        # Cannot copy directly.
+        i, j = (n-1)//2, n//2
+        num[i] += 1
+    # Copy remaining digits.
+    while i >= 0:
+        if num[i] >= 10:
+            num[i] -= 10
+            num[i-1] += 1
+        num[j] = num[i]
+        i -= 1
+        j += 1
+    return num
