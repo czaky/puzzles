@@ -8,7 +8,7 @@ def queens(n: int) -> list:
         place = 1 | 1 << (n+r) | 1 << (n*4-r)
         for s[r] in range(1, n+1):
             invalid & place or (
-                (not r or rec(r-1, invalid | place)) and
+                (r <= 0 or rec(r-1, invalid | place)) and
                 sols.append(s[:]))
             place <<= 1
     n > 0 and rec(n-1, 0)
