@@ -1,9 +1,20 @@
 """Puzzles related to brackets, parentheses, and braces."""
 
 OPENING = {
-    '(':')', '[':']', '{':'}', '<':'>',
-    '⟨':'⟩', '《':'》', '⌈':'⌉', '⌊':'⌋',
-    '【':'】', '〖':'〗', '⧘':'⧙', '⧚':'⧛' }
+    "(": ")",
+    "[": "]",
+    "{": "}",
+    "<": ">",
+    "⟨": "⟩",
+    "《": "》",
+    "⌈": "⌉",
+    "⌊": "⌋",
+    "【": "】",
+    "〖": "〗",
+    "⧘": "⧙",
+    "⧚": "⧛",
+}
+
 
 def balanced(s: str) -> bool:
     "Check if string `s` brackets are balanced in O(N) space."
@@ -17,18 +28,22 @@ def balanced(s: str) -> bool:
             return False
     return not stack
 
+
 def max_valid_len(s: str):
     "Maximum length of a valid parentheses sub-string."
     # O(1) space; O(N) time
     n = len(s)
+
     def scan(a):
         ac = i = 0
         for j, e in enumerate(a):
             ac = max(ac, 0) + e
             i = ac < 0 and n or min(i, j)
             if ac == 0:
-                yield j-i+1
+                yield j - i + 1
         yield 0
+
     return max(
-        max(scan(map(lambda c: 2*int(c=='(')-1, s))),
-        max(scan(map(lambda c: 2*int(c==')')-1, reversed(s)))))
+        max(scan(map(lambda c: 2 * int(c == "(") - 1, s))),
+        max(scan(map(lambda c: 2 * int(c == ")") - 1, reversed(s)))),
+    )

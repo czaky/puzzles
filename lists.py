@@ -2,8 +2,10 @@
 
 from typing import Optional
 
+
 class Node:
     "Linked List Node."
+
     def __init__(self, data):
         self.data = data
         self.next = None
@@ -14,12 +16,13 @@ class Node:
             yield n.data
             n = n.next
 
-def make(l: list, loop: int=-1) -> Optional[Node]:
-    """
-Make a linked list out of normal Python list `l`.
 
-If `loop` >= 0, add a loop at the end pointing to node `loop`.
-"""
+def make(l: list, loop: int = -1) -> Optional[Node]:
+    """
+    Make a linked list out of normal Python list `l`.
+
+    If `loop` >= 0, add a loop at the end pointing to node `loop`.
+    """
     if not l:
         return None
     n = h = Node(l[0])
@@ -34,6 +37,7 @@ If `loop` >= 0, add a loop at the end pointing to node `loop`.
         n.next = ln
     return h
 
+
 def middle(head: Node) -> Optional[Node]:
     "Return the middle node of the list starting with `head`."
     slow = fast = head
@@ -41,6 +45,7 @@ def middle(head: Node) -> Optional[Node]:
         fast = fast.next.next
         slow = slow.next
     return slow
+
 
 def delete_middle(head: Node) -> Optional[Node]:
     "Delete the middle from the list starting at `head`."
@@ -55,12 +60,13 @@ def delete_middle(head: Node) -> Optional[Node]:
         return head
     return slow and slow.next
 
+
 def nth(head: Node, n: int) -> Optional[Node]:
     """
-Return nth node from the linked list starting at `head`.
+    Return nth node from the linked list starting at `head`.
 
-If n is negative, returns the nth node from the end of the list.
-"""
+    If n is negative, returns the nth node from the end of the list.
+    """
     if n >= 0:
         while head and n > 0:
             head = head.next
@@ -78,6 +84,7 @@ If n is negative, returns the nth node from the end of the list.
         slow = slow.next
     return slow
 
+
 def insert_sorted(head: Node, value: int) -> Node:
     "Insert `value` into list starting at `head`. Return new head."
     nn = Node(value)
@@ -91,12 +98,14 @@ def insert_sorted(head: Node, value: int) -> Node:
     n.next = nn
     return head
 
+
 def reverse(head: Node) -> Optional[Node]:
     "Reverse a linked starting at `head`."
     prev = None
     while head:
         prev, head.next, head = head, prev, head.next
     return prev
+
 
 def dedup(head: Node) -> Node:
     "Remove nodes with duplicate values in the linked list."
@@ -109,11 +118,13 @@ def dedup(head: Node) -> Node:
         n = n.next
     return head
 
+
 def delete_node(n: Node):
     "Remove node without reference to `head`."
     assert n.next
     n.data = n.next.data
     n.next = n.next.next
+
 
 def remove_smaller_nodes_left(h: Node) -> Optional[Node]:
     "Remove all nodes from list `h` smaller than any node to the right."
@@ -128,6 +139,7 @@ def remove_smaller_nodes_left(h: Node) -> Optional[Node]:
         n = n.next
     return reverse(rev)
 
+
 def sorted_intersection(a: Node, b: Node) -> Optional[Node]:
     "Intersection of two sorted lists `a` and `b`."
     nh = nn = Node(0)
@@ -140,6 +152,7 @@ def sorted_intersection(a: Node, b: Node) -> Optional[Node]:
         if diff <= 0:
             b = b.next
     return nh.next
+
 
 def loop_length(head: Node) -> int:
     "Count nodes in a loop. Return 0 if none."
@@ -162,6 +175,7 @@ def loop_length(head: Node) -> int:
         c += 1
         fast = fast.next
     return c
+
 
 def swap_pairs(h: Node) -> Node:
     "Swap pairs of nodes in the `h` list."
@@ -235,7 +249,7 @@ def subtract_lists(l1: Node, l2: Node) -> Node:
     d = 0
     r = None
     while h1:
-        d = -int(d<0) + h1.data - (h2.data if h2 else 0)
+        d = -int(d < 0) + h1.data - (h2.data if h2 else 0)
         n = Node(d if d >= 0 else 10 + d)
         n.next = r
         r = n

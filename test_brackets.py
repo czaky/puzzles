@@ -1,6 +1,8 @@
 """Test module for the brackets puzzles."""
+
 import unittest
 import brackets as b
+
 
 class TestBrackets(unittest.TestCase):
     """Test class for brackets module."""

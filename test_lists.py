@@ -1,10 +1,12 @@
 """Test module for the linked lists puzzles."""
+
 import unittest
 import lists as ll
 
 
 class TestLinkedLists(unittest.TestCase):
     """Test class for the linked lists puzzles."""
+
     def test_make_linked(self):
         "Test `make_linked`."
         self.assertIsNone(ll.make([]))
@@ -16,7 +18,6 @@ class TestLinkedLists(unittest.TestCase):
         n = n.next
         self.assertEqual(2, n.data)
         self.assertIsNone(n.next)
-
 
     def test_make_linked_loop(self):
         "Test `make_linked`."
@@ -56,8 +57,7 @@ class TestLinkedLists(unittest.TestCase):
 
         self.assertEqual([1], list(ll.delete_middle(ll.make([1, 2]))))
         self.assertEqual([1, 3], list(ll.delete_middle(ll.make([1, 2, 3]))))
-        self.assertEqual(
-            [1, 2, 4], list(ll.delete_middle(ll.make([1, 2, 3, 4]))))
+        self.assertEqual([1, 2, 4], list(ll.delete_middle(ll.make([1, 2, 3, 4]))))
 
     def test_nth(self):
         "Test `nth` function."
@@ -79,8 +79,7 @@ class TestLinkedLists(unittest.TestCase):
         self.assertEqual([1], list(ll.insert_sorted(ll.make([]), 1)))
         self.assertEqual([1, 2], list(ll.insert_sorted(ll.make([1]), 2)))
         self.assertEqual([1, 2], list(ll.insert_sorted(ll.make([2]), 1)))
-        self.assertEqual(
-            [1, 2, 3], list(ll.insert_sorted(ll.make([1, 3]), 2)))
+        self.assertEqual([1, 2, 3], list(ll.insert_sorted(ll.make([1, 3]), 2)))
 
     def test_reverse(self):
         "Test `reverse`."
@@ -117,21 +116,62 @@ class TestLinkedLists(unittest.TestCase):
         self.assertEqual([1], list(ll.swap_pairs(ll.make([1]))))
         self.assertEqual([2, 1], list(ll.swap_pairs(ll.make([1, 2]))))
         self.assertEqual([2, 1, 3], list(ll.swap_pairs(ll.make([1, 2, 3]))))
-        self.assertEqual(
-            [2, 1, 4, 3], list(ll.swap_pairs(ll.make([1, 2, 3, 4]))))
-
+        self.assertEqual([2, 1, 4, 3], list(ll.swap_pairs(ll.make([1, 2, 3, 4]))))
 
     def test_subtract_lists(self):
         "Test `subtract_lists` function."
         self.assertEqual(
-            [8, 8], list(ll.subtract_lists(
-                ll.make(list(map(int, '100'))),
-                ll.make(list(map(int, '12')))))
+            [8, 8],
+            list(
+                ll.subtract_lists(
+                    ll.make(list(map(int, "100"))), ll.make(list(map(int, "12")))
+                )
+            ),
         )
         self.assertEqual(
-            [9, 2, 2, 0, 2, 0, 9, 9, 1, 2, 0, 9, 0, 0, 8, 8, 7, 8,
-            4, 4, 0, 6, 7, 8, 4, 9, 9, 1, 7, 0, 7, 3, 5, 8, 8, 3, 7],
-            list(ll.subtract_lists(
-                ll.make(list(map(int, '020055383525634518999521060086463321841'))),
-                ll.make(list(map(int, '10835173613544430215114275094755963004')))))
+            [
+                9,
+                2,
+                2,
+                0,
+                2,
+                0,
+                9,
+                9,
+                1,
+                2,
+                0,
+                9,
+                0,
+                0,
+                8,
+                8,
+                7,
+                8,
+                4,
+                4,
+                0,
+                6,
+                7,
+                8,
+                4,
+                9,
+                9,
+                1,
+                7,
+                0,
+                7,
+                3,
+                5,
+                8,
+                8,
+                3,
+                7,
+            ],
+            list(
+                ll.subtract_lists(
+                    ll.make(list(map(int, "020055383525634518999521060086463321841"))),
+                    ll.make(list(map(int, "10835173613544430215114275094755963004"))),
+                )
+            ),
         )

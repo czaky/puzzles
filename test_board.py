@@ -1,10 +1,12 @@
 """Test module for the board puzzles."""
+
 import unittest
 import board as b
 
 
 class TestBoardGames(unittest.TestCase):
     """Test class for the board games puzzles."""
+
     def test_queens(self):
         "Test the `queens` puzzle."
         self.assertEqual([], b.queens(0))

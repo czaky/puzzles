@@ -1,17 +1,18 @@
 """Test module for the string puzzles."""
+
 import unittest
 import strings as s
 
+
 class TestStrings(unittest.TestCase):
     """Test class for the string puzzles."""
+
     def test_reverse_words(self):
         "Test the `reverse_words` function."
-        self.assertEqual('', s.reverse_words(''))
-        self.assertEqual('jello', s.reverse_words('jello'))
-        self.assertEqual(
-            'world sunny hello', s.reverse_words('hello sunny world'))
-        self.assertEqual(
-            'fun-much-so', s.reverse_words('so-much-fun', '-'))
+        self.assertEqual("", s.reverse_words(""))
+        self.assertEqual("jello", s.reverse_words("jello"))
+        self.assertEqual("world sunny hello", s.reverse_words("hello sunny world"))
+        self.assertEqual("fun-much-so", s.reverse_words("so-much-fun", "-"))
 
     def test_palindrome(self):
         "Test the `palindrome` function."
@@ -33,34 +34,13 @@ class TestStrings(unittest.TestCase):
 
     def test_common_prefix(self):
         "Test the `common_prefix` function."
-        self.assertEqual(
-            "",
-            s.common_prefix([])
-        )
-        self.assertEqual(
-            "abc",
-            s.common_prefix(["abc"])
-        )
-        self.assertEqual(
-            "a",
-            s.common_prefix(["a", "ab", "abc"])
-        )
-        self.assertEqual(
-            "a",
-            s.common_prefix(["abc", "ab", "a"])
-        )
-        self.assertEqual(
-            "abc",
-            s.common_prefix(["abc", "abc", "abc"])
-        )
-        self.assertEqual(
-            "ab",
-            s.common_prefix(["abd", "abc", "abc"])
-        )
-        self.assertEqual(
-            "a",
-            s.common_prefix(["abc", "abc", "aec"])
-        )
+        self.assertEqual("", s.common_prefix([]))
+        self.assertEqual("abc", s.common_prefix(["abc"]))
+        self.assertEqual("a", s.common_prefix(["a", "ab", "abc"]))
+        self.assertEqual("a", s.common_prefix(["abc", "ab", "a"]))
+        self.assertEqual("abc", s.common_prefix(["abc", "abc", "abc"]))
+        self.assertEqual("ab", s.common_prefix(["abd", "abc", "abc"]))
+        self.assertEqual("a", s.common_prefix(["abc", "abc", "aec"]))
 
     def test_equal_rotated(self):
         "Test the `equal_rotated` function."
@@ -92,8 +72,11 @@ class TestStrings(unittest.TestCase):
         self.assertEqual(3, s.max_distinct_char_substring("hallo"))
         self.assertEqual(2, s.max_distinct_char_substring("abba"))
         self.assertEqual(
-            10, s.max_distinct_char_substring(
-                "aldshflasghdfasgfkhgasdfasdgvfyweofyewyrtyefgv"))
+            10,
+            s.max_distinct_char_substring(
+                "aldshflasghdfasgfkhgasdfasdgvfyweofyewyrtyefgv"
+            ),
+        )
 
     def test_edit_distance(self):
         "Test the `edit_distance` function."
@@ -174,37 +157,42 @@ class TestStrings(unittest.TestCase):
         self.assertEqual("aba", s.smallest_window_with_all_characters("abab", "aa"))
         self.assertEqual("aba", s.smallest_window_with_all_characters("baba5", "aa"))
         self.assertEqual(
-            "bc@de4f", s.smallest_window_with_all_characters("abc@de4fg", "bdf"))
+            "bc@de4f", s.smallest_window_with_all_characters("abc@de4fg", "bdf")
+        )
         self.assertEqual(
-            "bc@def", s.smallest_window_with_all_characters("abc3de4fg@abc@def2g", "bdf"))
+            "bc@def",
+            s.smallest_window_with_all_characters("abc3de4fg@abc@def2g", "bdf"),
+        )
 
     def test_boolean_parentheses(self):
         "Test the `boolean_parentheses` function."
         self.assertEqual(1, s.boolean_parentheses("T|F"))
         self.assertEqual(5, s.boolean_parentheses("T|F^F&T"))
-        self.assertEqual(99632640, s.boolean_parentheses("T|F^F&T|F^F^F^T|T&T^T|F^T^F&F^T|T^F"))
+        self.assertEqual(
+            99632640, s.boolean_parentheses("T|F^F&T|F^F^F^T|T&T^T|F^T^F&F^T|T^F")
+        )
 
     def test_artistic_photo_count(self):
         "Test the `artistic_photo_count` function."
-        self.assertEqual(1, s.artistic_photo_count('APABA', 1, 2))
-        self.assertEqual(0, s.artistic_photo_count('APABA', 2, 3))
-        self.assertEqual(3, s.artistic_photo_count('PBAAP.B', 1, 3))
-        self.assertEqual(3, s.artistic_photo_count('.PBAAP.B', 1, 3))
+        self.assertEqual(1, s.artistic_photo_count("APABA", 1, 2))
+        self.assertEqual(0, s.artistic_photo_count("APABA", 2, 3))
+        self.assertEqual(3, s.artistic_photo_count("PBAAP.B", 1, 3))
+        self.assertEqual(3, s.artistic_photo_count(".PBAAP.B", 1, 3))
 
     def test_distinct_subsequence_count(self):
         "Test the `distinct_subsequence_count` function."
-        self.assertEqual(1, s.distinct_subsequence_count(''))
-        self.assertEqual(2, s.distinct_subsequence_count('a'))
-        self.assertEqual(4, s.distinct_subsequence_count('ab'))
-        self.assertEqual(3, s.distinct_subsequence_count('aa'))
-        self.assertEqual(7, s.distinct_subsequence_count('aba'))
+        self.assertEqual(1, s.distinct_subsequence_count(""))
+        self.assertEqual(2, s.distinct_subsequence_count("a"))
+        self.assertEqual(4, s.distinct_subsequence_count("ab"))
+        self.assertEqual(3, s.distinct_subsequence_count("aa"))
+        self.assertEqual(7, s.distinct_subsequence_count("aba"))
 
     def test_permutations(self):
         "Test the `permutations` function."
-        self.assertEqual([''], s.permutations(''))
-        self.assertEqual(['a'], s.permutations('a'))
-        self.assertEqual(['ab', 'ba'], s.permutations('ab'))
+        self.assertEqual([""], s.permutations(""))
+        self.assertEqual(["a"], s.permutations("a"))
+        self.assertEqual(["ab", "ba"], s.permutations("ab"))
         self.assertEqual(
-            ['abc', 'acb', 'bac', 'bca', 'cab', 'cba'],
-            s.permutations('abc'))
-        self.assertEqual(24, len(s.permutations('abcd')))
+            ["abc", "acb", "bac", "bca", "cab", "cba"], s.permutations("abc")
+        )
+        self.assertEqual(24, len(s.permutations("abcd")))

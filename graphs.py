@@ -3,7 +3,8 @@
 from typing import List, Iterable
 from collections import deque
 
-def breadth_first(adj: List[List[int]], start: int=0) -> List[int]:
+
+def breadth_first(adj: List[List[int]], start: int = 0) -> List[int]:
     "Traverse the graph breadth first. Return list of nodes."
     q = deque([start])
     v = set([start])
@@ -17,7 +18,8 @@ def breadth_first(adj: List[List[int]], start: int=0) -> List[int]:
                 v.add(d)
     return o
 
-def depth_first(adj: List[List[int]], start: int=0) -> List[int]:
+
+def depth_first(adj: List[List[int]], start: int = 0) -> List[int]:
     "Traverse the graph depth first using stack. Return list of nodes."
     o = []
     v = set()
@@ -30,27 +32,33 @@ def depth_first(adj: List[List[int]], start: int=0) -> List[int]:
             s.extend(filter(lambda a: a not in v, reversed(adj[n])))
     return o
 
-def depth_first_r(adj: List[List[int]], start: int=0) -> List[int]:
+
+def depth_first_r(adj: List[List[int]], start: int = 0) -> List[int]:
     "Traverse the graph recursively depth first. Return list of nodes."
     o = []
     v = set()
+
     def dfs(n: int):
         v.add(n)
         o.append(n)
         for a in adj[n]:
             if not a in v:
                 dfs(a)
+
     dfs(start)
     return o
+
 
 def topological_order(vertexes: list, edges: dict) -> Iterable:
     "Return `vertexes` in topological order based on `edges` relation."
     s = []
     v = set()
+
     def sort(n):
         if not n in v:
             v.add(n)
             any(map(sort, edges.get(n, [])))
             s.append(n)
+
     any(map(sort, vertexes))
     return reversed(s)

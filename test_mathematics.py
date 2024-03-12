@@ -1,9 +1,12 @@
 """Test module for the numbers related puzzles."""
+
 import unittest
 import mathematics as m
 
+
 class TestNumbers(unittest.TestCase):
     """Test class for the numbers puzzles."""
+
     def test_floor_sqrt(self):
         "Test the `floor_sqrt` function."
         self.assertEqual(0, m.floor_sqrt(0))
