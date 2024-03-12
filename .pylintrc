@@ -88,6 +88,7 @@ disable=raw-checker-failed,
         use-symbolic-message-instead,
         unnecessary-lambda-assignment,
         too-few-public-methods,
+        too-many-public-methods,
         nested-min-max,
         expression-not-assigned
 
