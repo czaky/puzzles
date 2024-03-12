@@ -349,6 +349,7 @@ def pattern_match(pattern: str, string: str) -> bool:
     pl = len(pattern)
     sl = len(string)
 
+    @lru_cache(None)
     def m(p: int, s: int):
         return (
             p < pl
