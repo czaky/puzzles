@@ -299,17 +299,10 @@ def no_siblings_nodes(t: Node) -> list:
     singles = []
 
     def enum(l, r):
-        if l:
-            if not r:
-                singles.append(l.data)
-            enum(l.left, l.right)
-        if r:
-            if not l:
-                singles.append(r.data)
-            enum(r.left, r.right)
+        l and (enum(l.left, l.right), r or singles.append(l.data))
+        r and (enum(r.left, r.right), l or singles.append(r.data))
 
-    if t:
-        enum(t.left, t.right)
+    t and enum(t.left, t.right)
     return sorted(singles)
 
 
@@ -422,3 +415,25 @@ def nodes_at_distance(r: Node, target: int, k: int) -> List[int]:
 
     search(r)
     return sorted(result)
+
+
+def merge_sorted(r1: Node, r2: Node) -> list:
+    "Return a list of sorted values from BST `r1` and `r2`."
+    # Runs in O(M+N) time complexity.
+    # Auxiliary space (necessary for the DFO stack):
+    #    O(max(|r1|, |r2|)) < O(M+N)
+    out = []
+    it1 = dfo(r1)
+    it2 = dfo(r2)
+    v1 = next(it1, None)
+    v2 = next(it2, None)
+    while v1 is not None and v2 is not None:
+        if v1 < v2:
+            out.append(v1)
+            v1 = next(it1, None)
+        else:
+            out.append(v2)
+            v2 = next(it2, None)
+    v1 is not None and (out.append(v1), out.extend(it1))
+    v2 is not None and (out.append(v2), out.extend(it2))
+    return out

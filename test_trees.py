@@ -168,3 +168,17 @@ class TestTrees(unittest.TestCase):
         self.assertEqual(
             [7], t.nodes_at_distance(t.make("20 7 4 -1 -1 3 1 -1 -1 -1 24"), 7, 0)
         )
+
+    def test_merge_sorted(self):
+        "Test `merge_sorted`."
+        self.assertEqual([1], t.merge_sorted(t.make(""), t.make("1")))
+        self.assertEqual([2], t.merge_sorted(t.make("2"), t.make("")))
+        self.assertEqual([1, 2], t.merge_sorted(t.make("2"), t.make("1")))
+        self.assertEqual(
+            [1, 2, 3, 4, 5, 6],
+            t.merge_sorted(t.make("3 1 -1 -1 5"), t.make("4 2 -1 -1 6")),
+        )
+        self.assertEqual(
+            [1, 2, 3, 4, 5, 6],
+            t.merge_sorted(t.make("4 2 -1 -1 6"), t.make("3 1 -1 -1 5")),
+        )
