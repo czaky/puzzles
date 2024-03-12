@@ -16,3 +16,8 @@ class TestGraphs(unittest.TestCase):
         "Test `depth_first` traversal."
         adj = [[1, 2, 3], [], [4], [], []]
         self.assertEqual([0, 1, 2, 4, 3], g.depth_first(adj))
+
+    def test_circle_of_words(self):
+        "Test `circle_of_words`."
+        self.assertTrue(g.circle_of_words(["abc", "cde", "eda"]))
+        self.assertFalse(g.circle_of_words(["abc", "cde", "edf"]))

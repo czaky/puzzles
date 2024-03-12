@@ -62,3 +62,18 @@ def topological_order(vertexes: list, edges: dict) -> Iterable:
 
     any(map(sort, vertexes))
     return reversed(s)
+
+
+def circle_of_words(words: List[str]) -> bool:
+    "True if `words` can make a circle if connected by the same letter."
+    # build graph
+    gr = {}
+    for w in words:
+        (gr.get(w[0]) or gr.setdefault(w[0], [[], 0]))[0].append(w[-1])
+        (gr.get(w[-1]) or gr.setdefault(w[-1], [[], 0]))[1] += 1
+    # connectivity check
+    vis = set()
+    dfs = lambda c: c in vis or (vis.add(c), all(map(dfs, gr[c][0])))
+    dfs(words[0][0])
+    # connectivity and vertex degree check
+    return int(len(gr) == len(vis) and all(len(c[0]) == c[1] for c in gr.values()))
