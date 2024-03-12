@@ -73,7 +73,7 @@ def circle_of_words(words: List[str]) -> bool:
         (gr.get(w[-1]) or gr.setdefault(w[-1], [[], 0]))[1] += 1
     # connectivity check
     vis = set()
-    dfs = lambda c: c in vis or (vis.add(c), all(map(dfs, gr[c][0])))
+    dfs = lambda c: c in vis or vis.add(c) or all(map(dfs, gr[c][0]))
     dfs(words[0][0])
     # connectivity and vertex degree check
     return int(len(gr) == len(vis) and all(len(c[0]) == c[1] for c in gr.values()))
