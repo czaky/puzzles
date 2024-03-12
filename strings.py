@@ -355,12 +355,13 @@ def pattern_match(pattern: str, string: str) -> bool:
             p < pl
             and s < sl
             and (
-                pattern[p] == "*"
-                and (m(p + 1, s) or m(p, s + 1))
-                or pattern[p] in (string[s], "?")
+                pattern[p] in (string[s], "?")
                 and m(p + 1, s + 1)
+                or pattern[p] == "*"
+                and m(p + 1, s) | m(p, s + 1)
             )
-            or (s == sl and all(pattern[i] == "*" for i in range(p, pl)))
+            or s == sl
+            and all(pattern[i] == "*" for i in range(p, pl))
         )
 
     return m(0, 0)
