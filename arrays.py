@@ -6,7 +6,7 @@ from typing import List, Optional, Tuple, Iterable
 from functools import reduce, lru_cache
 from operator import mul, neg, add
 from itertools import accumulate, starmap, islice, chain
-import search as bs
+import search
 
 
 def skip(it, n: int = 1):
@@ -31,7 +31,7 @@ def subrev(a: list, s: int = 0, e: int = -1):
 
 def find_rotation(a: List[int]) -> int:
     "A sorted list `a` was rotated. Find the rotation index in O(log N)."
-    return bs.binary(lambda m: a[m] <= a[-1], 0, len(a) - 1, -1) + 1
+    return search.binary(lambda m: a[m] <= a[-1], 0, len(a) - 1, -1) + 1
 
 
 def rotated_minimum(a: list) -> int:
@@ -60,7 +60,7 @@ def equilibrium_point(a: list) -> int:
 def bitonic_point(a: List[int]) -> int:
     "Maximum of strictly increasing array then maybe strictly decreasing."
     # Runs in O(log N)
-    return a[bs.binary(lambda m: a[m - 1] > a[m], 1, len(a) - 1, len(a) - 1)]
+    return a[search.binary(lambda m: a[m - 1] > a[m], 1, len(a) - 1, len(a) - 1)]
 
 
 def duplicates(a: list) -> list:
@@ -87,7 +87,7 @@ def rotate(a: list, left: int = 1):
 
 def transition_point(a: list) -> int:
     "Transition index in sorted list `a` of '0's and '1's."
-    return bs.binary(lambda m: a[m] == 1, 0, len(a) - 1, -1)
+    return search.binary(lambda m: a[m] == 1, 0, len(a) - 1, -1)
 
 
 def min_distance(a: list, x: int, y: int) -> int:
@@ -145,7 +145,7 @@ def meta_cafeteria(n: int, d: int, s: List[int]) -> int:
 
 def floor_element(a: List[int], x: int) -> int:
     "Return the largest element smaller or equal to `x` from sorted `a`."
-    return bs.binary(lambda m: a[m] > x, 0, len(a) - 1, -1)
+    return search.binary(lambda m: a[m] > x, 0, len(a) - 1, -1)
 
 
 def product_except_self(nums: List[int]) -> List[int]:
@@ -234,7 +234,7 @@ def find_extra_element(a: List[int], b: List[int]) -> int:
     # Runs in O(log N)
     if len(a) < len(b):
         a, b = b, a
-    return bs.binary(lambda m: a[m] < b[m], 0, len(b) - 1, -1) + 1
+    return search.binary(lambda m: a[m] < b[m], 0, len(b) - 1, -1) + 1
 
 
 def pascal_triangle_row(n: int) -> List[int]:
@@ -282,7 +282,7 @@ def duplicated_sorted_find_unique(a: List[int]) -> int:
     # 1 1 2 2 3 4 4 5 5
     # 1=1 2=2 3<4 4<5 5
     return a[
-        bs.binary(lambda m: a[2 * m] < a[2 * m + 1], 0, len(a) // 2 - 1, -1) * 2 + 2
+        search.binary(lambda m: a[2 * m] < a[2 * m + 1], 0, len(a) // 2 - 1, -1) * 2 + 2
     ]
 
 
@@ -306,8 +306,8 @@ def toys_with_budget(a: List[int], b: int) -> int:
 
 def first_last(a: List[int], x: int) -> Tuple[int, int]:
     "Return the first and last index of `x` in a sorted array `a`."
-    l = bs.binary(lambda m: a[m] >= x, 0, len(a) - 1, -1) + 1
-    h = bs.binary(lambda m: a[m] > x, l, len(a) - 1, -1)
+    l = search.binary(lambda m: a[m] >= x, 0, len(a) - 1, -1) + 1
+    h = search.binary(lambda m: a[m] > x, l, len(a) - 1, -1)
     return (l, h) if l <= h else (-1, -1)
 
 
@@ -481,3 +481,11 @@ def next_smallest_palindrome_number(num: list) -> list:
         i -= 1
         j += 1
     return num
+
+
+def aggressive_cows(stalls: list, cows: int) -> int:
+    "Return maximum possible distance between `cows` when placed into the `stalls`."
+    stalls.sort()
+    count = lambda d: lambda a, s: (a[0] + 1, s) if s - a[1] >= d else a
+    gt = lambda d: cows > reduce(count(d), stalls, (1, stalls[0]))[0]
+    return search.binary(gt, 1, stalls[-1] - stalls[0])

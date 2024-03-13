@@ -277,3 +277,8 @@ class TestRotatedArray2(unittest.TestCase):
             [9, 4, 1, 8, 8, 0, 8, 8, 1, 4, 9],
             ar.next_smallest_palindrome_number([9, 4, 1, 8, 7, 9, 7, 8, 3, 2, 2]),
         )
+
+    def test_aggressive_cows(self):
+        "Test `aggressive_cows`."
+        self.assertEqual(3, ar.aggressive_cows([1, 2, 4, 8, 9], 3))
+        self.assertEqual(4, ar.aggressive_cows([10, 1, 2, 7, 5], 3))
