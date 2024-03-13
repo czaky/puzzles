@@ -486,6 +486,6 @@ def next_smallest_palindrome_number(num: list) -> list:
 def aggressive_cows(stalls: list, cows: int) -> int:
     "Return maximum possible distance between `cows` when placed into the `stalls`."
     stalls.sort()
-    count = lambda d: lambda a, s: (a[0] + 1, s) if s - a[1] >= d else a
-    gt = lambda d: cows > reduce(count(d), stalls, (1, stalls[0]))[0]
+    ac = lambda d: lambda a, s: s - a[1] >= d and (a[0] + 1, s) or a
+    gt = lambda d: cows > reduce(ac(d), stalls, (1, stalls[0]))[0]
     return search.binary(gt, 1, stalls[-1] - stalls[0])
