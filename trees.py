@@ -31,24 +31,65 @@ class Node:
             n.left and q.append(n.left)
             n.right and q.append(n.right)
 
-    def present(self):
-        "Print the tree top-down."
-        h = self.height()
-        q = deque([self])
-        found = True
-        while found:
-            h -= 1
-            sep = " " * max(1, 2**h)
-            print(sep, end="")
-            found = False
-            for _ in range(len(q)):
-                n = q.popleft()
-                found |= n is not None
-                print(sep, end="")
-                print(n.data if n else " ", end="")
-                q.append(n and n.left)
-                q.append(n and n.right)
-            print()
+    def display(self):
+        "Display the tree in a visual 2D manner."
+
+        def aux(node):
+            if node.left and node.right:
+                # Two children.
+                left, n, p, x = aux(node.left)
+                right, m, q, y = aux(node.right)
+                s = str(node.data)
+                u = len(s)
+                first_line = (
+                    (x + 1) * " " + (n - x - 1) * "_" + s + y * "_" + (m - y) * " "
+                )
+                second_line = (
+                    x * " " + "/" + (n - x - 1 + u + y) * " " + "\\" + (m - y - 1) * " "
+                )
+                if p < q:
+                    left += [n * " "] * (q - p)
+                elif q < p:
+                    right += [m * " "] * (p - q)
+                zipped_lines = zip(left, right)
+                lines = [first_line, second_line] + [
+                    a + u * " " + b for a, b in zipped_lines
+                ]
+                return lines, n + m + u, max(p, q) + 2, n + u // 2
+
+            # Only left child.
+            if node.left:
+                lines, n, p, x = aux(node.left)
+                s = str(node.data)
+                u = len(s)
+                first_line = (x + 1) * " " + (n - x - 1) * "_" + s
+                second_line = x * " " + "/" + (n - x - 1 + u) * " "
+                shifted_lines = [line + u * " " for line in lines]
+                return (
+                    [first_line, second_line] + shifted_lines,
+                    n + u,
+                    p + 2,
+                    n + u // 2,
+                )
+
+            # Only right child.
+            if node.right:
+                lines, n, p, x = aux(node.right)
+                s = str(node.data)
+                u = len(s)
+                first_line = s + x * "_" + (n - x) * " "
+                second_line = (u + x) * " " + "\\" + (n - x - 1) * " "
+                shifted_lines = [u * " " + line for line in lines]
+                return [first_line, second_line] + shifted_lines, n + u, p + 2, u // 2
+
+            line = str(node.data)
+            width = len(line)
+            height = 1
+            middle = width // 2
+            return [line], width, height, middle
+
+        for line in aux(self)[0]:
+            print(line)
 
 
 def make(s: str) -> Node:
@@ -377,7 +418,7 @@ def median(t: Node) -> float:
     return next(it) if n % 2 else (next(it) + next(it)) / 2
 
 
-def width(t: Node) -> int:
+def max_width(t: Node) -> int:
     "Max width at any level in tree `t`."
 
     def level_width():
@@ -478,3 +519,26 @@ def merge_sorted(r1: Node, r2: Node) -> list:
     v1 is not None and (out.append(v1), out.extend(it1))
     v2 is not None and (out.append(v2), out.extend(it2))
     return out
+
+
+def tree_distance(root: Node, target) -> int:
+    "Return max distance to all nodes from the one with the `target` value."
+    # This puzzle is also known as `burning tree` puzzle.
+
+    def search(r):
+        if not r:
+            return 0, 0
+
+        # Try to find `target`.
+        # If not compute the max depth.
+        fl, dl = search(r.left)
+        fr, dr = search(r.right)
+        return (
+            fl
+            and (fl + 1, max(fl + 1 + dr, dl))
+            or fr
+            and (fr + 1, max(fr + 1 + dl, dr))
+            or (int(r.data == target), max(dl, dr) + 1)
+        )
+
+    return search(root)[1] - 1

@@ -131,11 +131,11 @@ class TestTrees(unittest.TestCase):
         self.assertEqual(2, t.median(t.make("2 1 -1 -1 3")))
         self.assertEqual(4, t.median(t.make("5 3 2 -1 -1 4 -1 -1 6")))
 
-    def test_width(self):
-        "Test `width` function."
-        self.assertEqual(1, t.width(t.make("2 1")))
-        self.assertEqual(2, t.width(t.make("2 1 -1 -1 3")))
-        self.assertEqual(3, t.width(t.make("5 3 2 -1 -1 4 -1 -1 7 6")))
+    def test_max_width(self):
+        "Test `max_width` function."
+        self.assertEqual(1, t.max_width(t.make("2 1")))
+        self.assertEqual(2, t.max_width(t.make("2 1 -1 -1 3")))
+        self.assertEqual(3, t.max_width(t.make("5 3 2 -1 -1 4 -1 -1 7 6")))
 
     def test_to_linked_list(self):
         "Test `to_linked_list` function."
@@ -182,3 +182,38 @@ class TestTrees(unittest.TestCase):
             [1, 2, 3, 4, 5, 6],
             t.merge_sorted(t.make("4 2 -1 -1 6"), t.make("3 1 -1 -1 5")),
         )
+
+    def test_tree_distance(self):
+        "Test `tree_distance`."
+        tr = t.make_bfo("1 2 N 3 N 4 N 5 N 6 N")
+        self.assertEqual(5, t.tree_distance(tr, 1))
+        self.assertEqual(4, t.tree_distance(tr, 2))
+        self.assertEqual(3, t.tree_distance(tr, 3))
+        self.assertEqual(3, t.tree_distance(tr, 4))
+        self.assertEqual(4, t.tree_distance(tr, 5))
+        self.assertEqual(5, t.tree_distance(tr, 6))
+
+        tr = t.make_bfo("1 N 2 N 3 N 4 N 5 N 6")
+        self.assertEqual(5, t.tree_distance(tr, 1))
+        self.assertEqual(4, t.tree_distance(tr, 2))
+        self.assertEqual(3, t.tree_distance(tr, 3))
+        self.assertEqual(3, t.tree_distance(tr, 4))
+        self.assertEqual(4, t.tree_distance(tr, 5))
+        self.assertEqual(5, t.tree_distance(tr, 6))
+
+        tr = t.make_bfo("1 2 3 N N 4 6 N 5 N N 7 N")
+        #  1___
+        # /    \
+        # 2  __3
+        #   /   \
+        #   4_  6
+        #     \
+        #     5
+        #    /
+        #    7
+        self.assertEqual(4, t.tree_distance(tr, 1))
+        self.assertEqual(5, t.tree_distance(tr, 2))
+        self.assertEqual(3, t.tree_distance(tr, 3))
+        self.assertEqual(3, t.tree_distance(tr, 4))
+        self.assertEqual(4, t.tree_distance(tr, 5))
+        self.assertEqual(4, t.tree_distance(tr, 6))
