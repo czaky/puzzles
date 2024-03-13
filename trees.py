@@ -31,9 +31,28 @@ class Node:
             n.left and q.append(n.left)
             n.right and q.append(n.right)
 
+    def present(self):
+        "Print the tree top-down."
+        h = self.height()
+        q = deque([self])
+        found = True
+        while found:
+            h -= 1
+            sep = " " * max(1, 2**h)
+            print(sep, end="")
+            found = False
+            for _ in range(len(q)):
+                n = q.popleft()
+                found |= n is not None
+                print(sep, end="")
+                print(n.data if n else " ", end="")
+                q.append(n and n.left)
+                q.append(n and n.right)
+            print()
+
 
 def make(s: str) -> Node:
-    "Make a binary tree from a string `s`."
+    "Make a binary tree from a string `s` in depth first order."
 
     def des(it):
         v = next(it, -1)
@@ -45,6 +64,28 @@ def make(s: str) -> Node:
         return n
 
     return des(iter(map(int, s.split())))
+
+
+def make_bfo(s: str) -> Node:
+    "Make a binary tree from a string `s` in breadth first order."
+    it = iter(s.split())
+    v = next(it, None)
+    if v is None:
+        return None
+    root = Node(int(v))
+    q = deque([root])
+    for v in it:
+        n = q.popleft()
+        if v != "N":
+            n.left = Node(int(v))
+            q.append(n.left)
+        v = next(it, None)
+        if v is None:
+            break
+        if v != "N":
+            n.right = Node(int(v))
+            q.append(n.right)
+    return root
 
 
 # Determine if a tree is an ordered BST (may be unbalanced)
