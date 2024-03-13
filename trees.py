@@ -35,58 +35,42 @@ class Node:
         "Display the tree in a visual 2D manner."
 
         def aux(node):
-            if node.left and node.right:
-                # Two children.
-                left, n, p, x = aux(node.left)
-                right, m, q, y = aux(node.right)
-                s = str(node.data)
-                u = len(s)
-                first_line = (
-                    (x + 1) * " " + (n - x - 1) * "_" + s + y * "_" + (m - y) * " "
-                )
-                second_line = (
-                    x * " " + "/" + (n - x - 1 + u + y) * " " + "\\" + (m - y - 1) * " "
-                )
-                if p < q:
-                    left += [n * " "] * (q - p)
-                elif q < p:
-                    right += [m * " "] * (p - q)
-                zipped_lines = zip(left, right)
-                lines = [first_line, second_line] + [
-                    a + u * " " + b for a, b in zipped_lines
-                ]
-                return lines, n + m + u, max(p, q) + 2, n + u // 2
+            "-> lines, width, height, middle"
+            s = str(node.data)
+            u = len(s)
+
+            if not node.left and not node.right:
+                return [s], u, 1, u // 2
 
             # Only left child.
-            if node.left:
+            if not node.right:
                 lines, n, p, x = aux(node.left)
-                s = str(node.data)
-                u = len(s)
-                first_line = (x + 1) * " " + (n - x - 1) * "_" + s
-                second_line = x * " " + "/" + (n - x - 1 + u) * " "
-                shifted_lines = [line + u * " " for line in lines]
-                return (
-                    [first_line, second_line] + shifted_lines,
-                    n + u,
-                    p + 2,
-                    n + u // 2,
-                )
+                first = (x + 1) * " " + (n - x - 1) * "_" + s
+                second = x * " " + "/" + (n - x - 1 + u) * " "
+                shifted = [line + u * " " for line in lines]
+                return [first, second] + shifted, n + u, p + 2, n + u // 2
 
             # Only right child.
-            if node.right:
+            if not node.left:
                 lines, n, p, x = aux(node.right)
-                s = str(node.data)
-                u = len(s)
-                first_line = s + x * "_" + (n - x) * " "
-                second_line = (u + x) * " " + "\\" + (n - x - 1) * " "
-                shifted_lines = [u * " " + line for line in lines]
-                return [first_line, second_line] + shifted_lines, n + u, p + 2, u // 2
+                first = s + x * "_" + (n - x) * " "
+                second = (u + x) * " " + "\\" + (n - x - 1) * " "
+                shifted = [u * " " + line for line in lines]
+                return [first, second] + shifted, n + u, p + 2, u // 2
 
-            line = str(node.data)
-            width = len(line)
-            height = 1
-            middle = width // 2
-            return [line], width, height, middle
+            # Two children.
+            left, n, p, x = aux(node.left)
+            right, m, q, y = aux(node.right)
+            first = (x + 1) * " " + (n - x - 1) * "_" + s + y * "_" + (m - y) * " "
+            second = (
+                x * " " + "/" + (n - x - 1 + u + y) * " " + "\\" + (m - y - 1) * " "
+            )
+            if p < q:
+                left += [n * " "] * (q - p)
+            elif q < p:
+                right += [m * " "] * (p - q)
+            lines = [first, second] + [a + u * " " + b for a, b in zip(left, right)]
+            return lines, n + m + u, max(p, q) + 2, n + u // 2
 
         for line in aux(self)[0]:
             print(line)
