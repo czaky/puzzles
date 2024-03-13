@@ -344,74 +344,26 @@ def permutations(s: str) -> list:
     return sorted(sols)
 
 
-def pattern_match_rec(pattern: str, string: str) -> bool:
-    "Match `pattern` containing `*` and `?` to `string`."
-    pl = len(pattern)
-    sl = len(string)
-
-    @lru_cache(None)
-    def m(p: int, s: int):
-        return (
-            p < pl
-            and s < sl
-            and (
-                pattern[p] in (string[s], "?")
-                and m(p + 1, s + 1)
-                or pattern[p] == "*"
-                and m(p + 1, s) | m(p, s + 1)
-            )
-            or s == sl
-            and all(pattern[i] == "*" for i in range(p, pl))
-        )
-
-    return m(0, 0)
-
-
-def pattern_match_dp(pattern: str, string: str) -> bool:
-    "Match `pattern` containing `*` and `?` to `string`."
-    pl = len(pattern)
-    sl = len(string)
-
-    dp = [[0] * (sl + 1) for _ in range(pl + 1)]
-
-    dp[pl][sl] = 1
-    p = pl - 1
-    while p >= 0 and pattern[p] == "*" and dp[p + 1][sl]:
-        dp[p][sl] = 1
-        p -= 1
-
-    for p in reversed(range(pl)):
-        for s in reversed(range(sl)):
-            dp[p][s] = int(
-                pattern[p] in (string[s], "?")
-                and dp[p + 1][s + 1]
-                or pattern[p] == "*"
-                and dp[p + 1][s] | dp[p][s + 1]
-            )
-    return dp[0][0]
-
-
 def pattern_match(pattern: str, string: str) -> bool:
     "Match `pattern` containing `*` and `?` to `string`."
     pl = len(pattern)
     sl = len(string)
 
-    p = s = star = bt = 0
+    p = s = bp = bs = 0
 
-    skip_stars = lambda: next((i for i in range(p, pl) if pattern[i] != '*'), pl)
+    skip_stars = lambda: next((i for i in range(p, pl) if pattern[i] != "*"), pl)
 
     while s < sl:
-        if p < pl and pattern[p] in ('?', string[s]):
+        if p < pl and pattern[p] in ("?", string[s]):
             p += 1
             s += 1
-        elif p < pl and pattern[p] == '*':
-            star = p + 1
-            bt = s
-            p = skip_stars()
-        elif star:
+        elif p < pl and pattern[p] == "*":
+            bp = p = skip_stars()
+            bs = s
+        elif bp:
             # backtrack
-            p = star
-            s = bt = bt + 1
+            p = bp
+            s = bs = bs + 1
         else:
             return False
 

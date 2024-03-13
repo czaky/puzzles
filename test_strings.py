@@ -196,3 +196,19 @@ class TestStrings(unittest.TestCase):
             ["abc", "acb", "bac", "bca", "cab", "cba"], s.permutations("abc")
         )
         self.assertEqual(24, len(s.permutations("abcd")))
+
+    def test_pattern_match(self):
+        "Test `pattern_match`."
+        self.assertTrue(s.pattern_match("*", ""))
+        self.assertTrue(s.pattern_match("*", "a"))
+        self.assertTrue(s.pattern_match("*", "aa"))
+        self.assertTrue(s.pattern_match("?", "a"))
+        self.assertFalse(s.pattern_match("?", ""))
+        self.assertFalse(s.pattern_match("?", "ab"))
+        self.assertTrue(s.pattern_match("??", "aa"))
+        self.assertFalse(s.pattern_match("??", "a"))
+        self.assertFalse(s.pattern_match("??", "abc"))
+        self.assertTrue(s.pattern_match("?*a*", "cab"))
+        self.assertTrue(s.pattern_match("?*a*", "cart"))
+        self.assertTrue(s.pattern_match("?*a*", "ca"))
+        self.assertFalse(s.pattern_match("?*a*", "ab"))
