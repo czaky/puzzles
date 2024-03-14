@@ -59,3 +59,17 @@ class TestMatrixPuzzles(unittest.TestCase):
             ],
             grid,
         )
+
+    def test_fib(self):
+        "Test `fib."
+        self.assertEqual(1, m.fib(0, 5))
+        self.assertEqual(1, m.fib(2, 5))
+        self.assertEqual(1, m.fib(1, 5))
+        self.assertEqual(2, m.fib(3, 5))
+        self.assertEqual(3, m.fib(4, 5))
+        self.assertEqual(0, m.fib(5, 5))
+        self.assertEqual(3, m.fib(6, 5))
+
+    def test_generic_fib(self):
+        "Test `generic_fib."
+        self.assertEqual(4, m.generic_fib(3, 3, 3, 3, 5))

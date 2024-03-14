@@ -4,6 +4,7 @@ from typing import List
 from itertools import product, tee
 from functools import lru_cache, reduce
 from bisect import bisect_right
+import numpy as np
 
 
 def at(m, *indexes):
@@ -102,3 +103,31 @@ def sorted_median(m: List[List[int]]) -> int:
         else:
             l = x + 1
     return l
+
+
+def fib(n, m):
+    "Return `n`th Fibonacci number of the form: `(fib(n-1) + fib(n-2))%m`."
+    # Runs in O(log N)
+    mat = np.array([[1, 1], [1, 0]])
+    res = np.array([1, 0])
+    n -= 2
+    while n > 0:
+        n, r = divmod(n, 2)
+        if r:
+            res = (res @ mat) % m
+        mat = (mat @ mat) % m
+    return sum(res) % m
+
+
+def generic_fib(a, b, c, n, m):
+    "Return `n`th Fibonacci number of the form: `(a*f(n-1) + b*f(n-2) + c)%m`."
+    # Runs in O(log N)
+    mat = np.array([[a, b, c], [1, 0, 0], [0, 0, 1]])
+    res = np.array([1, 0, 0])
+    n -= 2
+    while n > 0:
+        n, r = divmod(n, 2)
+        if r:
+            res = (res @ mat) % m
+        mat = (mat @ mat) % m
+    return sum(res) % m

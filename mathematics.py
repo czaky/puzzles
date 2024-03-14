@@ -69,14 +69,6 @@ def frog_hops(n: int) -> int:
     return a
 
 
-def fibonacci(n: int) -> int:
-    "Returns nth Fibonacci number."
-    a, b = 0, 1
-    for _ in range(n):
-        a, b = b, a + b
-    return a
-
-
 def uniform_integers(a: int, b: int) -> int:
     """
     Count number of integers between `[a, b]` with same digits.
