@@ -222,15 +222,15 @@ class TestRotatedArray2(unittest.TestCase):
         self.assertEqual((4, 6), ar.first_last([1, 1, 2, 3, 4, 4, 4], 4))
         self.assertEqual((-1, -1), ar.first_last([1, 1, 2, 3, 4, 4, 4], 5))
 
-    def test_merge(self):
-        "Test `merge` function."
+    def test_merge_sorted(self):
+        "Test `merge_sorted` function."
         a = [4, 5, 6, 12, 13]
         b = [0, 7, 8, 13, 12, 15]
-        ar.merge(a, b)
+        ar.merge_sorted(a, b)
         self.assertEqual([0, 4, 5, 6, 7], a)
         self.assertEqual([8, 12, 12, 13, 13, 15], b)
         a, b = b, a
-        ar.merge(a, b)
+        ar.merge_sorted(a, b)
         self.assertEqual([0, 4, 5, 6, 7, 8], a)
         self.assertEqual([12, 12, 13, 13, 15], b)
 
@@ -282,3 +282,14 @@ class TestRotatedArray2(unittest.TestCase):
         "Test `aggressive_cows`."
         self.assertEqual(3, ar.aggressive_cows([1, 2, 4, 8, 9], 3))
         self.assertEqual(4, ar.aggressive_cows([10, 1, 2, 7, 5], 3))
+
+    def test_smaller_on_right_count(self):
+        "Test `smaller_on_right_count`"
+        self.assertEqual(
+            [6, 1, 1, 1, 0, 1, 0], ar.smaller_on_right_count([12, 1, 2, 3, 0, 11, 4])
+        )
+        self.assertEqual([0, 0, 0, 0], ar.smaller_on_right_count([1, 2, 3, 4]))
+        self.assertEqual([0, 0, 0, 0, 0], ar.smaller_on_right_count([1, 2, 3, 4, 5]))
+
+        self.assertEqual([3, 2, 1, 0], ar.smaller_on_right_count([4, 3, 2, 1]))
+        self.assertEqual([4, 3, 2, 1, 0], ar.smaller_on_right_count([5, 4, 3, 2, 1]))

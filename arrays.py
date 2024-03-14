@@ -311,7 +311,7 @@ def first_last(a: List[int], x: int) -> Tuple[int, int]:
     return (l, h) if l <= h else (-1, -1)
 
 
-def merge(a: List[int], b: List[int]):
+def merge_sorted(a: List[int], b: List[int]):
     "Merge two sorted lists in place. `a` gets the lower elements."
     l = min(len(a), len(b))
     a[: -l - 1 : -1], b[:l] = zip(*map(minmax, zip(reversed(a), b)))
@@ -489,3 +489,36 @@ def aggressive_cows(stalls: list, cows: int) -> int:
     ac = lambda d: lambda a, s: s - a[1] >= d and (a[0] + 1, s) or a
     gt = lambda d: cows > reduce(ac(d), stalls, (1, stalls[0]))[0]
     return search.binary(gt, 1, stalls[-1] - stalls[0])
+
+
+def smaller_on_right_count(arr: list) -> list:
+    "Return a list counting elements smaller that each element in `arr`."
+    n = len(arr)
+    o = [0] * n
+    x = list(range(n))
+    t = x[:]
+
+    def merge(l, m, h):
+        k, i, j = l, l, m + 1
+        while i <= m and j <= h:
+            if arr[t[i]] > arr[t[j]]:
+                o[t[i]] += h - j + 1
+                x[k] = t[i]
+                i += 1
+            else:
+                x[k] = t[j]
+                j += 1
+            k += 1
+        x[k : h + 1] = i <= m and t[i : m + 1] or t[j : h + 1]
+        t[l : h + 1] = x[l : h + 1]
+
+    def split(i, j):
+        if i < j:
+            m = (i + j) // 2
+            split(i, m)
+            split(m + 1, j)
+            merge(i, m, j)
+
+    split(0, len(arr) - 1)
+
+    return o
