@@ -112,10 +112,10 @@ def fib(n, m):
     res = np.array([1, 0])
     n -= 2
     while n > 0:
-        n, r = divmod(n, 2)
-        if r:
+        if n & 1:
             res = (res @ mat) % m
         mat = (mat @ mat) % m
+        n >>= 1
     return sum(res) % m
 
 
@@ -126,8 +126,8 @@ def generic_fib(a, b, c, n, m):
     res = np.array([1, 0, 0])
     n -= 2
     while n > 0:
-        n, r = divmod(n, 2)
-        if r:
+        if n & 1:
             res = (res @ mat) % m
         mat = (mat @ mat) % m
+        n >>= 1
     return sum(res) % m
