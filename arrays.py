@@ -134,12 +134,10 @@ def meta_cafeteria(n: int, d: int, s: List[int]) -> int:
         # [1 - (d+1), S[0]] we can seat ppl every (d + 1) seats
         -1
         + (s[0] + d) // (d + 1)
-        +
         # We can seat ppl every (d + 1) seats
-        sum(-1 + (s[i] - s[i - 1]) // (d + 1) for i in range(1, len(s)))
-        +
+        + sum(-1 + (s[i] - s[i - 1]) // (d + 1) for i in range(1, len(s)))
         # [s[-1], n + (d+1)] we can seat ppl every (d + 1) seats.
-        (n - s[-1]) // (d + 1)
+        + (n - s[-1]) // (d + 1)
     )
 
 
@@ -522,3 +520,14 @@ def smaller_on_right_count(arr: list) -> list:
     split(0, len(arr) - 1)
 
     return o
+
+
+def min_sum_split(a: list, k: int) -> int:
+    "Split `a` in `k` sub-lists. Minimize the maximum sum of every one."
+    # Search through possible splits of `a` given the maximum `mx` sum of each sub-list.
+    # Calculate the number of splits given the `mx` maximum sum of elements.
+    acc = lambda mx: lambda a, e: (e, a[1] + 1) if a[0] + e > mx else (a[0] + e, a[1])
+    # Assure that the number of splits is less or equal to k
+    fit = lambda mx: k < reduce(acc(mx), a, (0, 1))[1]
+    # Use binary search to find the maximum sub-sum.
+    return search.binary_lt(fit, max(a), sum(a))

@@ -26,6 +26,26 @@ def binary(gt: Callable, l: int, h: int, i: int = None) -> Optional[int]:
     return i
 
 
+def binary_lt(lt: Callable, l: int, h: int, i: int = None) -> Optional[int]:
+    """
+    Returns the index of an element which is NOT less than (`lt`).
+
+    Arguments:
+        lt  - less than predicate; takes index of the element.
+        l   - lowest index to start search from (inclusive).
+        h   - highest index to start search from (inclusive).
+        i   - default index to return (`None` by default).
+    """
+    while l <= h:
+        m = (l + h) // 2
+        if lt(m):
+            l = m + 1
+        else:
+            i = m
+            h = m - 1
+    return i
+
+
 def dijkstra_grid(grid: List[List[int]]) -> int:
     "Search a path in an NxN grid of costs per cell. Return overall cost."
     n = len(grid)

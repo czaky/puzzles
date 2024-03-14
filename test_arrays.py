@@ -196,10 +196,6 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual(1, ar.duplicated_sorted_find_unique([1, 3, 3, 4, 4, 5, 5]))
         self.assertEqual(3, ar.duplicated_sorted_find_unique([1, 1, 3]))
 
-
-class TestRotatedArray2(unittest.TestCase):
-    """Test class for sorted, rotated array puzzles."""
-
     def test_max_equal_zero_and_one_length(self):
         "Test `max_equal_zero_and_one_length` function."
         self.assertEqual(4, ar.max_equal_zero_and_one_length([1, 0, 1, 0, 1]))
@@ -293,3 +289,10 @@ class TestRotatedArray2(unittest.TestCase):
 
         self.assertEqual([3, 2, 1, 0], ar.smaller_on_right_count([4, 3, 2, 1]))
         self.assertEqual([4, 3, 2, 1, 0], ar.smaller_on_right_count([5, 4, 3, 2, 1]))
+
+    def test_min_sum_split(self):
+        "Test `min_sum_split`."
+        self.assertEqual(10, ar.min_sum_split([1, 2, 3, 4], 1))
+        self.assertEqual(6, ar.min_sum_split([1, 2, 3, 4], 2))
+        self.assertEqual(4, ar.min_sum_split([1, 2, 3, 4], 3))
+        self.assertEqual(4, ar.min_sum_split([1, 2, 3, 4], 4))
