@@ -3,17 +3,10 @@
 from collections import Counter
 from typing import List, Optional
 from functools import lru_cache, reduce
-from itertools import tee, accumulate
+from itertools import accumulate
 
 from graphs import topological_order
-
-
-# Python 3.10
-def pairwise(iterable):
-    "pairwise('ABCDEFG') --> AB BC CD DE EF FG"
-    a, b = tee(iterable)
-    next(b, None)
-    return zip(a, b)
+from future import pairwise
 
 
 def reverse_words(s: str, sep: str = " ") -> str:
