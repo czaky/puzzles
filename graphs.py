@@ -112,6 +112,8 @@ def articulation_points(adj: List[int]) -> List[int]:
             elif c != p:
                 # If we reached another node (but the parent) higher
                 # in the DFS-tree, update our circle time.
+                # Use the original visited time, given that
+                # the child may be in another circle.
                 ct[n] = min(ct[n], vt[c])
         # Append the node if it is marked as an articulate point.
         # For the root of the DFS-tree (p == -1), we just need
