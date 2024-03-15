@@ -117,54 +117,38 @@ def word_break(s: str, d) -> bool:
     return rec(s)
 
 
-def largest_palindrome(s: str) -> str:
-    "Return largest palindrome substring from `s`."
-    sub = [0, 0]
-    n = len(s)
+def longest_palindrome(s: str) -> str:
+    "Return longest palindrome substring from `s`."
+    n = len(s) * 2 + 1
+    if n == 1:
+        return ""
+    lps = [0] * n
+    lps[1] = 1  # size of the first palindrome
+    c = 1  # center of the outer palindrome
+    r = 2  # right border of the outer palindrome
+    mxs, mxe = 0, 2  # borders of the largest palindrome
+    for i in range(2, n):
+        m = 2 * c - i  # mirror around center `c`
+        # use the mirror length if j is between `c` and `r`.
+        l = int(r - i > 0 and min(lps[m], r - i))
+        # Try to expand the length (skip filler chars).
+        l += (i + l + 2 < n) & (i - l > 0) & (i + l)
+        while (i - l > 0) & (i + l + 2 < n) and (
+            s[(i - l - 1) // 2] == s[(i + l + 1) // 2]
+        ):
+            l += 2
+        # Store the value.
+        lps[i] = l
+        # Update the max interval.
+        if l * 2 > mxe - mxs:
+            mxs, mxe = i - l, i + l
+        # If the current palindrome expanded beyond the
+        # previous one, replace the old by this one.
+        if i + l > r:
+            c = i
+            r = i + l
 
-    def is_palindrome(i, even):
-        r = min(i, n - i + even - 1)
-        if r * 2 - even < sub[1] - sub[0]:
-            return
-        for j in range(1, r + 1):
-            a = i - j
-            b = i + j - even
-            if s[a] != s[b]:
-                break
-            if sub[1] - sub[0] < b - a:
-                sub[:] = [a, b]
-
-    m = n // 2
-    for i in range(1, m + 1):
-        is_palindrome(m - i, even=0)
-        is_palindrome(m - i, even=1)
-        is_palindrome(m + i - 1, even=0)
-        is_palindrome(m + i - 1, even=1)
-
-    return s[sub[0] : sub[1] + 1]
-
-
-def largest_palindrome_dp(s: str) -> str:
-    "Return largest palindrome substring from `s`."
-    # Uses dynamic programming table. O(N^2)
-    n = len(s)
-    table = [[False] * n for _ in s]
-
-    for i in range(n - 1):
-        table[i][i] = True
-        table[i][i + 1] = s[i] == s[i + 1]
-    table[n - 1][n - 1] = True
-
-    mi = mj = 0
-    for cl in range(3, n + 1):
-        for i in range(n - cl + 1):
-            j = i + cl - 1
-            if s[i] == s[j] and table[i + 1][j - 1]:
-                table[i][j] = True
-                mi, mj = i, j
-
-    # return longest palindrome
-    return s[mi : mj + 1]
+    return s[mxs // 2 : (mxe - 1) // 2 + 1]
 
 
 def subsequence_count(s: str, t: str) -> int:
