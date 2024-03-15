@@ -21,3 +21,9 @@ class TestGraphs(unittest.TestCase):
         "Test `circle_of_words`."
         self.assertTrue(g.circle_of_words(["abc", "cde", "eda"]))
         self.assertFalse(g.circle_of_words(["abc", "cde", "edf"]))
+
+    def test_articulation_points(self):
+        "Test `articulation_points`."
+        self.assertEqual(
+            [1, 4], g.articulation_points([[1], [0, 4], [3, 4], [2, 4], [1, 2, 3]])
+        )
