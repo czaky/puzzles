@@ -87,7 +87,7 @@ def circle_of_words(words: List[str]) -> bool:
 def articulation_points(adj: List[int]) -> List[int]:
     "Return the articulation points for a graph defined by the `adj` list."
     vt = [0] * len(adj)  # visited time for each node in DFS-tree order
-    ct = vt[:]           # circle time for the parent/root of the whole circle
+    ct = vt[:]  # circle time for the parent/root of the whole circle
     o = []
 
     # Depth first search to determine the parent of each node
@@ -96,8 +96,7 @@ def articulation_points(adj: List[int]) -> List[int]:
         vt[n] = ct[n] = t  # set the times
         art = kids = 0
         for c in adj[n]:
-            if not vt[c]:
-                # if the child node was not visited.
+            if not vt[c]:  # If the child node was not visited...
                 dfs(n, c, t + 1)
                 # Count the kids of this parent
                 # which were not visited earlier by the DFS.
@@ -114,10 +113,11 @@ def articulation_points(adj: List[int]) -> List[int]:
                 # If we reached another node (but the parent) higher
                 # in the DFS-tree, update our circle time.
                 ct[n] = min(ct[n], vt[c])
-        # Append the node if it is marked as articulate point.
+        # Append the node if it is marked as an articulate point.
         # For the root of the DFS-tree (p == -1), we just need
         # to check if there are more than two kids (not in the same circle).
         (art if p != -1 else kids > 1) and o.append(n)
+
     # Start search from the first node (== 0).
     dfs(-1, 0, 1)
     return sorted(o)
