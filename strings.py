@@ -119,6 +119,8 @@ def word_break(s: str, d) -> bool:
 
 def longest_palindrome(s: str) -> str:
     "Return longest palindrome substring from `s`."
+    # Uses Mancher's algorithm.
+    # Runs in O(N)
     n = len(s) * 2 + 1
     if n == 1:
         return ""
