@@ -212,3 +212,9 @@ class TestStrings(unittest.TestCase):
         self.assertTrue(s.pattern_match("?*a*", "cart"))
         self.assertTrue(s.pattern_match("?*a*", "ca"))
         self.assertFalse(s.pattern_match("?*a*", "ab"))
+
+    def test_longest_repeating_substring(self):
+        "Test `longest_repeating_substring`."
+        self.assertEqual("a", s.longest_repeating_substring("ab123acb"))
+        self.assertEqual("d", s.longest_repeating_substring("dedb123baaacead"))
+        self.assertEqual("teeth", s.longest_repeating_substring("teeth_for_teeth"))

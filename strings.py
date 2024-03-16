@@ -347,3 +347,20 @@ def pattern_match(pattern: str, string: str) -> bool:
             return False
 
     return skip_stars() == pl
+
+def longest_repeating_substring(s: str) -> str:
+    "Return the longest repeating (non-overlapping) substring from `s`."
+    # This runs surprisingly faster than the dynamic programming solution.
+    # The worst case is O(N^3) but we use two tricks to cut down the problem space.
+    n = len(s)
+    mx = ""
+    for i in range(n - 1):
+        # Skip comparing of smaller substrings than already found.
+        j = i + len(mx) + 1
+        # Abort if the prefix was not found.
+        while s[i:j] in s[j:]:
+            # Any string s[i:j] here is longer than `mx`.
+            mx = s[i:j]
+            j += 1
+
+    return mx
