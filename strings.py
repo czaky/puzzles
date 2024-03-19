@@ -365,3 +365,30 @@ def longest_repeating_substring(s: str) -> str:
             j += 1
 
     return mx
+
+
+def longest_prefix_suffix(p: str) -> int:
+    "Return the length of the longes proper prefix that is also a suffix."
+    # Uses KMH algorithm. Runs in O(N).
+    n = len(p)
+    lps = [0] * n
+    i, j = 0, 1
+    while j < n:
+        if p[i] == p[j]:
+            # `i` is the index from the beginning of the pattern.
+            # lps[j] is the length of the prefix that matched p[j-i:j] so far
+            # I.e.: p[0:i] == p[j-i:j]
+            lps[j] = i = i + 1
+        elif i > 0:
+            # p[0:i] == p[j-i:j] but p[i] != p[j]
+            # We need to start the matching of the pattern again.
+            # Normally this would mean:
+            #   i, j = 0, j-i+1
+            # Given that lps[i - 1] = length of matching prefix-suffix for p[0:i]
+            # and we try extend it at position p[i],
+            # we can skip the firs lps[i - 1] characters of the pattern.
+            i = lps[i - 1]
+            continue
+        j += 1
+    # print(lps)
+    return lps[-1]
