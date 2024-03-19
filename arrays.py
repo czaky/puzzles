@@ -31,7 +31,7 @@ def subrev(a: list, s: int = 0, e: int = -1):
 
 def find_rotation(a: List[int]) -> int:
     "A sorted list `a` was rotated. Find the rotation index in O(log N)."
-    return search.binary(lambda m: a[m] <= a[-1], 0, len(a) - 1, -1) + 1
+    return (search.binary(lambda m: a[m] <= a[-1], 0, len(a) - 1, -1) or 0) + 1
 
 
 def rotated_minimum(a: list) -> int:
@@ -60,7 +60,7 @@ def equilibrium_point(a: list) -> int:
 def bitonic_point(a: List[int]) -> int:
     "Maximum of strictly increasing array then maybe strictly decreasing."
     # Runs in O(log N)
-    return a[search.binary(lambda m: a[m - 1] > a[m], 1, len(a) - 1, len(a) - 1)]
+    return a[search.binary(lambda m: a[m - 1] > a[m], 1, len(a) - 1, len(a) - 1) or 0]
 
 
 def duplicates(a: list) -> list:
@@ -87,7 +87,7 @@ def rotate(a: list, left: int = 1):
 
 def transition_point(a: list) -> int:
     "Transition index in sorted list `a` of '0's and '1's."
-    return search.binary(lambda m: a[m] == 1, 0, len(a) - 1, -1)
+    return search.binary(lambda m: a[m] == 1, 0, len(a) - 1, -1) or 0
 
 
 def min_distance(a: list, x: int, y: int) -> int:
@@ -143,7 +143,7 @@ def meta_cafeteria(n: int, d: int, s: List[int]) -> int:
 
 def floor_element(a: List[int], x: int) -> int:
     "Return the largest element smaller or equal to `x` from sorted `a`."
-    return search.binary(lambda m: a[m] > x, 0, len(a) - 1, -1)
+    return search.binary(lambda m: a[m] > x, 0, len(a) - 1, -1) or 0
 
 
 def product_except_self(nums: List[int]) -> List[int]:
@@ -171,7 +171,7 @@ def find_difference(a: List[int], d: int) -> bool:
     c = Counter(a)
     if 0 in c:
         return d in c
-    return next(filter(lambda e: c[e + d] > int(d == 0), a), False)
+    return any(filter(lambda e: c[e + d] > int(d == 0), a))  # pyright: ignore
 
 
 def pairs_equal_sum(a: List[int], b: List[int], s: int) -> list:
@@ -304,8 +304,8 @@ def toys_with_budget(a: List[int], b: int) -> int:
 
 def first_last(a: List[int], x: int) -> Tuple[int, int]:
     "Return the first and last index of `x` in a sorted array `a`."
-    l = search.binary(lambda m: a[m] >= x, 0, len(a) - 1, -1) + 1
-    h = search.binary(lambda m: a[m] > x, l, len(a) - 1, -1)
+    l: int = search.binary(lambda m: a[m] >= x, 0, len(a) - 1, -1) + 1
+    h: int = search.binary(lambda m: a[m] > x, l, len(a) - 1, -1) + 0
     return (l, h) if l <= h else (-1, -1)
 
 
@@ -437,7 +437,7 @@ def mail_room_theft(arrivals: List[int], cost: int, theft: float) -> float:
     cl = [0]  # collected value
     for p in arrivals:
         # theft plus new package
-        mr[:] = (mrv * (1 - theft) + p for mrv in mr)
+        mr[:] = (int(mrv * (1 - theft) + p) for mrv in mr)
         # pickup
         cl.append(max(map(add, mr, cl)) - cost)
         mr.append(0)
@@ -486,7 +486,7 @@ def aggressive_cows(stalls: list, cows: int) -> int:
     stalls.sort()
     ac = lambda d: lambda a, s: s - a[1] >= d and (a[0] + 1, s) or a
     gt = lambda d: cows > reduce(ac(d), stalls, (1, stalls[0]))[0]
-    return search.binary(gt, 1, stalls[-1] - stalls[0])
+    return search.binary(gt, 1, stalls[-1] - stalls[0]) + 0
 
 
 def smaller_on_right_count(arr: list) -> list:
@@ -530,4 +530,4 @@ def min_sum_split(a: list, k: int) -> int:
     # Assure that the number of splits is less or equal to k
     fit = lambda mx: k < reduce(acc(mx), a, (0, 1))[1]
     # Use binary search to find the maximum sub-sum.
-    return search.binary_lt(fit, max(a), sum(a))
+    return search.binary_lt(fit, max(a), sum(a)) + 0

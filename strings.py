@@ -249,7 +249,7 @@ def alien_alphabet(words):
     return "".join(topological_order(chars, edges))
 
 
-def fix_palindrome(s: str) -> str:
+def fix_palindrome(s: str) -> int:
     "Return number of characters to be added to make a string a palindrome."
 
     @lru_cache(None)
@@ -303,11 +303,11 @@ def distinct_subsequence_count(s: str) -> int:
     return reduce(lambda a, c: (2 * a - m.get(c, 0), m.update({c: a}))[0], s, 1)
 
 
-def permutations(s: str) -> list:
-    "Return a sorted list of permutations of string `s`."
+def permutations(string: str) -> list:
+    "Return a sorted list of permutations of `string`."
     sols = []
-    n = len(s)
-    s = list(s)
+    n = len(string)
+    s = list(string)
 
     def rec(i):
         if i >= n:

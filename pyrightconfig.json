@@ -1,0 +1,5 @@
+{
+    "reportOptionalOperand": false,
+    "reportOptionalMemberAccess": false,
+    "reportUnusedExpression": false,
+}

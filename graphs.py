@@ -49,7 +49,7 @@ def depth_first_r(adj: List[List[int]], start: int = 0) -> List[int]:
     return o
 
 
-def topological_order(vertexes: list, edges: dict) -> Iterable:
+def topological_order(vertexes: Iterable, edges: dict) -> Iterable:
     "Return `vertexes` in topological order based on `edges` relation."
     s = []
     v = set()
@@ -81,10 +81,10 @@ def circle_of_words(words: List[str]) -> bool:
     vis = set()
     (dfs := lambda c: c in vis or vis.add(c) or all(map(dfs, gr[c][0])))(words[0][0])
     # connectivity and vertex degree check
-    return int(len(gr) == len(vis) and all(len(c[0]) == c[1] for c in gr.values()))
+    return len(gr) == len(vis) and all(len(c[0]) == c[1] for c in gr.values())
 
 
-def articulation_points(adj: List[int]) -> List[int]:
+def articulation_points(adj: List[List[int]]) -> List[int]:
     "Return the articulation points for a graph defined by the `adj` list."
     vt = [0] * len(adj)  # visited time for each node in DFS-tree order
     ct = vt[:]  # circle time for the parent/root of the whole circle
@@ -118,7 +118,8 @@ def articulation_points(adj: List[int]) -> List[int]:
         # Append the node if it is marked as an articulate point.
         # For the root of the DFS-tree (p == -1), we just need
         # to check if there are more than two kids (not in the same circle).
-        (art if p != -1 else kids > 1) and o.append(n)
+        if art if p != -1 else kids > 1:
+            o.append(n)
 
     # Start search from the first node (== 0).
     dfs(-1, 0, 1)

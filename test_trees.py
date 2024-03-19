@@ -1,7 +1,13 @@
 """Test module for the tree based puzzles."""
 
+from typing import Optional, Iterable, Sequence
 import unittest
 import trees as t
+
+
+def seq(sequence: Optional[Iterable]) -> Sequence:
+    "Return a list out of None | Iterable."
+    return list(sequence or [])
 
 
 class TestTrees(unittest.TestCase):
@@ -72,17 +78,17 @@ class TestTrees(unittest.TestCase):
 
     def test_iter(self):
         "Test the level order iterator."
-        self.assertEqual([1], list(t.make("1")))
-        self.assertEqual([2, 1, 3], list(t.make("2 1 3")))
-        self.assertEqual([3, 1, 2], list(t.make("3 1 -1 -1 2")))
-        self.assertEqual([5, 3, 2, 4], list(t.make("5 3 -1 4 -1 -1 2")))
+        self.assertEqual([1], seq(t.make("1")))
+        self.assertEqual([2, 1, 3], seq(t.make("2 1 3")))
+        self.assertEqual([3, 1, 2], seq(t.make("3 1 -1 -1 2")))
+        self.assertEqual([5, 3, 2, 4], seq(t.make("5 3 -1 4 -1 -1 2")))
 
     def test_insert(self):
         "Test `insert` function."
-        self.assertEqual([1, 2], list(t.insert(t.make("1"), 2)))
-        self.assertEqual([2, 1, 3], list(t.insert(t.make("2 1 -1 -1 3"), 3)))
-        self.assertEqual([2, 1, 3, 4], list(t.insert(t.make("2 1 -1 -1 3"), 4)))
-        self.assertEqual([5, 3, 6, 2, 4], list(t.insert(t.make("5 3 -1 4 -1 -1 6"), 2)))
+        self.assertEqual([1, 2], seq(t.insert(t.make("1"), 2)))
+        self.assertEqual([2, 1, 3], seq(t.insert(t.make("2 1 -1 -1 3"), 3)))
+        self.assertEqual([2, 1, 3, 4], seq(t.insert(t.make("2 1 -1 -1 3"), 4)))
+        self.assertEqual([5, 3, 6, 2, 4], seq(t.insert(t.make("5 3 -1 4 -1 -1 6"), 2)))
 
     def test_find_ancestor(self):
         "Test `find_ancestor` function."
@@ -137,7 +143,7 @@ class TestTrees(unittest.TestCase):
         self.assertEqual(2, t.max_width(t.make("2 1 -1 -1 3")))
         self.assertEqual(3, t.max_width(t.make("5 3 2 -1 -1 4 -1 -1 7 6")))
 
-    def test_to_linked_list(self):
+    def test_to_linked_seq(self):
         "Test `to_linked_list` function."
 
         def it(n):
@@ -145,11 +151,11 @@ class TestTrees(unittest.TestCase):
                 yield n.data
                 n = n.right
 
-        self.assertEqual([1, 2], list(it(t.to_linked_list(t.make("2 1")))))
-        self.assertEqual([1, 3, 1, 2], list(it(t.to_linked_list(t.make("2 1 1 -1 3")))))
+        self.assertEqual([1, 2], seq(it(t.to_linked_list(t.make("2 1")))))
+        self.assertEqual([1, 3, 1, 2], seq(it(t.to_linked_list(t.make("2 1 1 -1 3")))))
         self.assertEqual(
             [2, 3, 1, 6, 7, 4, 5],
-            list(it(t.to_linked_list(t.make("5 3 2 -1 -1 4 1 -1 7 6")))),
+            seq(it(t.to_linked_list(t.make("5 3 2 -1 -1 4 1 -1 7 6")))),
         )
 
     def test_nodes_at_distance(self):

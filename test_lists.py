@@ -1,7 +1,13 @@
 """Test module for the linked lists puzzles."""
 
+from typing import Optional, Iterable, Sequence
 import unittest
 import lists as ll
+
+
+def seq(sequence: Optional[Iterable]) -> Sequence:
+    "Return a list out of None | Iterable."
+    return list(sequence or [])
 
 
 class TestLinkedLists(unittest.TestCase):
@@ -55,9 +61,9 @@ class TestLinkedLists(unittest.TestCase):
         self.assertIsNone(ll.delete_middle(ll.make([])))
         self.assertIsNone(ll.delete_middle(ll.make([1])))
 
-        self.assertEqual([1], list(ll.delete_middle(ll.make([1, 2]))))
-        self.assertEqual([1, 3], list(ll.delete_middle(ll.make([1, 2, 3]))))
-        self.assertEqual([1, 2, 4], list(ll.delete_middle(ll.make([1, 2, 3, 4]))))
+        self.assertEqual([1], seq(ll.delete_middle(ll.make([1, 2]))))
+        self.assertEqual([1, 3], seq(ll.delete_middle(ll.make([1, 2, 3]))))
+        self.assertEqual([1, 2, 4], seq(ll.delete_middle(ll.make([1, 2, 3, 4]))))
 
     def test_nth(self):
         "Test `nth` function."
@@ -76,28 +82,28 @@ class TestLinkedLists(unittest.TestCase):
 
     def test_insert_sorted(self):
         "Test `insert_sorted`."
-        self.assertEqual([1], list(ll.insert_sorted(ll.make([]), 1)))
-        self.assertEqual([1, 2], list(ll.insert_sorted(ll.make([1]), 2)))
-        self.assertEqual([1, 2], list(ll.insert_sorted(ll.make([2]), 1)))
-        self.assertEqual([1, 2, 3], list(ll.insert_sorted(ll.make([1, 3]), 2)))
+        self.assertEqual([1], seq(ll.insert_sorted(ll.make([]), 1)))
+        self.assertEqual([1, 2], seq(ll.insert_sorted(ll.make([1]), 2)))
+        self.assertEqual([1, 2], seq(ll.insert_sorted(ll.make([2]), 1)))
+        self.assertEqual([1, 2, 3], seq(ll.insert_sorted(ll.make([1, 3]), 2)))
 
     def test_reverse(self):
         "Test `reverse`."
         self.assertIsNone(ll.reverse(ll.make([])))
 
-        self.assertEqual([1], list(ll.reverse(ll.make([1]))))
-        self.assertEqual([2, 1], list(ll.reverse(ll.make([1, 2]))))
-        self.assertEqual([3, 2, 1], list(ll.reverse(ll.make([1, 2, 3]))))
+        self.assertEqual([1], seq(ll.reverse(ll.make([1]))))
+        self.assertEqual([2, 1], seq(ll.reverse(ll.make([1, 2]))))
+        self.assertEqual([3, 2, 1], seq(ll.reverse(ll.make([1, 2, 3]))))
 
     def test_dedup(self):
         "Test `dedup` function."
         self.assertIsNone(ll.dedup(ll.make([])))
 
-        self.assertEqual([1], list(ll.dedup(ll.make([1]))))
-        self.assertEqual([1, 2, 3], list(ll.dedup(ll.make([1, 2, 3]))))
-        self.assertEqual([3, 2], list(ll.dedup(ll.make([3, 2, 3]))))
-        self.assertEqual([1, 3], list(ll.dedup(ll.make([1, 3, 3]))))
-        self.assertEqual([1, 3], list(ll.dedup(ll.make([1, 1, 3]))))
+        self.assertEqual([1], seq(ll.dedup(ll.make([1]))))
+        self.assertEqual([1, 2, 3], seq(ll.dedup(ll.make([1, 2, 3]))))
+        self.assertEqual([3, 2], seq(ll.dedup(ll.make([3, 2, 3]))))
+        self.assertEqual([1, 3], seq(ll.dedup(ll.make([1, 3, 3]))))
+        self.assertEqual([1, 3], seq(ll.dedup(ll.make([1, 1, 3]))))
 
     def test_loop_length(self):
         "Test the `loop_length` function."
@@ -113,65 +119,25 @@ class TestLinkedLists(unittest.TestCase):
         "Test `swap_pairs` function."
         self.assertIsNone(ll.swap_pairs(ll.make([])))
 
-        self.assertEqual([1], list(ll.swap_pairs(ll.make([1]))))
-        self.assertEqual([2, 1], list(ll.swap_pairs(ll.make([1, 2]))))
-        self.assertEqual([2, 1, 3], list(ll.swap_pairs(ll.make([1, 2, 3]))))
-        self.assertEqual([2, 1, 4, 3], list(ll.swap_pairs(ll.make([1, 2, 3, 4]))))
+        self.assertEqual([1], seq(ll.swap_pairs(ll.make([1]))))
+        self.assertEqual([2, 1], seq(ll.swap_pairs(ll.make([1, 2]))))
+        self.assertEqual([2, 1, 3], seq(ll.swap_pairs(ll.make([1, 2, 3]))))
+        self.assertEqual([2, 1, 4, 3], seq(ll.swap_pairs(ll.make([1, 2, 3, 4]))))
 
     def test_subtract_lists(self):
         "Test `subtract_lists` function."
         self.assertEqual(
             [8, 8],
-            list(
+            seq(
                 ll.subtract_lists(
                     ll.make(list(map(int, "100"))), ll.make(list(map(int, "12")))
                 )
             ),
         )
+        l = ll.subtract_lists(
+            ll.make(list(map(int, "020055383525634518999521060086463321841"))),
+            ll.make(list(map(int, "10835173613544430215114275094755963004"))),
+        )
         self.assertEqual(
-            [
-                9,
-                2,
-                2,
-                0,
-                2,
-                0,
-                9,
-                9,
-                1,
-                2,
-                0,
-                9,
-                0,
-                0,
-                8,
-                8,
-                7,
-                8,
-                4,
-                4,
-                0,
-                6,
-                7,
-                8,
-                4,
-                9,
-                9,
-                1,
-                7,
-                0,
-                7,
-                3,
-                5,
-                8,
-                8,
-                3,
-                7,
-            ],
-            list(
-                ll.subtract_lists(
-                    ll.make(list(map(int, "020055383525634518999521060086463321841"))),
-                    ll.make(list(map(int, "10835173613544430215114275094755963004"))),
-                )
-            ),
+            "9220209912090088784406784991707358837", "".join(map(str, l or []))
         )

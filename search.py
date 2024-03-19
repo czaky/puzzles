@@ -6,7 +6,7 @@ from typing import Optional, List
 from collections.abc import Callable
 
 
-def binary(gt: Callable, l: int, h: int, i: int = None) -> Optional[int]:
+def binary(gt: Callable, l: int, h: int, i: Optional[int] = None) -> Optional[int]:
     """
     Returns the index of an element which is NOT greater than (`gt`).
 
@@ -26,7 +26,7 @@ def binary(gt: Callable, l: int, h: int, i: int = None) -> Optional[int]:
     return i
 
 
-def binary_lt(lt: Callable, l: int, h: int, i: int = None) -> Optional[int]:
+def binary_lt(lt: Callable, l: int, h: int, i: Optional[int] = None) -> Optional[int]:
     """
     Returns the index of an element which is NOT less than (`lt`).
 
@@ -50,7 +50,7 @@ def dijkstra_grid(grid: List[List[int]]) -> int:
     "Search a path in an NxN grid of costs per cell. Return overall cost."
     n = len(grid)
     goal = (n - 1, n - 1)
-    start = (0, 0)
+    start = (int(0), int(0))
     v = set([start])
     dc = grid[0][0]
     q = [(dc, start)]
@@ -73,14 +73,14 @@ def a_star_grid(grid: List[List[int]]) -> int:
     n = len(grid)
     g = n - 1
     d = grid[0][0]
-    q = [(d + g + g, 0, 0)]
+    q = [(float(d + g + g), int(0), int(0))]
     m = [[math.inf] * n for _ in grid]
     m[0][0] = d
     while q:
         _, px, py = heappop(q)
         d = m[px][py]
         if px == g and py == g:
-            return d
+            return int(d)
         for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1)):
             cx, cy = px + dx, py + dy
             if not (0 <= cx < n and 0 <= cy < n):

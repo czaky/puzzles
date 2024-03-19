@@ -1,14 +1,14 @@
 """Puzzles around linked lists."""
 
-from typing import Optional
+from typing import Optional, Iterable, Any
 
 
-class Node:
+class Node(Iterable):
     "Linked List Node."
 
     def __init__(self, data):
         self.data = data
-        self.next = None
+        self.next: Optional[Node] = None
 
     def __iter__(self):
         n = self
@@ -17,7 +17,7 @@ class Node:
             n = n.next
 
 
-def make(l: list, loop: int = -1) -> Optional[Node]:
+def make(l: Iterable[Any], loop: int = -1) -> Optional[Node]:
     """
     Make a linked list out of normal Python list `l`.
 
@@ -25,20 +25,35 @@ def make(l: list, loop: int = -1) -> Optional[Node]:
     """
     if not l:
         return None
-    n = h = Node(l[0])
-    ln = None if loop != 0 else n
-    for i in range(1, len(l)):
-        n.next = Node(l[i])
+    n = h = Node(0)
+    ln = None
+    for e in l:
+        n.next = Node(e)
         n = n.next
-        loop -= 1
         if loop == 0:
             ln = n
+        loop -= 1
     if ln:
         n.next = ln
-    return h
+    return h.next
 
 
-def middle(head: Node) -> Optional[Node]:
+def pprint(head: Optional[Node]):
+    "Pretty print the linked list starting at `head`."
+    if not head:
+        return
+    n = head
+    v = set()
+    while n:
+        if n in v:
+            print(f"-> {n.data}")
+            break
+        v.add(n)
+        print(n.data, end=" ")
+        n = n.next
+
+
+def middle(head: Optional[Node]) -> Optional[Node]:
     "Return the middle node of the list starting with `head`."
     slow = fast = head
     while fast and fast.next:
@@ -47,7 +62,7 @@ def middle(head: Node) -> Optional[Node]:
     return slow
 
 
-def delete_middle(head: Node) -> Optional[Node]:
+def delete_middle(head: Optional[Node]) -> Optional[Node]:
     "Delete the middle from the list starting at `head`."
     slow = fast = head
     prev = None
@@ -61,7 +76,7 @@ def delete_middle(head: Node) -> Optional[Node]:
     return slow and slow.next
 
 
-def nth(head: Node, n: int) -> Optional[Node]:
+def nth(head: Optional[Node], n: int) -> Optional[Node]:
     """
     Return nth node from the linked list starting at `head`.
 
@@ -85,7 +100,7 @@ def nth(head: Node, n: int) -> Optional[Node]:
     return slow
 
 
-def insert_sorted(head: Node, value: int) -> Node:
+def insert_sorted(head: Optional[Node], value: int) -> Optional[Node]:
     "Insert `value` into list starting at `head`. Return new head."
     nn = Node(value)
     if not head or head.data > value:
@@ -99,7 +114,7 @@ def insert_sorted(head: Node, value: int) -> Node:
     return head
 
 
-def reverse(head: Node) -> Optional[Node]:
+def reverse(head: Optional[Node]) -> Optional[Node]:
     "Reverse a linked starting at `head`."
     prev = None
     while head:
@@ -107,7 +122,7 @@ def reverse(head: Node) -> Optional[Node]:
     return prev
 
 
-def dedup(head: Node) -> Node:
+def dedup(head: Optional[Node]) -> Optional[Node]:
     "Remove nodes with duplicate values in the linked list."
     s = set()
     n = head
@@ -119,14 +134,14 @@ def dedup(head: Node) -> Node:
     return head
 
 
-def delete_node(n: Node):
+def delete_node(n: Optional[Node]):
     "Remove node without reference to `head`."
     assert n.next
     n.data = n.next.data
     n.next = n.next.next
 
 
-def remove_smaller_nodes_left(h: Node) -> Optional[Node]:
+def remove_smaller_nodes_left(h: Optional[Node]) -> Optional[Node]:
     "Remove all nodes from list `h` smaller than any node to the right."
     # Runs in-place at O(N).
     rev = reverse(h)
@@ -140,7 +155,7 @@ def remove_smaller_nodes_left(h: Node) -> Optional[Node]:
     return reverse(rev)
 
 
-def sorted_intersection(a: Node, b: Node) -> Optional[Node]:
+def sorted_intersection(a: Optional[Node], b: Optional[Node]) -> Optional[Node]:
     "Intersection of two sorted lists `a` and `b`."
     nh = nn = Node(0)
     while a and b:
@@ -154,7 +169,7 @@ def sorted_intersection(a: Node, b: Node) -> Optional[Node]:
     return nh.next
 
 
-def loop_length(head: Node) -> int:
+def loop_length(head: Optional[Node]) -> int:
     "Count nodes in a loop. Return 0 if none."
     # detect loop
     slow = head
@@ -177,7 +192,7 @@ def loop_length(head: Node) -> int:
     return c
 
 
-def swap_pairs(h: Node) -> Node:
+def swap_pairs(h: Optional[Node]) -> Optional[Node]:
     "Swap pairs of nodes in the `h` list."
     if not h or not h.next:
         return h
@@ -204,11 +219,11 @@ def swap_pairs(h: Node) -> Node:
     return h
 
 
-def subtract_lists(l1: Node, l2: Node) -> Node:
+def subtract_lists(l1: Optional[Node], l2: Optional[Node]) -> Optional[Node]:
     "Subtract the smaller from the larger list representing numbers."
     # This exercise uses Node traversal instead of simple arithmetic.
 
-    def compare(l1: Node, l2: Node) -> int:
+    def compare(l1: Optional[Node], l2: Optional[Node]) -> int:
         "Determine longest/largest list."
         h1, h2 = l1, l2
         while h1 and h2:
@@ -227,7 +242,7 @@ def subtract_lists(l1: Node, l2: Node) -> Node:
             h1, h2 = h1.next, h2.next
         return 0
 
-    def trim(l: Node) -> Node:
+    def trim(l: Optional[Node]) -> Optional[Node]:
         "Skip leading zeros."
         while l and l.data == 0:
             l = l.next

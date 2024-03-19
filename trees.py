@@ -7,13 +7,13 @@ from itertools import islice
 from functools import reduce
 
 
-class Node:
+class TreeNode:
     "Node of a binary tree."
 
     def __init__(self, data):
         self.data = data
-        self.left = None
-        self.right = None
+        self.left: Optional[Node] = None
+        self.right: Optional[Node] = None
 
     def height(self):
         "Returns max height of the tree starting from this node."
@@ -24,7 +24,8 @@ class Node:
 
     def __iter__(self):
         # level order (breadth first)
-        q = deque([self])
+        r: Node = self
+        q = deque([r])
         while q:
             n = q.popleft()
             yield n.data
@@ -76,6 +77,9 @@ class Node:
             print(line)
 
 
+Node = Optional[TreeNode]
+
+
 def make(s: str) -> Node:
     "Make a binary tree from a string `s` in depth first order."
 
@@ -83,7 +87,7 @@ def make(s: str) -> Node:
         v = next(it, -1)
         if v < 0:
             return None
-        n = Node(v)
+        n = TreeNode(v)
         n.left = des(it)
         n.right = des(it)
         return n
@@ -97,18 +101,18 @@ def make_bfo(s: str) -> Node:
     v = next(it, None)
     if v is None:
         return None
-    root = Node(int(v))
+    root = TreeNode(int(v))
     q = deque([root])
     for v in it:
         n = q.popleft()
         if v != "N":
-            n.left = Node(int(v))
+            n.left = TreeNode(int(v))
             q.append(n.left)
         v = next(it, None)
         if v is None:
             break
         if v != "N":
-            n.right = Node(int(v))
+            n.right = TreeNode(int(v))
             q.append(n.right)
     return root
 
@@ -287,7 +291,7 @@ def balanced(root: Node) -> bool:
 
 def identical(a: Node, b: Node) -> bool:
     "True if `a` and `b` have identical structure and data."
-    return a == b or (
+    return a == b or bool(
         a
         and b
         and a.data == b.data
@@ -316,7 +320,7 @@ def symmetric(r: Node) -> bool:
             and sym(b.left, a.right)
         )
 
-    return not r or sym(r.left, r.right)
+    return bool(not r or sym(r.left, r.right))
 
 
 def flat(r: Node) -> bool:
@@ -338,7 +342,7 @@ def flat(r: Node) -> bool:
 def insert(r: Node, value: int) -> Node:
     "Insert `value` into a BST starting at `r`."
     if not r:
-        return Node(value)
+        return TreeNode(value)
     if value < r.data:
         r.left = insert(r.left, value)
     elif value > r.data:
@@ -432,7 +436,7 @@ def max_path_sum(t: Node) -> int:
         return n.data + ls + rs
 
     rec(t)
-    return mx[0]
+    return int(mx[0])
 
 
 def to_linked_list(r: Node) -> Node:
