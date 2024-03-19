@@ -380,13 +380,14 @@ def longest_prefix_suffix_length(p: str) -> int:
             # I.e.: p[0:i] == p[j-i:j]
             lps[j] = i = i + 1
         elif i > 0:
-            # p[0:i] == p[j-i:j] but p[i] != p[j]
+            # `p[0:i] == p[j-i:j]` but `p[i] != p[j]`
             # We need to start the matching of the pattern again.
             # Normally this would mean:
-            #   i, j = 0, j-i+1
-            # Given that lps[i - 1] = length of matching prefix-suffix for p[0:i]
-            # and we try extend it at position p[i],
-            # we can skip the firs lps[i - 1] characters of the pattern.
+            #   `i, j = 0, j-i+1`
+            # Given that `lps[i - 1]` = length of matching prefix-suffix
+            # for `p[0:i] == p[j-i:j]`
+            # and we will try extend it at position `p[i] == p[j]`,
+            # we can skip the first `lps[i - 1]` characters of the pattern so far.
             i = lps[i - 1]
             continue
         j += 1
