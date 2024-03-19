@@ -12,8 +12,8 @@ class TreeNode:
 
     def __init__(self, data):
         self.data = data
-        self.left: Optional[Node] = None
-        self.right: Optional[Node] = None
+        self.left: Optional[TreeNode] = None
+        self.right: Optional[TreeNode] = None
 
     def height(self):
         "Returns max height of the tree starting from this node."

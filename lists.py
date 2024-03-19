@@ -3,12 +3,12 @@
 from typing import Optional, Iterable, Any
 
 
-class Node(Iterable):
+class ListNode(Iterable):
     "Linked List Node."
 
     def __init__(self, data):
         self.data = data
-        self.next: Optional[Node] = None
+        self.next: Node = None
 
     def __iter__(self):
         n = self
@@ -17,7 +17,10 @@ class Node(Iterable):
             n = n.next
 
 
-def make(l: Iterable[Any], loop: int = -1) -> Optional[Node]:
+Node = Optional[ListNode]
+
+
+def make(l: Iterable[Any], loop: int = -1) -> Node:
     """
     Make a linked list out of normal Python list `l`.
 
@@ -25,10 +28,10 @@ def make(l: Iterable[Any], loop: int = -1) -> Optional[Node]:
     """
     if not l:
         return None
-    n = h = Node(0)
+    n = h = ListNode(0)
     ln = None
     for e in l:
-        n.next = Node(e)
+        n.next = ListNode(e)
         n = n.next
         if loop == 0:
             ln = n
@@ -38,7 +41,7 @@ def make(l: Iterable[Any], loop: int = -1) -> Optional[Node]:
     return h.next
 
 
-def pprint(head: Optional[Node]):
+def pprint(head: Node):
     "Pretty print the linked list starting at `head`."
     if not head:
         return
@@ -53,7 +56,7 @@ def pprint(head: Optional[Node]):
         n = n.next
 
 
-def middle(head: Optional[Node]) -> Optional[Node]:
+def middle(head: Node) -> Node:
     "Return the middle node of the list starting with `head`."
     slow = fast = head
     while fast and fast.next:
@@ -62,7 +65,7 @@ def middle(head: Optional[Node]) -> Optional[Node]:
     return slow
 
 
-def delete_middle(head: Optional[Node]) -> Optional[Node]:
+def delete_middle(head: Node) -> Node:
     "Delete the middle from the list starting at `head`."
     slow = fast = head
     prev = None
@@ -76,7 +79,7 @@ def delete_middle(head: Optional[Node]) -> Optional[Node]:
     return slow and slow.next
 
 
-def nth(head: Optional[Node], n: int) -> Optional[Node]:
+def nth(head: Node, n: int) -> Node:
     """
     Return nth node from the linked list starting at `head`.
 
@@ -100,9 +103,9 @@ def nth(head: Optional[Node], n: int) -> Optional[Node]:
     return slow
 
 
-def insert_sorted(head: Optional[Node], value: int) -> Optional[Node]:
+def insert_sorted(head: Node, value: int) -> Node:
     "Insert `value` into list starting at `head`. Return new head."
-    nn = Node(value)
+    nn = ListNode(value)
     if not head or head.data > value:
         nn.next = head
         return nn
@@ -114,7 +117,7 @@ def insert_sorted(head: Optional[Node], value: int) -> Optional[Node]:
     return head
 
 
-def reverse(head: Optional[Node]) -> Optional[Node]:
+def reverse(head: Node) -> Node:
     "Reverse a linked starting at `head`."
     prev = None
     while head:
@@ -122,7 +125,7 @@ def reverse(head: Optional[Node]) -> Optional[Node]:
     return prev
 
 
-def dedup(head: Optional[Node]) -> Optional[Node]:
+def dedup(head: Node) -> Node:
     "Remove nodes with duplicate values in the linked list."
     s = set()
     n = head
@@ -134,14 +137,14 @@ def dedup(head: Optional[Node]) -> Optional[Node]:
     return head
 
 
-def delete_node(n: Optional[Node]):
+def delete_node(n: Node):
     "Remove node without reference to `head`."
     assert n.next
     n.data = n.next.data
     n.next = n.next.next
 
 
-def remove_smaller_nodes_left(h: Optional[Node]) -> Optional[Node]:
+def remove_smaller_nodes_left(h: Node) -> Node:
     "Remove all nodes from list `h` smaller than any node to the right."
     # Runs in-place at O(N).
     rev = reverse(h)
@@ -155,13 +158,13 @@ def remove_smaller_nodes_left(h: Optional[Node]) -> Optional[Node]:
     return reverse(rev)
 
 
-def sorted_intersection(a: Optional[Node], b: Optional[Node]) -> Optional[Node]:
+def sorted_intersection(a: Node, b: Node) -> Node:
     "Intersection of two sorted lists `a` and `b`."
-    nh = nn = Node(0)
+    nh = nn = ListNode(0)
     while a and b:
         diff = a.data - b.data
         if diff == 0:
-            nn.next = nn = Node(a.data)
+            nn.next = nn = ListNode(a.data)
         if diff >= 0:
             a = a.next
         if diff <= 0:
@@ -169,7 +172,7 @@ def sorted_intersection(a: Optional[Node], b: Optional[Node]) -> Optional[Node]:
     return nh.next
 
 
-def loop_length(head: Optional[Node]) -> int:
+def loop_length(head: Node) -> int:
     "Count nodes in a loop. Return 0 if none."
     # detect loop
     slow = head
@@ -192,7 +195,7 @@ def loop_length(head: Optional[Node]) -> int:
     return c
 
 
-def swap_pairs(h: Optional[Node]) -> Optional[Node]:
+def swap_pairs(h: Node) -> Node:
     "Swap pairs of nodes in the `h` list."
     if not h or not h.next:
         return h
@@ -219,11 +222,11 @@ def swap_pairs(h: Optional[Node]) -> Optional[Node]:
     return h
 
 
-def subtract_lists(l1: Optional[Node], l2: Optional[Node]) -> Optional[Node]:
+def subtract_lists(l1: Node, l2: Node) -> Node:
     "Subtract the smaller from the larger list representing numbers."
     # This exercise uses Node traversal instead of simple arithmetic.
 
-    def compare(l1: Optional[Node], l2: Optional[Node]) -> int:
+    def compare(l1: Node, l2: Node) -> int:
         "Determine longest/largest list."
         h1, h2 = l1, l2
         while h1 and h2:
@@ -242,7 +245,7 @@ def subtract_lists(l1: Optional[Node], l2: Optional[Node]) -> Optional[Node]:
             h1, h2 = h1.next, h2.next
         return 0
 
-    def trim(l: Optional[Node]) -> Optional[Node]:
+    def trim(l: Node) -> Node:
         "Skip leading zeros."
         while l and l.data == 0:
             l = l.next
@@ -253,7 +256,7 @@ def subtract_lists(l1: Optional[Node], l2: Optional[Node]) -> Optional[Node]:
 
     cmp = compare(l1, l2)
     if cmp == 0:
-        return Node(0)
+        return ListNode(0)
     if cmp == -1:
         l1, l2 = l2, l1
 
@@ -265,8 +268,8 @@ def subtract_lists(l1: Optional[Node], l2: Optional[Node]) -> Optional[Node]:
     r = None
     while h1:
         d = -int(d < 0) + h1.data - (h2.data if h2 else 0)
-        n = Node(d if d >= 0 else 10 + d)
+        n = ListNode(d if d >= 0 else 10 + d)
         n.next = r
         r = n
         h1, h2 = h1.next, h2 and h2.next
-    return trim(r) or Node(0)
+    return trim(r) or ListNode(0)
