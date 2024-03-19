@@ -367,7 +367,7 @@ def longest_repeating_substring(s: str) -> str:
     return mx
 
 
-def longest_prefix_suffix(p: str) -> int:
+def longest_prefix_suffix_length(p: str) -> int:
     "Return the length of the longes proper prefix that is also a suffix."
     # Uses KMH algorithm. Runs in O(N).
     n = len(p)

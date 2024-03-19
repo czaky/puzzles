@@ -219,8 +219,8 @@ class TestStrings(unittest.TestCase):
         self.assertEqual("d", s.longest_repeating_substring("dedb123baaacead"))
         self.assertEqual("teeth", s.longest_repeating_substring("teeth_for_teeth"))
 
-    def test_longest_prefix_suffix(self):
-        "Test `longest_prefix_suffix`."
-        self.assertEqual(0, s.longest_prefix_suffix("abcd"))
-        self.assertEqual(4, s.longest_prefix_suffix("aaaaa"))
-        self.assertEqual(2, s.longest_prefix_suffix("acccbaa3acccbaac"))
+    def test_longest_prefix_suffix_length(self):
+        "Test `longest_prefix_suffix_length`."
+        self.assertEqual(0, s.longest_prefix_suffix_length("abcd"))
+        self.assertEqual(4, s.longest_prefix_suffix_length("aaaaa"))
+        self.assertEqual(2, s.longest_prefix_suffix_length("acccbaa3acccbaac"))
