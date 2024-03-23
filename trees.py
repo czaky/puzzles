@@ -530,3 +530,39 @@ def tree_distance(root: Node, target) -> int:
         )
 
     return search(root)[1] - 1
+
+
+def fix_two_nodes(root: Node):
+    "Given a BST with two nodes swapped fix the tree at `root`."
+    # Swap the two node values in the in-order sequence.
+    # E.g.
+    #     __10                _10_
+    #    /    \              /    \
+    #    5_   8        =>    5   20
+    #   /  \                / \
+    #   2 20                2 8
+    #
+    #  2, 5, 20, 10, 8 => 2, 5, 8, 10, 20
+    #
+    a: Node = None  # stores the first anomaly left node
+    b: Node = None  # stores the last anomaly right node
+
+    # Uses recursion (stack) for in-order traversal.
+    def rec(p: Node, n: Node):
+        # recursive in-order descend
+        # `p` tracks the most recent / previous node.
+        nonlocal a, b
+        if not n:
+            return p
+        # left
+        p = rec(p, n.left)
+        # middle
+        if p and p.data > n.data:
+            a, b = a or p, n
+        # right
+        return rec(n, n.right)
+
+    rec(None, root)
+
+    if a and b:
+        a.data, b.data = b.data, a.data
