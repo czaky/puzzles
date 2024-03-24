@@ -134,7 +134,7 @@ def longest_palindrome(s: str) -> str:
         l = int(i < r and min(lps[2 * c - i], r - i))
         # Try to expand the length (skip filler chars).
         l += (i + l) % 2 + 1
-        while i >= l and i + l + 1 < n and s[(i - l) // 2] == s[(i + l) // 2]:
+        while i >= l and i + l < n - 1 and s[(i - l) // 2] == s[(i + l) // 2]:
             l += 2
         # Store the value.
         l = lps[i] = l - 1
