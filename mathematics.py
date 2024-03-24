@@ -87,10 +87,10 @@ def uniform_integers(a: int, b: int) -> int:
 def closest_palindrome_number(n: int) -> int:
     "Return the closest number to `n` that is a palindrome number."
 
-    def closer(a, fix):
-        s = str(n + fix)
-        m = len(s) // 2
-        c = int("".join(s[i if i < m else -(i + 1)] for i in range(len(s))))
+    def closer(a, f):
+        s = str(n + f)
+        m, r = divmod(len(s) - 1, 2)
+        c = int(s[: m + r] + s[m::-1])
         return c if abs(c - n) < abs(a - n) else a
 
     d = n > 9 and 10 ** int((log(n, 10) + 1) // 2)
