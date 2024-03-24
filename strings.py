@@ -130,10 +130,10 @@ def longest_palindrome(s: str) -> str:
     r = 2  # right border of the outer palindrome
     mxs, mxe = 0, 1  # borders of the largest palindrome
     for i in range(2, n):
-        # use the mirror length if `i` is between `c` and `r`.
+        # Use the mirror length if `i` is between `c` and `r`.
         l = int(i < r and min(lps[2 * c - i], r - i))
         # Try to expand the length (skip filler chars).
-        l += (i > l) & (i + l + 2 < n) & (i + l)
+        l += (i + l) & 1
         while i > l and i + l + 2 < n and s[(i - l - 1) // 2] == s[(i + l + 1) // 2]:
             l += 2
         # Store the value.
