@@ -43,3 +43,15 @@ class TestNumbers(unittest.TestCase):
         self.assertEqual(1, m.paths_in_matrix(1, 1))
         self.assertEqual(6, m.paths_in_matrix(3, 3))
         self.assertEqual(705432, m.paths_in_matrix(12, 12))
+
+    def test_closest_palindrome_number(self):
+        "Test `closest_palindrome_number`."
+        self.assertEqual(0, m.closest_palindrome_number(0))
+        self.assertEqual(9, m.closest_palindrome_number(10))
+        self.assertEqual(99, m.closest_palindrome_number(100))
+        self.assertEqual(101, m.closest_palindrome_number(101))
+        self.assertEqual(999, m.closest_palindrome_number(1000))
+        self.assertEqual(1001, m.closest_palindrome_number(1001))
+        self.assertEqual(55, m.closest_palindrome_number(60))
+        self.assertEqual(202, m.closest_palindrome_number(197))
+        self.assertEqual(191, m.closest_palindrome_number(195))

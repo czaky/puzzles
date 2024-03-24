@@ -82,3 +82,16 @@ def uniform_integers(a: int, b: int) -> int:
         return 9 * (l - 1) + n // ((10**l - 1) // 9)
 
     return uniform(b) - uniform(a - 1)
+
+
+def closest_palindrome_number(n: int) -> int:
+    "Return the closest number to `n` that is a palindrome number."
+
+    def cmp(a, b):
+        s = str(b)
+        m = len(s) // 2
+        c = int("".join(s[i if i < m else -(i + 1)] for i in range(len(s))))
+        return c if abs(c - n) < abs(a - n) else a
+
+    d = n > 9 and 10 ** int((log(n, 10) + 1) // 2)
+    return reduce(lambda a, f: cmp(a, n + f), (-d, -1, 0, d), 0) if d else n
