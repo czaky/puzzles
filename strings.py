@@ -133,11 +133,11 @@ def longest_palindrome(s: str) -> str:
         # Use the mirror length if `i` is between `c` and `r`.
         l = int(i < r and min(lps[2 * c - i], r - i))
         # Try to expand the length (skip filler chars).
-        l += (i + l) & 1
-        while i > l and i + l + 2 < n and s[(i - l - 1) // 2] == s[(i + l + 1) // 2]:
+        l += (i + l) % 2 + 1
+        while i >= l and i + l + 1 < n and s[(i - l) // 2] == s[(i + l) // 2]:
             l += 2
         # Store the value.
-        lps[i] = l
+        l = lps[i] = l - 1
         # Update the max interval.
         if l > mxe - mxs:
             mxs, mxe = (i - l) // 2, (i + l) // 2
