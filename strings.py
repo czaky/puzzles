@@ -126,9 +126,9 @@ def longest_palindrome(s: str) -> str:
         return ""
     lps = [0] * n
     lps[1] = 1  # size of the first palindrome
-    c = 1  # center of the outer palindrome
-    r = 2  # right border of the outer palindrome
-    mxs, mxe = 0, 1  # borders of the largest palindrome
+    c = 1  # center of the outer palindrome (in s*2)
+    r = 2  # right border of the outer palindrome (in s*2)
+    mxs, mxe = 0, 1  # borders of the largest palindrome (in s)
     for i in range(2, n):
         # Use the mirror length if `i` is between `c` and `r`.
         l = int(i < r and min(lps[2 * c - i], r - i))
