@@ -128,29 +128,26 @@ def longest_palindrome(s: str) -> str:
     lps[1] = 1  # size of the first palindrome
     c = 1  # center of the outer palindrome
     r = 2  # right border of the outer palindrome
-    mxs, mxe = 0, 2  # borders of the largest palindrome
+    mxs, mxe = 0, 1  # borders of the largest palindrome
     for i in range(2, n):
-        m = 2 * c - i  # mirror around center `c`
-        # use the mirror length if j is between `c` and `r`.
-        l = int(r - i > 0 and min(lps[m], r - i))
+        # use the mirror length if `i` is between `c` and `r`.
+        l = int(i < r and min(lps[2 * c - i], r - i))
         # Try to expand the length (skip filler chars).
-        l += (i + l + 2 < n) & (i - l > 0) & (i + l)
-        while (i - l > 0) & (i + l + 2 < n) and (
-            s[(i - l - 1) // 2] == s[(i + l + 1) // 2]
-        ):
+        l += (i > l) & (i + l + 2 < n) & (i + l)
+        while i > l and i + l + 2 < n and s[(i - l - 1) // 2] == s[(i + l + 1) // 2]:
             l += 2
         # Store the value.
         lps[i] = l
         # Update the max interval.
-        if l * 2 > mxe - mxs:
-            mxs, mxe = i - l, i + l
+        if l > mxe - mxs:
+            mxs, mxe = (i - l) // 2, (i + l) // 2
         # If the current palindrome expanded beyond the
         # previous one, replace the old by this one.
         if i + l > r:
             c = i
             r = i + l
 
-    return s[mxs // 2 : (mxe - 1) // 2 + 1]
+    return s[mxs:mxe]
 
 
 def subsequence_count(s: str, t: str) -> int:
