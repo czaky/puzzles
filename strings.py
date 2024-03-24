@@ -121,8 +121,8 @@ def longest_palindrome(s: str) -> str:
     "Return longest palindrome substring from `s`."
     # Uses Manacher's algorithm.
     # Runs in O(N)
-    n = len(s) * 2 + 1
-    if n == 1:
+    n = len(s) * 2
+    if n == 0:
         return ""
     lps = [0] * n
     lps[1] = 1  # size of the first palindrome
@@ -134,7 +134,7 @@ def longest_palindrome(s: str) -> str:
         l = int(i < r and min(lps[2 * c - i], r - i))
         # Try to expand the length (skip filler chars).
         l += (i + l) % 2 + 1
-        while i >= l and i + l < n - 1 and s[(i - l) // 2] == s[(i + l) // 2]:
+        while l <= i < n - l and s[(i - l) // 2] == s[(i + l) // 2]:
             l += 2
         # Store the value.
         l = lps[i] = l - 1
