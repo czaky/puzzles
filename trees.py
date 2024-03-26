@@ -14,13 +14,7 @@ class TreeNode:
         self.data = data
         self.left: Optional[TreeNode] = None
         self.right: Optional[TreeNode] = None
-
-    def height(self):
-        "Returns max height of the tree starting from this node."
-        return 1 + max(
-            self.left.height() if self.left else 0,
-            self.right.height() if self.right else 0,
-        )
+        self.height: int = 1
 
     def __iter__(self):
         # level order (breadth first)
@@ -31,6 +25,14 @@ class TreeNode:
             yield n.data
             n.left and q.append(n.left)
             n.right and q.append(n.right)
+
+    def inorder(self):
+        "In-order iterator."
+        if self.left:
+            yield from self.left.inorder()
+        yield self.data
+        if self.right:
+            yield from self.right.inorder()
 
     def display(self):
         "Display the tree in a visual 2D manner."
@@ -76,8 +78,49 @@ class TreeNode:
         for line in aux(self)[0]:
             print(line)
 
+    def update_height(self):
+        "Update the height of this node based on its children."
+        self.height = 1 + max(height(self.left), height(self.right))
+
+    def left_rotate(self) -> "TreeNode":
+        "Rotate the tree at this node to the left."
+        #  2_         _4
+        # /  \       /  \
+        # 1  4   =>  2  5
+        #   / \     / \
+        #   3 5     1 3
+        assert self.right
+        y = self.right
+        self.right = y.left
+        y.left = self
+        # Update the height of this (lower) node first.
+        self.update_height()
+        y.update_height()
+        return y
+
+    def right_rotate(self) -> "TreeNode":
+        "Rotate the tree at this node to the right."
+        #   _4         2_
+        #  /  \       /  \
+        #  2  5   =>  1  4
+        # / \           / \
+        # 1 3           3 5
+        assert self.left
+        y = self.left
+        self.left = y.right
+        y.right = self
+        # Update the height of this (lower) node first.
+        self.update_height()
+        y.update_height()
+        return y
+
 
 Node = Optional[TreeNode]
+
+
+def height(n: Node) -> int:
+    "Return the height of a Node `n` or 0 for NONE."
+    return n and n.height or 0
 
 
 def make(s: str) -> Node:
@@ -90,6 +133,7 @@ def make(s: str) -> Node:
         n = TreeNode(v)
         n.left = des(it)
         n.right = des(it)
+        n.update_height()
         return n
 
     return des(iter(map(int, s.split())))
@@ -114,7 +158,35 @@ def make_bfo(s: str) -> Node:
         if v != "N":
             n.right = TreeNode(int(v))
             q.append(n.right)
+    for n in df_nodes(root):
+        n.update_height()
     return root
+
+
+def insert_balanced(n: Node, value: int):
+    "Insert a node with `value`"
+    if not n:
+        return TreeNode(value)
+    if value < n.data:
+        n.left = insert_balanced(n.left, value)
+    elif value > n.data:
+        n.right = insert_balanced(n.right, value)
+    else:
+        return n
+
+    n.update_height()
+    # Balance the tree
+    bf = height(n.left) - height(n.right)
+    if bf > 1:
+        if value > n.left.data:
+            n.left = n.left.left_rotate()
+        return n.right_rotate()
+    if bf < -1:
+        if value < n.right.data:
+            n.right = n.right.right_rotate()
+        return n.left_rotate()
+
+    return n
 
 
 # Determine if a tree is an ordered BST (may be unbalanced)

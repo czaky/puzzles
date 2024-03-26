@@ -223,3 +223,65 @@ class TestTrees(unittest.TestCase):
         self.assertEqual(3, t.tree_distance(tr, 4))
         self.assertEqual(4, t.tree_distance(tr, 5))
         self.assertEqual(4, t.tree_distance(tr, 6))
+
+    def test_insert_balanced(self):
+        "Test `insert_balanced`."
+        n = None
+        for x in (1, 2, 3, 4, 5):
+            n = t.insert_balanced(n, x)
+        #  2_
+        # /  \
+        # 1  4
+        #   / \
+        #   3 5
+        self.assertEqual([2, 1, 4, 3, 5], list(n or []))
+        self.assertEqual([1, 2, 3, 4, 5], list(n.inorder()))
+        self.assertEqual(3, t.height(n))
+
+    def test_right_rotate(self):
+        "Test `right_rotate`."
+        n = None
+        for x in (1, 2, 3, 4, 5):
+            n = t.insert_balanced(n, x)
+
+        self.assertEqual([2, 1, 4, 3, 5], list(n or []))
+        #  2_
+        # /  \
+        # 1  4
+        #   / \
+        #   3 5
+
+        n = n.right_rotate()
+        # 1
+        #  \
+        #  2_
+        #    \
+        #    4
+        #   / \
+        #   3 5
+        self.assertEqual([1, 2, 4, 3, 5], list(n or []))
+        self.assertEqual([1, 2, 3, 4, 5], list(n.inorder()))
+        self.assertEqual(4, t.height(n))
+
+    def test_left_rotate(self):
+        "Test `left_rotate`."
+        n = None
+        for x in (1, 2, 3, 4, 5):
+            n = t.insert_balanced(n, x)
+
+        self.assertEqual([2, 1, 4, 3, 5], list(n or []))
+        #  2_
+        # /  \
+        # 1  4
+        #   / \
+        #   3 5
+
+        n = n.left_rotate()
+        #   _4
+        #  /  \
+        #  2  5
+        # / \
+        # 1 3
+        self.assertEqual([4, 2, 5, 1, 3], list(n or []))
+        self.assertEqual([1, 2, 3, 4, 5], list(n.inorder()))
+        self.assertEqual(3, t.height(n))
