@@ -224,3 +224,17 @@ class TestStrings(unittest.TestCase):
         self.assertEqual(0, s.longest_prefix_suffix_length("abcd"))
         self.assertEqual(4, s.longest_prefix_suffix_length("aaaaa"))
         self.assertEqual(2, s.longest_prefix_suffix_length("acccbaa3acccbaac"))
+
+    def test_word_wrap(self):
+        "Test `word_wrap` ."
+        self.assertEqual(0, s.word_wrap([], 6))
+        self.assertEqual(0, s.word_wrap([3], 6))
+        self.assertEqual(0, s.word_wrap([3, 2], 6))
+        self.assertEqual(0, s.word_wrap([3, 2, 2], 6))
+        self.assertEqual(10, s.word_wrap([3, 2, 2, 5], 6))
+
+        self.assertEqual(0, s.word_wrap([], 4))
+        self.assertEqual(0, s.word_wrap([3], 4))
+        self.assertEqual(1, s.word_wrap([3, 2], 4))
+        self.assertEqual(5, s.word_wrap([3, 2, 2], 4))
+        self.assertEqual(9, s.word_wrap([3, 2, 2, 4], 4))

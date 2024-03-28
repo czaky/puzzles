@@ -390,3 +390,26 @@ def longest_prefix_suffix_length(p: str) -> int:
         j += 1
     # print(lps)
     return lps[-1]
+
+
+def word_wrap(words: List[int], k: int) -> int:
+    "Return min sum(extra_spaces**2) for a wrapped text."
+    # Runs in O(n*n), aux space O(n)
+    n: int = len(words)
+    mx: int = n * k**2  # maximum possible result
+    dp: List[int] = [0] * (n + 1)  # dynamic programming scratchpad
+
+    # start from the back
+    for i in reversed(range(n)):
+        e, c = k + 1, mx  # extra spaces, minimum cost so far
+        # add more words to the current line
+        for j in range(i, n):
+            e -= words[j] + 1
+            if e < 0:  # if run over the column limit.
+                break
+            c = min(c, e**2 + dp[j + 1])
+        else:
+            continue  # final line does not count to extra spaces
+        dp[i] = c
+
+    return dp[0]
