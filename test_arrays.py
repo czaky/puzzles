@@ -296,3 +296,9 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual(6, ar.min_sum_split([1, 2, 3, 4], 2))
         self.assertEqual(4, ar.min_sum_split([1, 2, 3, 4], 3))
         self.assertEqual(4, ar.min_sum_split([1, 2, 3, 4], 4))
+
+    def test_out_of_there_number(self):
+        "Test `out_of_there_number`."
+        self.assertEqual(1, ar.out_ouf_there_number([2]))
+        self.assertEqual(2, ar.out_ouf_there_number([1, 10, 3]))
+        self.assertEqual(7, ar.out_ouf_there_number([1, 3, 2]))

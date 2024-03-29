@@ -531,3 +531,15 @@ def min_sum_split(a: list, k: int) -> int:
     fit = lambda mx: k < reduce(acc(mx), a, (0, 1))[1]
     # Use binary search to find the maximum sub-sum.
     return search.binary_lt(fit, max(a), sum(a)) + 0
+
+
+def out_ouf_there_number(a: List[int]) -> int:
+    "Smallest positive number not in the array `a` or not a sum of elements from `a`."
+    a.sort()
+    # Looking for the lowest number between `a[i]...a[i+1]` that cannot be represented
+    # by numbers `a[0] ... a[i]` in any way as a sum.
+    # For `a[i]` such number must be larger than `a[i]` and any other number added before.
+    # Even if there were gaps in the array up to `a[i]`, those have been filled already
+    # by another sum of previous numbers.
+    # Thus we compare the array itself and the cumulative value starting at 1.
+    return next((s for e, s in zip(a, accumulate(a, initial=1)) if s < e), sum(a) + 1)
