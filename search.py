@@ -3,6 +3,7 @@
 import math
 from heapq import heappop, heappush
 from typing import Optional, List
+from itertools import product
 from collections.abc import Callable
 
 
@@ -92,3 +93,41 @@ def a_star_grid(grid: List[List[int]]) -> int:
             heappush(q, (h, cx, cy))
             m[cx][cy] = dc
     return -1
+
+
+def connect_islands(grid: List[List[int]]) -> int:
+    "Return the size of the largest island that can be made with just one flip."
+    n = len(grid)
+    islands = [0, 0]  # index == 0 (empty), index == 1 (unexplored)
+    # safe grid access shortcut.
+    g = lambda x, y: 0 <= x < n and 0 <= y < n and grid[x][y]
+    # offset of adjacent points
+    adjacency = ((-1, 0), (0, -1), (1, 0), (0, 1))
+
+    def visit(x: int, y: int) -> int:
+        "Visit the island at `(x, y)` and mark it with the island with a counter. Return size."
+        if g(x, y) != 1:
+            return 0
+        # Mark the grid with the index of the island.
+        grid[x][y] = len(islands)
+        # Visit all the adjacent points. Sum up the size.
+        return 1 + sum(visit(x + dx, y + dy) for dx, dy in adjacency)
+
+    # Find the islands on the grid and compute their size.
+    for x, y in product(range(n), repeat=2):
+        size = visit(x, y)
+        if size:
+            islands.append(size)
+
+    # For each empty cell on the grid determine the size
+    # of a new island if the cell is flipped to 1.
+    ms = 0
+    for x, y in product(range(n), repeat=2):
+        if grid[x][y] == 0:
+            # Determine (the set of) adjacent islands.
+            adjacent = set(g(x + dx, y + dy) for dx, dy in adjacency)
+            # Compute the size of a joined island. Draw maximum.
+            ms = max(ms, sum(islands[i] for i in adjacent if i) + 1)
+
+    # If `ms == 0`, then `grid` is one big island.
+    return ms or n * n

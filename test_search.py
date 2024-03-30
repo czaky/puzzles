@@ -43,3 +43,23 @@ class TestSearch(unittest.TestCase):
                 ]
             ),
         )
+
+    def test_connect_islands(self):
+        "Test `connect_islands`."
+        self.assertEqual(1, s.connect_islands([[0, 0], [0, 0]]))
+        self.assertEqual(2, s.connect_islands([[0, 0], [0, 1]]))
+        self.assertEqual(3, s.connect_islands([[1, 0], [0, 1]]))
+        self.assertEqual(4, s.connect_islands([[1, 0], [1, 1]]))
+        self.assertEqual(4, s.connect_islands([[1, 1], [1, 1]]))
+
+        mat = """\
+        1 1 1 0 1 0
+        1 0 1 0 0 0
+        0 0 1 1 0 1
+        1 1 0 0 0 0
+        0 0 1 1 1 0
+        1 0 1 1 0 0"""
+
+        m = [list(map(int, l.split())) for l in mat.splitlines()]
+
+        self.assertEqual(15, s.connect_islands(m))
