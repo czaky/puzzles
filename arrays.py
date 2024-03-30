@@ -543,3 +543,53 @@ def out_ouf_there_number(a: List[int]) -> int:
     # by another sum of previous numbers.
     # Thus we compare the array itself and the cumulative value starting at 1.
     return next((s for e, s in zip(a, accumulate(a, initial=1)) if s < e), sum(a) + 1)
+
+
+def max_min_window(a: List[int]) -> List[int]:
+    "For every window size return the maximum of the minimums."
+    # The idea is to find a window size for each element, where the
+    # element is the minimum. Larger elements have smaller window size.
+    # This is done by finding the index for the left and right element
+    # that is smaller than the current element.
+    #
+    # Using: [10, 20, 30, 50, 10, 70, 30] as example.
+
+    def bracket(b: List[int], it: Iterable[int]) -> List[int]:
+        "Computes the left and right index of a smaller element."
+        s = []  # Contains indexes of elements smaller and the previous one.
+        for i in it:
+            # Remove all elements larger or equal to this one.
+            while s and a[i] <= a[s[-1]]:
+                s.pop()
+            if s:
+                # s[-1] should contain the index of an element smaller
+                # than the current one.
+                b[i] = s[-1]
+            s.append(i)
+        return b
+
+    n = len(a)
+    # The left index of a smaller element is initialized with -1.
+    left = bracket([-1] * n, range(n))
+    # => [-1, 0, 1, 2, -1, 4, 4]
+
+    # The right index is initialized with `n` (= 7).
+    right = bracket([n] * n, reversed(range(n)))
+    # => [7, 4, 4, 4, 7, 6, 7]
+
+    wnd = [0] * n
+    for e, l, r in zip(a, left, right):
+        # Assign the element to the window size where it is the minimum.
+        # It two elements share the same window size, take the maximum of both.
+        # `(r - l - 2)` - size of the window with exclusive indexes `r` and `l`
+        # minus one for the 0-based indexing.
+        wnd[r - l - 2] = max(wnd[r - l - 2], e)
+    # => [70, 30, 20, 0, 0, 0, 10]
+
+    for i in reversed(range(n - 1)):
+        # If an element is the maximum in a larger window,
+        # it needs to be considered a maximum for smaller windows as well.
+        wnd[i] = max(wnd[i], wnd[i + 1])
+    # => [70, 30, 20, 10, 10, 10, 10]
+
+    return wnd

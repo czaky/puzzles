@@ -302,3 +302,10 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual(1, ar.out_ouf_there_number([2]))
         self.assertEqual(2, ar.out_ouf_there_number([1, 10, 3]))
         self.assertEqual(7, ar.out_ouf_there_number([1, 3, 2]))
+
+    def test_max_min_window(self):
+        "Test `max_min_window`."
+        self.assertEqual(
+            [70, 30, 20, 10, 10, 10, 10],
+            ar.max_min_window([10, 20, 30, 50, 10, 70, 30]),
+        )
