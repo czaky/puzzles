@@ -2,7 +2,7 @@
 
 import math
 from collections import deque
-from typing import Tuple, Optional, List
+from typing import Tuple, Optional, List, Deque
 from itertools import islice
 from functools import reduce
 
@@ -34,12 +34,12 @@ class TreeNode:
         if self.right:
             yield from self.right.inorder()
 
-    def display(self):
+    def display(self, v=False):
         "Display the tree in a visual 2D manner."
 
         def aux(node):
             "-> lines, width, height, middle"
-            s = str(node.data)
+            s = str(node.data) if not v else f"{node.data}({node.height})"
             u = len(s)
 
             if not node.left and not node.right:
@@ -75,8 +75,29 @@ class TreeNode:
             lines = [first, second] + [a + u * " " + b for a, b in zip(left, right)]
             return lines, n + m + u, max(p, q) + 2, n + u // 2
 
+        mxl = 0
         for line in aux(self)[0]:
+            mxl = max(mxl, len(line))
             print(line)
+
+        if v:
+            print("-" * mxl)
+            print(self.bfo_string())
+            print("-" * mxl)
+
+    def bfo_string(self) -> str:
+        "Return a BFO string representation using 'N' for None."
+        o = []
+        q: Deque[Node] = deque([self])
+        while q:
+            n = q.popleft()
+            o.append(str(n.data) if n else "N")
+            if n:
+                q.append(n.left)
+                q.append(n.right)
+        while o and o[-1] == "N":
+            o.pop()
+        return " ".join(o)
 
     def update_height(self):
         "Update the height of this node based on its children."
@@ -113,6 +134,56 @@ class TreeNode:
         self.update_height()
         y.update_height()
         return y
+
+    def balance_factor(self) -> int:
+        "Return the balance factor at this node."
+        l, r = self.left, self.right
+        return (l and l.height or 0) - (r and r.height or 0)
+
+    def balanced(self) -> "TreeNode":
+        "Balance the tree. Return new root."
+        bf = self.balance_factor()
+        if bf > 1:
+            if self.left.balance_factor() < 0:
+                self.left = self.left.left_rotate()
+            return self.right_rotate()
+        if bf < -1:
+            if self.right.balance_factor() > 0:
+                self.right = self.right.right_rotate()
+            return self.left_rotate()
+
+        self.update_height()
+        return self
+
+    def insert_balanced(self, value: int):
+        "Insert a node with `value`"
+        if value < self.data:
+            self.left = insert_balanced(self.left, value)
+        elif value > self.data:
+            self.right = insert_balanced(self.right, value)
+        else:
+            return self
+
+        return self.balanced()
+
+    def delete_balanced(self, value: int):
+        "Delete the `value` from a self-balancing AVL tree."
+        if value == self.data:
+            if not (self.right and self.left):
+                return self.left or self.right
+
+            # Find the next in-order successor ...
+            next_node = lambda n: n.left and next_node(n.left) or n
+            # and use its value.
+            value = self.data = next_node(self.right).data
+            # The `next_node` will be deleted recursively below.
+
+        if value < self.data:
+            self.left = self.left.delete_balanced(value)
+        else:
+            self.right = self.right.delete_balanced(value)
+
+        return self.balanced()
 
 
 Node = Optional[TreeNode]
@@ -165,28 +236,7 @@ def make_bfo(s: str) -> Node:
 
 def insert_balanced(n: Node, value: int):
     "Insert a node with `value`"
-    if not n:
-        return TreeNode(value)
-    if value < n.data:
-        n.left = insert_balanced(n.left, value)
-    elif value > n.data:
-        n.right = insert_balanced(n.right, value)
-    else:
-        return n
-
-    n.update_height()
-    # Balance the tree
-    bf = height(n.left) - height(n.right)
-    if bf > 1:
-        if value > n.left.data:
-            n.left = n.left.left_rotate()
-        return n.right_rotate()
-    if bf < -1:
-        if value < n.right.data:
-            n.right = n.right.right_rotate()
-        return n.left_rotate()
-
-    return n
+    return n.insert_balanced(value) if n else TreeNode(value)
 
 
 # Determine if a tree is an ordered BST (may be unbalanced)

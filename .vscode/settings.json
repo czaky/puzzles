@@ -12,6 +12,7 @@
         "popleft",
         "pylint",
         "PYTHONPATH",
+        "rebalance",
         "subrev"
     ],
     "cSpell.ignoreWords": [

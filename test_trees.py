@@ -224,20 +224,6 @@ class TestTrees(unittest.TestCase):
         self.assertEqual(4, t.tree_distance(tr, 5))
         self.assertEqual(4, t.tree_distance(tr, 6))
 
-    def test_insert_balanced(self):
-        "Test `insert_balanced`."
-        n = None
-        for x in (1, 2, 3, 4, 5):
-            n = t.insert_balanced(n, x)
-        #  2_
-        # /  \
-        # 1  4
-        #   / \
-        #   3 5
-        self.assertEqual([2, 1, 4, 3, 5], list(n or []))
-        self.assertEqual([1, 2, 3, 4, 5], list(n.inorder()))
-        self.assertEqual(3, t.height(n))
-
     def test_right_rotate(self):
         "Test `right_rotate`."
         n = None
@@ -285,3 +271,47 @@ class TestTrees(unittest.TestCase):
         self.assertEqual([4, 2, 5, 1, 3], list(n or []))
         self.assertEqual([1, 2, 3, 4, 5], list(n.inorder()))
         self.assertEqual(3, t.height(n))
+
+    def test_insert_balanced(self):
+        "Test `insert_balanced`."
+        n = None
+        for x in (1, 2, 3, 4, 5):
+            n = t.insert_balanced(n, x)
+        #  2_
+        # /  \
+        # 1  4
+        #   / \
+        #   3 5
+        self.assertEqual([2, 1, 4, 3, 5], list(n or []))
+        self.assertEqual([1, 2, 3, 4, 5], list(n.inorder()))
+        self.assertEqual(3, t.height(n))
+
+    def test_delete_balanced(self):
+        "Test `delete_balanced`."
+        n = t.make_bfo("54 44 86 43 46 78 88 N N N 50 61 83 N 89")
+        #     ____54_______
+        #    /             \
+        #   44_         __86_
+        #  /   \       /     \
+        # 43  46_     78_   88_
+        #        \   /   \     \
+        #       50  61  83    89
+        for x in (46, 86, 88, 61, 89, 78, 54, 83):
+            n = n.delete_balanced(x)
+        #   44_
+        #  /   \
+        # 43  50
+        self.assertEqual("44 43 50", n.bfo_string())
+        #
+        n = t.make_bfo("4 2 6 1 3 5 7")
+        #   _4_
+        #  /   \
+        #  2   6
+        # / \ / \
+        # 1 3 5 7
+        for x in (4, 1, 3, 6):
+            n = n.delete_balanced(x)
+        #  5
+        # / \
+        # 2 7
+        self.assertEqual("5 2 7", n.bfo_string())
