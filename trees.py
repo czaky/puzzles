@@ -173,9 +173,9 @@ class TreeNode:
                 return self.left or self.right
 
             # Find the next in-order successor ...
-            next_node = lambda n: n.left and next_node(n.left) or n
+            min_node = lambda n: n.left and min_node(n.left) or n
             # and use its value.
-            value = self.data = next_node(self.right).data
+            value = self.data = min_node(self.right).data
             # The `next_node` will be deleted recursively below.
 
         if value < self.data:
