@@ -593,3 +593,29 @@ def max_min_window(a: List[int]) -> List[int]:
     # => [70, 30, 20, 10, 10, 10, 10]
 
     return wnd
+
+
+def partition_equal_sum(a: List[int], k: int) -> bool:
+    "Partition `a` into `k` subset with equal sum value."
+    # The idea is to compute the sum of numbers recursively
+    # for each state denoted by '2**len(a)' bits.
+    # Each bit indicates that a number is in the state or not.
+
+    @lru_cache(None)
+    def value(state: int) -> int:
+        for i, e in enumerate(a):
+            # Check if the number `e` is in this state.
+            if state & (1 << i):
+                # Then compute the value for a state without it.
+                v = value(state ^ (1 << i))
+                # Check if we can fit the new number under the target.
+                if v + e <= target:
+                    # Return the sum for this bin (modulo target)
+                    return (v + e) % target
+        # Return target to indicate failure or return 0 for an empty `state`.
+        return target if state else 0
+
+    target, r = divmod(sum(a), k)
+    # If there is a reminder, then the array does not fit into `k` bins.
+    # Otherwise, a valid `value` will be less than the `target` returned above.
+    return not r and value((1 << len(a)) - 1) < target
