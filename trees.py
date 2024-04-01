@@ -135,20 +135,21 @@ class TreeNode:
         y.update_height()
         return y
 
-    def balance_factor(self) -> int:
-        "Return the balance factor at this node."
+    def left_skew(self) -> int:
+        "Return how far to the left the node is skewed."
         l, r = self.left, self.right
         return (l and l.height or 0) - (r and r.height or 0)
 
-    def balanced(self) -> "TreeNode":
-        "Balance the tree. Return new root."
-        bf = self.balance_factor()
-        if bf > 1:
-            if self.left.balance_factor() < 0:
+    def balance_node(self) -> "TreeNode":
+        "Balance this node. May return one of its descendants."
+
+        skew = self.left_skew()
+        if skew > 1:
+            if self.left.left_skew() < 0:
                 self.left = self.left.left_rotate()
             return self.right_rotate()
-        if bf < -1:
-            if self.right.balance_factor() > 0:
+        if skew < -1:
+            if self.right.left_skew() > 0:
                 self.right = self.right.right_rotate()
             return self.left_rotate()
 
@@ -164,7 +165,7 @@ class TreeNode:
         else:
             return self
 
-        return self.balanced()
+        return self.balance_node()
 
     def delete_balanced(self, value: int):
         "Delete the `value` from a self-balancing AVL tree."
@@ -183,7 +184,7 @@ class TreeNode:
         else:
             self.right = self.right.delete_balanced(value)
 
-        return self.balanced()
+        return self.balance_node()
 
 
 Node = Optional[TreeNode]
