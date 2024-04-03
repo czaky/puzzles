@@ -234,7 +234,7 @@ class TestStrings(unittest.TestCase):
         self.assertEqual(1, s.extra_palindrome_chars("ab"))
         self.assertEqual(3, s.extra_palindrome_chars("abcd"))
         self.assertEqual(0, s.extra_palindrome_chars("aaaaa"))
-        self.assertEqual(1, s.extra_palindrome_chars("aacacaaa"))
+        self.assertEqual(1, s.extra_palindrome_chars("aa3a3aaa"))
 
     def test_word_wrap(self):
         "Test `word_wrap` ."
