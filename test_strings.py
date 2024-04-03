@@ -225,6 +225,17 @@ class TestStrings(unittest.TestCase):
         self.assertEqual(4, s.longest_prefix_suffix_length("aaaaa"))
         self.assertEqual(2, s.longest_prefix_suffix_length("acccbaa3acccbaac"))
 
+    def test_extra_palindrome_chars(self):
+        "Test (upfront) `extra_palindrome_chars`."
+        self.assertEqual(0, s.extra_palindrome_chars(""))
+        self.assertEqual(0, s.extra_palindrome_chars("a"))
+        self.assertEqual(0, s.extra_palindrome_chars("aa"))
+        self.assertEqual(0, s.extra_palindrome_chars("aba"))
+        self.assertEqual(1, s.extra_palindrome_chars("ab"))
+        self.assertEqual(3, s.extra_palindrome_chars("abcd"))
+        self.assertEqual(0, s.extra_palindrome_chars("aaaaa"))
+        self.assertEqual(1, s.extra_palindrome_chars("aacacaaa"))
+
     def test_word_wrap(self):
         "Test `word_wrap` ."
         self.assertEqual(0, s.word_wrap([], 6))

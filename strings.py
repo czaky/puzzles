@@ -366,30 +366,49 @@ def longest_repeating_substring(s: str) -> str:
 
 def longest_prefix_suffix_length(p: str) -> int:
     "Return the length of the longest proper prefix that is also a suffix."
-    # Uses KMH (Knuth Morris Pratt) algorithm. Runs in O(N).
-    n = len(p)
-    lps = [0] * n
-    i, j = 0, 1
-    while j < n:
-        if p[i] == p[j]:
-            # `i` is the index from the beginning of the pattern.
-            # lps[j] is the length of the prefix that matched p[j-i:j] so far
-            # I.e.: p[0:i] == p[j-i:j]
-            lps[j] = i = i + 1
-        elif i > 0:
-            # `p[0:i] == p[j-i:j]` but `p[i] != p[j]`
-            # We need to start the matching of the pattern again.
-            # Normally this would mean:
-            #   `i, j = 0, j-i+1`
-            # Given that `lps[i - 1]` = length of matching prefix-suffix
-            # for `p[0:i] == p[j-i:j]`
-            # and we will try extend it at position `p[i] == p[j]`,
-            # we can skip the first `lps[i - 1]` characters of the pattern so far.
-            i = lps[i - 1]
-            continue
-        j += 1
-    # print(lps)
-    return lps[-1]
+    # Uses KMP (Knuth Morris Pratt) algorithm. Runs in O(N).
+    pi = [0] * len(p)  # the computed PI table
+    k = 0  # length of the prefix
+    # `k`` increases with every matched letter, but resets after a mismatch.
+    # The length that `k` resets is based on the precomputed `pi` table so far.
+    # It resets to 0, or resets to longest `k` so that `p[:k+1] == p[q-k:q+1]`.
+    for q in range(1, len(p)):
+        # find p[:k] where p[k] == p[q]
+        while p[k] != p[q]:
+            if k == 0:
+                break
+            # pi[k - 1] = j, where p[:j] == p[k - j:k]
+            # resets to length of the self matched prefix-suffix at `k-1`.
+            k = pi[k - 1]
+        else:
+            # p[:k + 1] == p[q - k:q + 1]
+            # We have already matched `k-1` plus one character.
+            # pi[q] is the length of prefix p[:k] that matched p[q-k:q]
+            pi[q] = k = k + 1
+    return pi[-1]
+
+def extra_palindrome_chars(s: str) -> int:
+    "Returns number of new chars upfront necessary to make `s` a palindrome."
+    # Uses KMP (Knuth Morris Pratt) algorithm  to determine the length
+    # of the length of the longest prefix of `s` equal to a suffix of
+    # the reverse of `s`.
+    n = len(s)
+    r = s[::-1]
+    # `pi[q]` is the length of a suffix of:
+    #    "#" + `r[:q]`
+    # matching a prefix of `s[:k]`
+    pi = [0] * (n + 1)
+    k = 0
+    for q in range(n):
+        while s[k] != r[q]:
+            if k == 0:
+                break
+            k = pi[k - 1]
+        else:
+            # Using `q+1` to account for the (missing) `#` char.
+            pi[q + 1] = k = k + 1
+    return n - pi[-1]
+
 
 
 def word_wrap(words: List[int], k: int) -> int:
