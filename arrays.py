@@ -629,6 +629,10 @@ def candy(r: List[int]) -> int:
     Return number of candies needed.
     """
     n = len(r)
+    # Start with 0 candies as bottom line for each kid.
+    # Accumulate number of candies if rewards are increasing, otherwise reset to 0
     c = accumulate(range(n), lambda a, i: i and r[i] > r[i - 1] and a + 1 or 0)
+    # The same in reverse.
     d = accumulate(range(n), lambda a, i: i and r[-i - 1] > r[-i] and a + 1 or 0)
+    # Take the maximum of both heaps of candies (and add an extra candy for each kid).
     return sum(max(x, y) for x, y in zip(c, reversed(list(d)))) + n
