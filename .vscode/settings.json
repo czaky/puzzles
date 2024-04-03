@@ -4,6 +4,7 @@
         "bitonic",
         "dedup",
         "inorder",
+        "Kadane's",
         "Kadane’s",
         "kaiten",
         "Manacher's",
@@ -13,7 +14,8 @@
         "pylint",
         "PYTHONPATH",
         "rebalance",
-        "subrev"
+        "subrev",
+        "sudoku"
     ],
     "cSpell.ignoreWords": [
         "MDXIX",
