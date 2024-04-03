@@ -401,6 +401,26 @@ def max_sub_sum(a: Iterable[int]) -> int:
     return max(accumulate(a, lambda x, y: max(0, x + y), initial=0))
 
 
+def max_sum_substring(s: str, d: dict) -> str:
+    "Return the substring of `s` with max sum, where some character values from `d`."
+    # Kadane’s Algorithm
+    # Transform `s` into a numeric array
+    num = lambda c: d.get(c, ord(c))
+    # Calculate the cumulative Kadane's value.
+    acc = accumulate(map(num, s), lambda x, y: max(0, x + y), initial=0)
+    # Determine the max value interval.
+    # i - last zero-index, mv - max value, mi mj - max value's indexes
+    i = mv = mi = mj = 0
+    # j - current index, v - current value.
+    for j, v in enumerate(acc):
+        if v == 0:
+            i = j
+        elif mv < v:
+            mv, mi, mj = v, i, j
+    # Return the substring or if empty, return the highest (negative) character.
+    return s[mi:mj] if mi < mj else max(s, key=num)
+
+
 def max_circular_sub_sum(a: List[int]) -> int:
     "Return the max sum of a circular sub-array from `a`."
     return max(max_sub_sum(a), max_sub_sum(map(neg, a)) + sum(a)) or max(a)

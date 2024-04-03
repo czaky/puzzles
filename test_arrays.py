@@ -319,3 +319,12 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual(6, ar.candy([3, 2, 1]))
         self.assertEqual(7, ar.candy([2, 3, 2, 1]))
         self.assertEqual(9, ar.candy([3, 2, 3, 2, 1]))
+
+    def test_max_sum_substring(self):
+        "Test `max_sum_substring`."
+        self.assertEqual("h", ar.max_sum_substring("h", {}))
+        self.assertEqual("h", ar.max_sum_substring("h", {"h": -880}))
+        self.assertEqual("o", ar.max_sum_substring("oK", {"K": -880}))
+        self.assertEqual("de", ar.max_sum_substring("abcde", {"c": -880}))
+        d = dict(zip("ZhXg", [342, -625, -904, 451]))
+        self.assertEqual("kg", ar.max_sum_substring("h3hkghXZ", d))
