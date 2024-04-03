@@ -309,3 +309,13 @@ class TestUnsortedArray(unittest.TestCase):
             [70, 30, 20, 10, 10, 10, 10],
             ar.max_min_window([10, 20, 30, 50, 10, 70, 30]),
         )
+
+    def test_candy(self):
+        "Test `candy`."
+        self.assertEqual(5, ar.candy([1, 0, 1]))
+        self.assertEqual(4, ar.candy([1, 2, 1]))
+        self.assertEqual(4, ar.candy([1, 2, 2]))
+        self.assertEqual(6, ar.candy([1, 2, 3]))
+        self.assertEqual(6, ar.candy([3, 2, 1]))
+        self.assertEqual(7, ar.candy([2, 3, 2, 1]))
+        self.assertEqual(9, ar.candy([3, 2, 3, 2, 1]))

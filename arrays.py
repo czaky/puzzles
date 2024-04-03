@@ -619,3 +619,16 @@ def partition_equal_sum(a: List[int], k: int) -> bool:
     # If there is a reminder, then the array does not fit into `k` bins.
     # Otherwise, a valid `value` will be less than the `target` returned above.
     return not r and value((1 << len(a)) - 1) < target
+
+
+def candy(r: List[int]) -> int:
+    """Given ratings `r` reward each kid with candies.
+    If a child is better than its neighbor it get more candies.
+    Each child gets at least 1 candy.
+
+    Return number of candies needed.
+    """
+    n = len(r)
+    c = accumulate(range(n), lambda a, i: i and r[i] > r[i - 1] and a + 1 or 0)
+    d = accumulate(range(n), lambda a, i: i and r[-i - 1] > r[-i] and a + 1 or 0)
+    return sum(max(x, y) for x, y in zip(c, reversed(list(d)))) + n
