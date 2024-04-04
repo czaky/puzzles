@@ -401,6 +401,11 @@ def max_sub_sum(a: Iterable[int]) -> int:
     return max(accumulate(a, lambda x, y: max(0, x + y), initial=0))
 
 
+def max_circular_sub_sum(a: List[int]) -> int:
+    "Return the max sum of a circular sub-array from `a`."
+    return max(max_sub_sum(a), max_sub_sum(map(neg, a)) + sum(a)) or max(a)
+
+
 def max_sum_substring(s: str, d: dict) -> str:
     "Return the substring of `s` with max sum, where some character values from `d`."
     # Kadane’s Algorithm
@@ -421,9 +426,19 @@ def max_sum_substring(s: str, d: dict) -> str:
     return s[mi:mj] if mi < mj else max(s, key=num)
 
 
-def max_circular_sub_sum(a: List[int]) -> int:
-    "Return the max sum of a circular sub-array from `a`."
-    return max(max_sub_sum(a), max_sub_sum(map(neg, a)) + sum(a)) or max(a)
+def max_zero_sum_sub(a: List[int]) -> int:
+    "Return the max length of a sub-array of `a` which sums to zero."
+    # The idea is to compute an array of the accumulated values.
+    # If any accumulated value shows up in the array again, there is a zero sub-array.
+    # Store the accumulated values to prevent recomputation below.
+    acc = list(accumulate(a))
+    # Determine the first occurrence of the sum.
+    # Special care is given for an empty array with 0 having -1 as index.
+    occ = {0: -1}
+    for i, e in enumerate(acc):
+        occ.setdefault(e, i)
+    # Determine the longest span between this occurrence and the first one.
+    return max(starmap(lambda i, e: i - occ[e], enumerate(acc)))
 
 
 def kaiten_sushi(belt: List[int], distance: int) -> int:

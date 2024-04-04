@@ -328,3 +328,8 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual("de", ar.max_sum_substring("abcde", {"c": -880}))
         d = dict(zip("ZhXg", [342, -625, -904, 451]))
         self.assertEqual("kg", ar.max_sum_substring("h3hkghXZ", d))
+
+    def test_max_zero_sum_sub(self):
+        "Test `max_zero_sum_sub`."
+        self.assertEqual(5, ar.max_zero_sum_sub([15, -2, 2, -8, 1, 7, 10, 23]))
+        self.assertEqual(8, ar.max_zero_sum_sub([15, -2, 2, -8, 1, 7, 10, -25, 10, 23]))
