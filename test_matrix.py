@@ -73,3 +73,31 @@ class TestMatrixPuzzles(unittest.TestCase):
     def test_generic_fib(self):
         "Test `generic_fib."
         self.assertEqual(4, m.generic_fib(3, 3, 3, 3, 5))
+
+    def test_max_sum_rectangle(self):
+        "Test `max_sum_rectangle`."
+        self.assertEqual(3, m.max_sum_rectangle([[1, 2]]))
+        self.assertEqual(4, m.max_sum_rectangle([[1], [3]]))
+        self.assertEqual(10, m.max_sum_rectangle([[1, 2], [3, 4]]))
+        self.assertEqual(-1, m.max_sum_rectangle([[-1, -2], [-3, -4]]))
+        self.assertEqual(
+            29,
+            m.max_sum_rectangle(
+                [
+                    [1, 2, -1, -4, -20],
+                    [-8, -3, 4, 2, 1],
+                    [3, 8, 10, 1, 3],
+                    [-4, -1, 1, 7, -6],
+                ]
+            ),
+        )
+        self.assertEqual(
+            16,
+            m.max_sum_rectangle(
+                [
+                    [9, -9, 1, -4, -1, 9, -10],
+                    [3, -3, -4, -2, -5, 3, -6],
+                    [-7, 2, -5, 1, -10, 4, -4],
+                ]
+            ),
+        )

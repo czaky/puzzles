@@ -1,7 +1,7 @@
 "Puzzles around matrices."
 
 from typing import List
-from itertools import product, tee
+from itertools import product, tee, accumulate
 from functools import lru_cache, reduce
 from bisect import bisect_right
 import numpy as np
@@ -131,3 +131,23 @@ def generic_fib(a, b, c, n, m):
         mat = (mat @ mat) % m
         n >>= 1
     return sum(res) % m
+
+
+def max_sum_rectangle(m: List[List[int]]) -> int:
+    "Return the maximum sum of a sub-matrix of `m`."
+    # The idea is to iterate over combinations of rows (top, bottom).
+    # Computing a cumulative sum for each of those columns between top and bottom row.
+    # Then apply Kedane's algorithm against those cumulative sums.
+    # This yields the maximum rectangle sum between top and bottom.
+    # The maximum of those rectangle sums is the overall maximum.
+    r, c = len(m), len(m[0])
+    mx = min(map(min, m))
+    ked = lambda a: max(accumulate(a, lambda x, y: max(0, x + y), initial=0))
+    for top in range(r):
+        a = [0] * c
+        for bottom in range(top, r):
+            mb = m[bottom]
+            for k in range(c):
+                a[k] += mb[k]
+            mx = max(mx, ked(a))
+    return mx if mx > 0 else max(map(max, m))
