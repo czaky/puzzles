@@ -6,10 +6,17 @@ from functools import lru_cache, reduce
 from bisect import bisect_right
 import numpy as np
 
+import arrays
+
 
 def at(m, *indexes):
     "Return element of `m` at the specific indexes."
     return reduce(lambda m, i: m[i], indexes, m)
+
+
+def make(s: str) -> List[List[int]]:
+    "Parse a string into a matrix."
+    return [list(map(int, l.split())) for l in s.splitlines()]
 
 
 def find_sorted(hay: List[List[int]], needle: int) -> bool:
@@ -151,3 +158,28 @@ def max_sum_rectangle(m: List[List[int]]) -> int:
                 a[k] += mb[k]
             mx = max(mx, ked(a))
     return mx if mx > 0 else max(map(max, m))
+
+
+def zero_sum_sub_matrix(m: List[List[int]]) -> List[List[int]]:
+    "Return the largest sub-matrix of `m` that sums to zero."
+    # The idea is borrowed from the 2D Kadane's algorithm.
+    # We use top, bottom cutoff to accumulate the values for the columns into an array.
+    # Then we apply the `zero_sum_sub_array` above to determine the left and right brackets.
+    # Using top, bottom, left, and right we calculate the area,
+    # which is used to determine the largest matrix.
+    r, c = len(m), len(m[0])
+    mx = (0, 0, 0, 0, 0)  # -area, top, left, bottom, right
+    for top in range(r):
+        a = [0] * c  # cumulative sum of columns from `top` to `bottom` row.
+        for bottom in range(top, r):
+            mb = m[bottom]
+            for k in range(c):
+                a[k] += mb[k]
+            left, right = arrays.zero_sum_sub_max_interval(a)
+            area = (bottom + 1 - top) * (right - left)
+            # Sort by area first, then top, lef, bottom, and right.
+            mx = min(mx, (-area, top, left, bottom + 1, right))
+
+    # `top` and `left` are inclusive, `bottom` and `right` are exclusive here.
+    (area, top, left, bottom, right) = mx
+    return [r[left:right] for r in m[top:bottom]] if area else []

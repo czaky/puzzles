@@ -101,3 +101,42 @@ class TestMatrixPuzzles(unittest.TestCase):
                 ]
             ),
         )
+
+    def test_zero_sum_sub_matrix(self):
+        "Test `zero_sum_sub_matrix`."
+        self.assertEqual(
+            [[1, 2, 3], [-3, -2, -1]],
+            m.zero_sum_sub_matrix([[1, 2, 3], [-3, -2, -1], [1, 7, 5]]),
+        )
+        self.assertEqual(
+            [[-6, -7], [8, 7], [-2, 0]],
+            m.zero_sum_sub_matrix(
+                [[9, 7, 16, 5], [1, -6, -7, 3], [1, 8, 7, 9], [7, -2, 0, 10]]
+            ),
+        )
+        mat = m.make(
+            """\
+            -4 6 6
+            1 7 8
+            0 -11 -6
+            4 5 -1
+            10 -6 -7
+            -9 -7 0
+            -7 1 -2
+            -9 7 -2
+            -6 -2 -8
+            5 5 0
+            1 0 6
+            3 1 6
+            -2 -6 -7
+            -9 4 5
+            7 -1 -3
+            -2 -7 -11
+            8 -11 -3
+            -5 -4 10
+            1 4 7"""
+        )
+        self.assertEqual(
+            [[-6, -2], [5, 5], [1, 0], [3, 1], [-2, -6], [-9, 4], [7, -1]],
+            m.zero_sum_sub_matrix(mat),
+        )
