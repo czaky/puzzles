@@ -5,6 +5,13 @@ from functools import reduce
 from operator import mul
 
 
+def digits(n: int):
+    "Iterates over decimal digits of `n`."
+    while n:
+        yield n % 10
+        n //= 10
+
+
 def floor_sqrt(x: int) -> int:
     "Return the floor of `sqrt(x)`."
     if x in (0, 1):
@@ -101,3 +108,12 @@ def closest_palindrome_number(n: int) -> int:
     # Manipulate the middle digit, to cover all cases.
     d = 10 ** int((log(n, 10) + 1) // 2)
     return min(map(pal, (n - d, n, n + d)), key=lambda p: abs(n - p))
+
+
+def next_happy_number(n: int) -> int:
+    "The next number to `n` with digits summing to 1 recursively."
+    # Get the recursive sum of digits.
+    ss = lambda n: n if n < 10 else ss(sum(d * d for d in digits(n)))
+    # Recursively determine the next "happy" number.
+    nh = lambda n: n if ss(n) in (1, 7) else nh(n + 1)
+    return nh(n + 1)

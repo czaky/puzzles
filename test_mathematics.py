@@ -55,3 +55,11 @@ class TestNumbers(unittest.TestCase):
         self.assertEqual(55, m.closest_palindrome_number(60))
         self.assertEqual(202, m.closest_palindrome_number(197))
         self.assertEqual(191, m.closest_palindrome_number(195))
+
+    def test_next_happy_number(self):
+        "Test `next_happy_number`."
+        self.assertEqual(7, m.next_happy_number(1))
+        self.assertEqual(7, m.next_happy_number(3))
+        self.assertEqual(10, m.next_happy_number(7))
+        self.assertEqual(13, m.next_happy_number(10))
+        self.assertEqual(1003, m.next_happy_number(1000))
