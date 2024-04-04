@@ -1,7 +1,7 @@
 "Puzzles around matrices."
 
 from typing import List
-from itertools import product, tee, accumulate
+from itertools import product, accumulate, combinations
 from functools import lru_cache, reduce
 from bisect import bisect_right
 import numpy as np
@@ -40,9 +40,8 @@ def rotate90cc(m: List[List[int]]):
     "Rotate matrix `m` 90deg counter-clockwise."
     # Transpose
     n = len(m)
-    for i in range(n):
-        for j in range(i, n):
-            m[i][j], m[j][i] = m[j][i], m[i][j]
+    for i, j in combinations(range(n), 2):
+        m[i][j], m[j][i] = m[j][i], m[i][j]
     # Reverse the rows.
     m.reverse()
 
@@ -55,12 +54,8 @@ def optimum_multiplications(a: List[int]) -> int:
 
     @lru_cache(None)
     def sub(i, j):
-        return int(
-            i < j
-            and min(
-                sub(i, k) + sub(k + 1, j) + a[i - 1] * a[k] * a[j] for k in range(i, j)
-            )
-        )
+        m = lambda k: sub(i, k) + sub(k + 1, j) + a[i - 1] * a[k] * a[j]
+        return min(map(m, range(i, j))) if i < j else 0
 
     return sub(1, len(a) - 1)
 
@@ -76,7 +71,7 @@ def sudoku(grid: List[List[int]]) -> bool:
         cols[j] ^= v
         boxes[i // 3 + 3 * (j // 3)] ^= v
 
-    for i, j in product(*tee(range(9))):
+    for i, j in product(range(9), repeat=2):
         flip(grid[i][j] or left.append((i, j)) or 0, i, j)
 
     def solve(pos):
@@ -115,8 +110,8 @@ def sorted_median(m: List[List[int]]) -> int:
 def fib(n, m):
     "Return `n`th Fibonacci number of the form: `(fib(n-1) + fib(n-2))%m`."
     # Runs in O(log N)
-    mat = np.array([[1, 1], [1, 0]])
-    res = np.array([1, 0])
+    mat = np.array([[1, 1], [1, 0]], dtype=int)
+    res = np.array([1, 0], dtype=int)
     n -= 2
     while n > 0:
         if n & 1:
@@ -129,8 +124,8 @@ def fib(n, m):
 def generic_fib(a, b, c, n, m):
     "Return `n`th Fibonacci number of the form: `(a*f(n-1) + b*f(n-2) + c)%m`."
     # Runs in O(log N)
-    mat = np.array([[a, b, c], [1, 0, 0], [0, 0, 1]])
-    res = np.array([1, 0, 0])
+    mat = np.array([[a, b, c], [1, 0, 0], [0, 0, 1]], dtype=int)
+    res = np.array([1, 0, 0], dtype=int)
     n -= 2
     while n > 0:
         if n & 1:
