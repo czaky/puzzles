@@ -426,7 +426,7 @@ def max_sum_substring(s: str, d: dict) -> str:
     return s[mi:mj] if mi < mj else max(s, key=num)
 
 
-def max_zero_sum_sub(a: List[int]) -> int:
+def zero_sum_sub_max_len(a: List[int]) -> int:
     "Return the max length of a sub-array of `a` which sums to zero."
     # The idea is to compute an array of the accumulated values.
     # If any accumulated value shows up in the array again, there is a zero sub-array.
@@ -439,6 +439,22 @@ def max_zero_sum_sub(a: List[int]) -> int:
         occ.setdefault(e, i)
     # Determine the longest span between this occurrence and the first one.
     return max(starmap(lambda i, e: i - occ[e], enumerate(acc)))
+
+def zero_sum_sub_max_interval(a: List[int]) -> Tuple[int, int]:
+    "Return the indexes of the longest sub-array of `a` which sums to zero."
+    # The idea is to compute an array of the accumulated values.
+    # If any accumulated value shows up in the array again, there is a zero sub-array.
+    # Store the accumulated values to prevent recomputation below.
+    acc = list(accumulate(a))
+    # Determine the first occurrence of the sum.
+    # Special care is given for an empty array with 0 having -1 as index.
+    occ = {0: -1}
+    for i, e in enumerate(acc):
+        occ.setdefault(e, i)
+    # Determine the longest span between this occurrence and the first one.
+    # Sort by length and the lowest column first. Length is negative here.
+    length, j = min(starmap(lambda j, e: (occ[e] - j, j), enumerate(acc)))
+    return j + 1 + length, j + 1
 
 
 def kaiten_sushi(belt: List[int], distance: int) -> int:
