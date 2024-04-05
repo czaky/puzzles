@@ -86,6 +86,7 @@ def circle_of_words(words: List[str]) -> bool:
 
 def articulation_points(adj: List[List[int]]) -> List[int]:
     "Return the articulation points for a graph defined by the `adj` list."
+    # This uses single pass Tarjan's Algorithm.
     vt = [0] * len(adj)  # visited time for each node in DFS-tree order
     ct = vt[:]  # circle time for the parent/root of the whole circle
     o = []
@@ -94,6 +95,8 @@ def articulation_points(adj: List[List[int]]) -> List[int]:
     # and created the DFS-tree.
     def dfs(p, n, t):
         vt[n] = ct[n] = t  # set the times
+        # art - boolean indicating if `n` is an articulate point.
+        # kids - number of kids reached from this node first.
         art = kids = 0
         for c in adj[n]:
             if not vt[c]:  # If the child node was not visited...
@@ -120,6 +123,39 @@ def articulation_points(adj: List[List[int]]) -> List[int]:
         # to check if there are more than two kids (not in the same circle).
         if art if p != -1 else kids > 1:
             o.append(n)
+
+    # Start search from the first node (== 0).
+    dfs(-1, 0, 1)
+    return sorted(o)
+
+def critical_connections(adj: List[List[int]]) -> List[List[int]]:
+    "Return a list of critical bridges in an unordered graph."
+    # This uses single pass Tarjan's Algorithm.
+    vt = [0] * len(adj)  # visited time for each node in DFS-tree order
+    ct = vt[:]  # circle time for the parent/root of the whole circle
+    o = set()
+
+    # Depth first search to determine the parent of each node
+    # and created the DFS-tree.
+    def dfs(p, n, t):
+        vt[n] = ct[n] = t  # set the times
+        for c in adj[n]:
+            if not vt[c]:  # If the child node was not visited...
+                dfs(n, c, t + 1)
+                # If the child circle time is lower than ours,
+                # it has reached another node up in the DFT-tree.
+                # This indicates that we are in a circle with the child.
+                ct[n] = min(ct[n], ct[c])
+                # If the child is in a circle later than our visit time,
+                # this means that child can only be visited through this node.
+                if ct[c] > t:
+                    o.add((n, c))
+            elif c != p:  # visited node before
+                # If we reached another node (but the parent) higher
+                # in the DFS-tree, update our circle time.
+                # Use the original visited time, given that
+                # the child may be in another circle.
+                ct[n] = min(ct[n], vt[c])
 
     # Start search from the first node (== 0).
     dfs(-1, 0, 1)

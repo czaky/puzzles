@@ -27,3 +27,10 @@ class TestGraphs(unittest.TestCase):
         self.assertEqual(
             [1, 4], g.articulation_points([[1], [0, 4], [3, 4], [2, 4], [1, 2, 3]])
         )
+
+    def test_critical_connections(self):
+        "Test `critical_connections`."
+        self.assertEqual([(0, 1), (0, 2)], g.critical_connections([[1, 2], [0], [0]]))
+        self.assertEqual(
+            [(2, 3)], g.critical_connections([[1, 2], [0, 2], [0, 1, 3], [2]])
+        )
