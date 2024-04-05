@@ -440,6 +440,7 @@ def zero_sum_sub_max_len(a: List[int]) -> int:
     # Determine the longest span between this occurrence and the first one.
     return max(starmap(lambda i, e: i - occ[e], enumerate(acc)))
 
+
 def zero_sum_sub_max_interval(a: List[int]) -> Tuple[int, int]:
     "Return the indexes of the longest sub-array of `a` which sums to zero."
     # The idea is to compute an array of the accumulated values.
@@ -687,3 +688,33 @@ def candy(r: List[int]) -> int:
     d = accumulate(range(n), lambda a, i: i and r[-i - 1] > r[-i] and a + 1 or 0)
     # Take the maximum of both heaps of candies (and add an extra candy for each kid).
     return sum(max(x, y) for x, y in zip(c, reversed(list(d)))) + n
+
+
+def max_profit(prices: List[int], k: int) -> int:
+    "Return a max-profit to be made for at most `k` sells using `prices` for each day."
+    # Each transaction needs a buy and a sell
+    k = min(k, len(prices) // 2)
+    # For each transaction count `t`:
+    #   - cumulative max profit achievable
+    profit = [0] * k
+    #   - cumulative max balance = profit for `t-1` transactions minus buy price.
+    balance = [-max(prices, default=0)] * k
+
+    for d, p in enumerate(prices):
+        # There can be at most d // 2 transactions up until day `d`.
+        for t in range(min(1 + d // 2, k)):
+            # The idea follows this chain of transformations.
+            # Each day we have the choice of two actions:
+            #    noop = profit[d - 1][t]
+            #    sell = max(p[d] - p[buy] + profit[buy][t - 1] for buy in range(d))
+            # where `sell` can be transformed to:
+            #    sell  = p[d] + max(profit[buy][t - 1] - p[buy] for buy in range(d)))
+            # The second term is the max achievable balance so far from `t-1` transactions.
+            # The `balance` term can be computed as:
+            #    balance[d][t] = max(balance[d-1][t], profit[d][t-1] - p[d])
+            # If we abandon the day `d` in the memo tables:
+            #    balance[t] = max(balance[t], profit[t-1] - p)
+            balance[t] = max(balance[t], (t and profit[t - 1]) - p)
+            profit[t] = max(profit[t], p + balance[t])
+
+    return len(profit) and profit[-1] or 0

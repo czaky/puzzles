@@ -344,3 +344,23 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual(
             (0, 8), ar.zero_sum_sub_max_interval([15, -2, 2, -8, 1, 7, 10, -25, 10, 23])
         )
+
+    def test_max_profit(self):
+        "Test `max_profit`."
+        self.assertEqual(0, ar.max_profit([], 0))
+        self.assertEqual(0, ar.max_profit([], 1))
+        self.assertEqual(0, ar.max_profit([10], 0))
+        self.assertEqual(0, ar.max_profit([10], 1))
+        self.assertEqual(0, ar.max_profit([10, 20], 0))
+        self.assertEqual(10, ar.max_profit([10, 20], 1))
+        self.assertEqual(10, ar.max_profit([10, 20, 5, 10], 1))
+        self.assertEqual(20, ar.max_profit([10, 20, 5, 25], 1))
+        self.assertEqual(15, ar.max_profit([10, 20, 5, 10], 2))
+        self.assertEqual(30, ar.max_profit([10, 20, 5, 25], 2))
+        self.assertEqual(20, ar.max_profit([5, 20, 10, 25], 1))
+        self.assertEqual(20, ar.max_profit([5, 20, 25, 10], 2))
+        self.assertEqual(0, ar.max_profit([10, 22, 5, 75, 65, 80, 90, 100], 0))
+        self.assertEqual(95, ar.max_profit([10, 22, 5, 75, 65, 80, 90, 100], 1))
+        self.assertEqual(107, ar.max_profit([10, 22, 5, 75, 65, 80, 90, 100], 2))
+        self.assertEqual(117, ar.max_profit([10, 22, 5, 75, 65, 80, 90, 100], 8))
+        self.assertEqual(117, ar.max_profit([10, 22, 5, 75, 65, 80, 90, 100], 20))
