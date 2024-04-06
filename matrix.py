@@ -1,6 +1,6 @@
 "Puzzles around matrices."
 
-from typing import List
+from typing import List, Tuple
 from itertools import product, accumulate, combinations
 from functools import lru_cache, reduce
 from bisect import bisect_right
@@ -54,10 +54,49 @@ def optimum_multiplications(a: List[int]) -> int:
 
     @lru_cache(None)
     def sub(i, j):
-        m = lambda k: sub(i, k) + sub(k + 1, j) + a[i - 1] * a[k] * a[j]
+        # Multiplying (i, k) x (k, j) matrices gives: (i, j) matrix.
+        # The number of multiplications necessary is: i * k * j
+        # For each K we multiply two matrices resulting from recursive calls:
+        #   sub(i, k)     => (a[i - 1], a[k])
+        #   sub(k + 1, j) => (    a[k], a[j])
+        m = lambda k: sub(i, k) + a[i - 1] * a[k] * a[j] + sub(k + 1, j)
+        # Determine the optimal split for this range.
         return min(map(m, range(i, j))) if i < j else 0
 
     return sub(1, len(a) - 1)
+
+
+A = ord("A")
+
+
+def optimum_brackets(a: List[int]) -> str:
+    """
+    Given a list of matrix sizes (a[i] x a[i+1])
+    return optimal bracketed multiplication expression
+    in the form:  `A(BC)D`
+    """
+
+    @lru_cache(None)
+    def sub(i: int, j: int) -> Tuple[int, int]:
+        # Multiplying (i, k) x (k, j) matrices gives: (i, j) matrix.
+        # The number of multiplications necessary is: i * k * j
+        # For each K we multiply two matrices resulting from recursive calls:
+        #   sub(i, k)     => (a[i - 1], a[k])
+        #   sub(k + 1, j) => (    a[k], a[j])
+        def split(k):
+            return sub(i, k)[0] + a[i - 1] * a[k] * a[j] + sub(k + 1, j)[0], k
+
+        # Determine the optimal split for this range.
+        return min(map(split, range(i, j))) if i < j else (0, i)
+
+    def par(i: int, j: int) -> str:
+        if i == j:
+            return chr(A + i - 1)
+        k = sub(i, j)[1]
+        b = par(k + 1, j)
+        return par(i, k) + (b if len(b) == 1 else f"({b})")
+
+    return par(1, len(a) - 1)
 
 
 def sudoku(grid: List[List[int]]) -> bool:

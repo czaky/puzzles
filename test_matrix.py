@@ -28,6 +28,14 @@ class TestMatrixPuzzles(unittest.TestCase):
         self.assertEqual(580, m.optimum_multiplications([2, 40, 2, 40, 5]))
         self.assertEqual(26000, m.optimum_multiplications([40, 20, 30, 10, 30]))
 
+    def test_optimum_brackets(self):
+        "Test `optimum_brackets`."
+        self.assertEqual("A", m.optimum_brackets([3, 3]))
+        self.assertEqual("AB", m.optimum_brackets([3, 3, 3]))
+        self.assertEqual("ABCD", m.optimum_brackets([1, 2, 3, 4, 5]))
+        self.assertEqual("A(B(CD))", m.optimum_brackets([5, 4, 3, 2, 1]))
+        self.assertEqual("A(BC)D", m.optimum_brackets([4, 2, 3, 1, 3]))
+
     def test_sudoku(self):
         "Test `sudoku` puzzle solver."
         grid = parse(
