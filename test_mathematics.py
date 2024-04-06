@@ -63,3 +63,30 @@ class TestNumbers(unittest.TestCase):
         self.assertEqual(10, m.next_happy_number(7))
         self.assertEqual(13, m.next_happy_number(10))
         self.assertEqual(1003, m.next_happy_number(1000))
+
+    def test_prime_numbers(self):
+        "Test `prime_numbers` generator."
+        self.assertEqual([], list(m.prime_numbers(0)))
+        self.assertEqual([], list(m.prime_numbers(1)))
+        self.assertEqual([2], list(m.prime_numbers(2)))
+        self.assertEqual([2, 3], list(m.prime_numbers(3)))
+        self.assertEqual([2, 3], list(m.prime_numbers(4)))
+        self.assertEqual([2, 3, 5], list(m.prime_numbers(5)))
+        self.assertEqual([2, 3, 5], list(m.prime_numbers(6)))
+        self.assertEqual([2, 3, 5, 7], list(m.prime_numbers(7)))
+        self.assertEqual([2, 3, 5, 7, 11, 13, 17, 19], list(m.prime_numbers(22)))
+        self.assertEqual([2, 3, 5, 7, 11, 13, 17, 19, 23], list(m.prime_numbers(23)))
+        self.assertEqual([2, 3, 5, 7, 11, 13, 17, 19, 23], list(m.prime_numbers(24)))
+        self.assertEqual([2, 3, 5, 7, 11, 13, 17, 19, 23], list(m.prime_numbers(25)))
+        self.assertEqual(9592, len(list(m.prime_numbers(100000))))
+
+    def test_prime_sum(self):
+        "Test `prime_sum`."
+        self.assertEqual((2, 2), m.prime_sum(4))
+        self.assertEqual((2, 3), m.prime_sum(5))
+        self.assertEqual((3, 3), m.prime_sum(6))
+        self.assertEqual((2, 5), m.prime_sum(7))
+        self.assertEqual((2, 7), m.prime_sum(9))
+        self.assertEqual((13, 5237), m.prime_sum(5250))
+        self.assertEqual((173, 7253), m.prime_sum(7426))
+        self.assertEqual((173, 33923), m.prime_sum(34096))

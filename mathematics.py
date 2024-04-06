@@ -1,5 +1,6 @@
 """Module for number and arithmetic related puzzles."""
 
+from typing import Tuple
 from math import floor, log
 from functools import reduce
 from operator import mul
@@ -117,3 +118,63 @@ def next_happy_number(n: int) -> int:
     # Recursively determine the next "happy" number.
     nh = lambda n: n if ss(n) in (1, 7) else nh(n + 1)
     return nh(n + 1)
+
+
+# Caches the table of integers in `range(3, n + 1, 2)`
+# Composite numbers in this table are replaced with 0.
+_prime_table = []
+
+
+def _primes(n: int):
+    # Generate potential prime numbers skipping all even ones.
+    global _prime_table  # pylint: disable=global-statement
+    pt = _prime_table
+    lpt = len(pt)
+    if n - 2 <= lpt:
+        return pt
+
+    nums = list(range(3, n + 1, 2))
+    nums[: len(pt)] = pt
+
+    # Iterate over all the numbers deemed not composite, yet.
+    for p in (p for p in nums if p and p * p <= n):
+        # Delete all: p^2, p^2 + p, ... numbers as composite.
+        st = (p * p - 3) // 2
+        st = st if lpt < st else lpt - (lpt - st) % p
+        for i in range(st, len(nums), p):
+            nums[i] = 0
+
+    if len(nums) > len(_prime_table):
+        _prime_table = nums
+    return nums
+
+
+def prime_numbers(n: int):
+    "Generate primes until n."
+    if n < 2:
+        return
+    yield 2
+    for p in _primes(n):
+        if p > n:
+            break
+        if p > 0:
+            yield p
+
+
+def prime_sum(n: int) -> Tuple[int, int]:  # pyright: ignore
+    "Return two prime numbers that sum to the even number `n`."
+    assert n > 3
+
+    primes = list(prime_numbers(n))
+
+    j = len(primes) - 1
+    for i, a in enumerate(primes):
+        if i > j:
+            break
+        b = n - a
+        while primes[j] > b:
+            j -= 1
+        if primes[j] == b:
+            return a, b
+
+    return 0, n
