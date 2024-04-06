@@ -93,8 +93,8 @@ def optimum_brackets(a: List[int]) -> str:
         if i == j:
             return chr(A + i - 1)
         k = sub(i, j)[1]
-        b = par(k + 1, j)
-        return par(i, k) + (b if len(b) == 1 else f"({b})")
+        a, b = par(i, k), par(k + 1, j)
+        return a + (b if len(b) == 1 else f"({b})")
 
     return par(1, len(a) - 1)
 
