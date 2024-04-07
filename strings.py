@@ -119,14 +119,20 @@ def word_break(s: str, d) -> bool:
 
 def word_parts(d: List[str], s: str) -> List[str]:
     "Return all possible combinations of words from `d` that make up `s`."
+    # The idea is to iterate recursively from the end and comparing the
+    # words from the dictionary list `d` to the suffix.
 
     def sub(j: int) -> list:
         if j == 0:
+            # If the prefix is empty, just return an empty list
+            # so the next steps adds a single suffix expansion.
             return [[]]
         o = []
         for suffix in d:
             i = j - len(suffix)
             if i >= 0 and s[i:j] == suffix:
+                # If there was a match to the suffix,
+                # generate an expansion for all the prefixes.
                 o.extend(x + [suffix] for x in sub(i))
         return o
 
