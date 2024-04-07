@@ -3,7 +3,7 @@
 from collections import Counter
 from typing import List, Optional
 from functools import lru_cache, reduce
-from itertools import accumulate
+from itertools import accumulate, combinations
 
 from graphs import topological_order
 from future import pairwise
@@ -387,6 +387,7 @@ def longest_prefix_suffix_length(p: str) -> int:
             pi[q] = k = k + 1
     return pi[-1]
 
+
 def extra_palindrome_chars(s: str) -> int:
     "Returns number of new chars upfront necessary to make `s` a palindrome."
     # Uses KMP (Knuth Morris Pratt) algorithm  to determine the length
@@ -410,7 +411,6 @@ def extra_palindrome_chars(s: str) -> int:
     return n - pi[-1]
 
 
-
 def word_wrap(words: List[int], k: int) -> int:
     "Return min sum(extra_spaces**2) for a wrapped text."
     # Runs in O(n*n), aux space O(n)
@@ -432,3 +432,21 @@ def word_wrap(words: List[int], k: int) -> int:
         dp[i] = c
 
     return dp[0]
+
+
+def sum_string(s: str) -> bool:
+    "True if `s` can be split recursively into `a + b = c` substrings."
+    # "12243660" -> "12", "24", "36", "60"
+    # The idea is to split the string into 3 parts: a + b + remainder
+    # Note that: a, b <- b, a + b
+    # So the substrings are basically:   `a + b**n`
+
+    def sub(a: int, b: int, s: str) -> bool:
+        c, fin, s = str(a + b), not s, s.lstrip("0")
+        return fin or s.startswith(c := str(a + b)) and sub(b, a + b, s[len(c) :])
+
+    # Once the first string is split, the initial two parts determine the reminder.
+    return any(
+        sub(int(s[:i]), int(s[i:j]), s[j:])
+        for i, j in combinations(range(1, len(s)), 2)
+    )

@@ -249,3 +249,22 @@ class TestStrings(unittest.TestCase):
         self.assertEqual(1, s.word_wrap([3, 2], 4))
         self.assertEqual(5, s.word_wrap([3, 2, 2], 4))
         self.assertEqual(9, s.word_wrap([3, 2, 2, 4], 4))
+
+    def test_sum_string(self):
+        "Test `sum_string`."
+        self.assertFalse(s.sum_string(""))
+        self.assertFalse(s.sum_string("0"))
+        self.assertFalse(s.sum_string("00"))
+        self.assertTrue(s.sum_string("123"))
+        self.assertFalse(s.sum_string("124"))
+        self.assertTrue(s.sum_string("0123"))
+        self.assertFalse(s.sum_string("0124"))
+        self.assertTrue(s.sum_string("1023"))
+        self.assertFalse(s.sum_string("1024"))
+        self.assertTrue(s.sum_string("1203"))
+        self.assertFalse(s.sum_string("1204"))
+        self.assertFalse(s.sum_string("1230"))
+        self.assertTrue(s.sum_string("12243660"))
+        self.assertFalse(s.sum_string("12243661"))
+        self.assertTrue(s.sum_string("11111122233355588931451"))
+        self.assertFalse(s.sum_string("11111122233355588931450"))
