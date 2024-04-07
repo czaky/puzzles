@@ -443,7 +443,7 @@ def sum_string(s: str) -> bool:
 
     def sub(a: int, b: int, s: str) -> bool:
         c, fin, s = str(a + b), not s, s.lstrip("0")
-        return fin or s.startswith(c := str(a + b)) and sub(b, a + b, s[len(c) :])
+        return fin or s.startswith(c) and sub(b, a + b, s[len(c) :])
 
     # Once the first string is split, the initial two parts determine the reminder.
     return any(
