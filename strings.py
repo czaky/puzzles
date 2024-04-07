@@ -117,6 +117,22 @@ def word_break(s: str, d) -> bool:
     return rec(s)
 
 
+def word_parts(d: List[str], s: str) -> List[str]:
+    "Return all possible combinations of words from `d` that make up `s`."
+
+    def sub(j: int) -> list:
+        if j == 0:
+            return [[]]
+        o = []
+        for suffix in d:
+            i = j - len(suffix)
+            if i >= 0 and s[i:j] == suffix:
+                o.extend(x + [suffix] for x in sub(i))
+        return o
+
+    return [" ".join(b) for b in sub(len(s))]
+
+
 def longest_palindrome(s: str) -> str:
     "Return longest palindrome substring from `s`."
     # Uses Manacher's algorithm.

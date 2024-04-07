@@ -268,3 +268,20 @@ class TestStrings(unittest.TestCase):
         self.assertFalse(s.sum_string("12243661"))
         self.assertTrue(s.sum_string("11111122233355588931451"))
         self.assertFalse(s.sum_string("11111122233355588931450"))
+
+    def test_word_parts(self):
+        "Test `word_parts`."
+        self.assertEqual(
+            ["cat"], s.word_parts(["rat", "cats", "cat", "and", "sand", "dog"], "cat")
+        )
+        self.assertEqual(
+            [], s.word_parts(["rat", "cats", "cat", "and", "sand", "dog"], "catsandog")
+        )
+        self.assertEqual(
+            ["cats and dog", "cat sand dog"],
+            s.word_parts(["rat", "cats", "cat", "and", "sand", "dog"], "catsanddog"),
+        )
+        self.assertEqual(
+            ["rat cats and dog", "rat cat sand dog"],
+            s.word_parts(["rat", "cats", "cat", "and", "sand", "dog"], "ratcatsanddog"),
+        )
