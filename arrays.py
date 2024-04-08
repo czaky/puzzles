@@ -734,7 +734,7 @@ def count_changes_to_make_strict(a: list) -> int:
         #   B. If there is no such subsequence, return 1 number length by default.
         return max((lis(i) + 1 for i in range(j) if increasing(i, j)), default=1)
 
-    # Define increasing as increasing in value
+    # Define `increasing` as increasing in value
     # with the interval long enough `(j - i)` to accommodate integer numbers in-between.
     increasing = lambda i, j: a[i] < a[j] and (j - i) <= (a[j] - a[i])
 
