@@ -719,10 +719,11 @@ def max_profit(prices: List[int], k: int) -> int:
 
     return len(profit) and profit[-1] or 0
 
+
 def count_changes_to_make_strict(a: list) -> int:
     "How many numbers need to be changed in `a` to make the sequence strictly increasing."
     # The idea is to find the longest (non-continuous) increasing subsequence (LIS).
-    # The remaining number in `a` will need to be changed.
+    # The remaining numbers in `a` will need to be changed.
     # In order to do this, we have to make sure that all the remaining numbers
     # can be changed to integers in the intervals between numbers in the LIS.
 
