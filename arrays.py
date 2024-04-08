@@ -718,3 +718,24 @@ def max_profit(prices: List[int], k: int) -> int:
             profit[t] = max(profit[t], p + balance[t])
 
     return len(profit) and profit[-1] or 0
+
+def count_changes_to_make_strict(a: list) -> int:
+    "How many numbers need to be changed in `a` to make the sequence strictly increasing."
+    # The idea is to find the longest (non-continuous) increasing subsequence (LIS).
+    # The remaining number in `a` will need to be changed.
+    # In order to do this, we have to make sure that all the remaining numbers
+    # can be changed to integers in the intervals between numbers in the LIS.
+
+    @lru_cache(None)
+    def lis(j: int):
+        # Uses the longest increasing sequence algorithm.
+        #   A. Take maximum (+1) of every LIS in the range [0, j)
+        #   B. If there is no such subsequence, return 1 number length by default.
+        return max((lis(i) + 1 for i in range(j) if increasing(i, j)), default=1)
+
+    # Define increasing as increasing in value
+    # with the interval long enough `(j - i)` to accommodate integer numbers in-between.
+    increasing = lambda i, j: a[i] < a[j] and (j - i) <= (a[j] - a[i])
+
+    # Return the number of characters left after removing the longest increasing subsequence.
+    return len(a) - max(map(lis, range(len(a))), default=0)

@@ -364,3 +364,19 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual(107, ar.max_profit([10, 22, 5, 75, 65, 80, 90, 100], 2))
         self.assertEqual(117, ar.max_profit([10, 22, 5, 75, 65, 80, 90, 100], 8))
         self.assertEqual(117, ar.max_profit([10, 22, 5, 75, 65, 80, 90, 100], 20))
+
+    def test_count_changes_to_make_strict(self):
+        "Test `count_changes_to_make_strict`."
+        self.assertEqual(0, ar.count_changes_to_make_strict([]))
+        self.assertEqual(0, ar.count_changes_to_make_strict([9]))
+        self.assertEqual(0, ar.count_changes_to_make_strict([1, 2]))
+        self.assertEqual(1, ar.count_changes_to_make_strict([2, 1]))
+        self.assertEqual(0, ar.count_changes_to_make_strict([1, 2, 3, 4]))
+        self.assertEqual(3, ar.count_changes_to_make_strict([4, 3, 2, 1]))
+        self.assertEqual(2, ar.count_changes_to_make_strict([1, 2, 3, 6, 5, 4]))
+        self.assertEqual(1, ar.count_changes_to_make_strict([1, 2, 3, 1, 5]))
+        self.assertEqual(2, ar.count_changes_to_make_strict([1, 6, 4, 6, 4]))
+        self.assertEqual(5, ar.count_changes_to_make_strict([7, 7, 5, 3, 3, 9, 5]))
+        self.assertEqual(
+            7, ar.count_changes_to_make_strict([10, 5, 5, 2, 4, 10, 3, 2, 7, 9])
+        )
