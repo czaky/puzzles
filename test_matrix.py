@@ -148,3 +148,17 @@ class TestMatrixPuzzles(unittest.TestCase):
             [[-6, -2], [5, 5], [1, 0], [3, 1], [-2, -6], [-9, 4], [7, -1]],
             m.zero_sum_sub_matrix(mat),
         )
+
+    def test_min_points_traverse(self):
+        "Test `min_points_traverse`."
+        self.assertEqual(1, m.min_points_traverse([[]]))
+        self.assertEqual(1, m.min_points_traverse([[1]]))
+        self.assertEqual(1, m.min_points_traverse([[0]]))
+        self.assertEqual(2, m.min_points_traverse([[-1]]))
+        self.assertEqual(6, m.min_points_traverse([[-5]]))
+        self.assertEqual(1, m.min_points_traverse([[1, 2, 3]]))
+        self.assertEqual(1, m.min_points_traverse([[1, 2, 3], [4, 5, 6]]))
+        self.assertEqual(6, m.min_points_traverse([[-5, 2, 3], [4, 5, 6]]))
+        self.assertEqual(
+            7, m.min_points_traverse([[-2, -3, 3], [-5, -10, 1], [10, 30, -5]])
+        )

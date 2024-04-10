@@ -217,3 +217,38 @@ def zero_sum_sub_matrix(m: List[List[int]]) -> List[List[int]]:
     # `top` and `left` are inclusive, `bottom` and `right` are exclusive here.
     (area, top, left, bottom, right) = mx
     return [r[left:right] for r in m[top:bottom]] if area else []
+
+
+def min_points_traverse(grid: List[List[int]]) -> int:
+    """Traverse a `grid` with positive and negative numbers representing returns.
+    What is the necessary minimum of initial points if the sum of returns
+    on the grid traversal path cannot fall below 1?
+    The path on the grid can only move down and to the right.
+    Starting position is (0, 0). Ending position is (m-1, n-1) for a `m x n` grid.
+    """
+    m, n = len(grid), len(grid[0])
+    # The idea is to start with the end position (m-1, n-1) and calculate
+    # each successive position by looking below and to the right.
+    # This can be done with only an array representing previous row,
+    # and calculating it from the right to left.
+    # At each point (i, j) the `v[j]` will contain value below,
+    # and `v[j + 1]` is the immediately before calculated value to the right.
+    #
+    # We initialize the array with 1,
+    # which is only important for the position `v[n-1]`.
+    # This indicates the minimum points necessary to traverse the grid at the start.
+    v = [1] * (n + 1)
+    # We add an additional column, which will be always at least
+    # the maximum possible points that would be necessary for the traversal.
+    # This will allow to do `min(v[n-1], v[n])` without extra code.
+    v[-1] = 1 - (n and m and m * n * min(map(min, grid)))
+    # We iterate through the grid in reverse order.
+    for i, j in product(reversed(range(m)), reversed(range(n))):
+        # The `v[j]` for this current row is calculated by taking
+        # the minium of the position below (i.e. previous `v[j]`)
+        # and the position immediately to the right (i.e this row's `v[j+1]`).
+        # We add negative values to the required points budget
+        # and make sure that positive values will not lower the budget below 1.
+        v[j] = max(min(v[j], v[j + 1]) - grid[i][j], 1)
+    # After the iteration the value for the top-left position (0, 0) is in `v[0]`.
+    return v[0]
