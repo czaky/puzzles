@@ -39,3 +39,24 @@ class TestBits(unittest.TestCase):
         self.assertEqual([4, 3], b.max_xor_sub_array([5, 4, 3, 2, 1])[1])
         self.assertEqual(13, b.max_xor_sub_array([8, 5, 4, 3, 2, 1])[0])
         self.assertEqual([8, 5], b.max_xor_sub_array([8, 5, 4, 3, 2, 1])[1])
+
+    def test_max_xor_subset(self):
+        "Test `max_xor_aubset`."
+        self.assertEqual(0, b.max_xor_subset([]))
+        self.assertEqual(1, b.max_xor_subset([1]))
+
+        self.assertEqual(3, b.max_xor_subset([1, 2]))
+        self.assertEqual(3, b.max_xor_subset([2, 1]))
+
+        self.assertEqual(3, b.max_xor_subset([1, 3]))
+        self.assertEqual(3, b.max_xor_subset([3, 1]))
+
+        self.assertEqual(7, b.max_xor_subset([1, 2, 3, 4, 5]))
+        self.assertEqual(15, b.max_xor_subset([1, 2, 3, 4, 5, 8]))
+
+        self.assertEqual(7, b.max_xor_subset([5, 4, 3, 2, 1]))
+        self.assertEqual(15, b.max_xor_subset([8, 5, 4, 3, 2, 1]))
+
+        self.assertEqual(13, b.max_xor_subset([9, 8, 5]))
+        self.assertEqual(125, b.max_xor_subset([96, 51, 26, 52]))
+        self.assertEqual(127, b.max_xor_subset([1, 2, 3, 4, 5, 6, 22, 33, 44, 22, 111]))

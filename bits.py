@@ -91,3 +91,23 @@ def max_xor_sub_array(a: list) -> Tuple[int, list]:
         nearest = trie.nearest(~cx)
         mx = max(mx, (cx ^ nearest[0], nearest[1] + 1, i + 1))
     return mx[0], a[mx[1] : mx[2]]
+
+
+def max_xor_subset(a: list) -> int:
+    "Return largest XOR value of `a` subset"
+    # The idea is to always use the maximum element in the array,
+    # then remove its bits from the set while adding those bits
+    # to the maximum accumulated so far.
+    x = 0
+    while y := max(a, default=0):
+        # Add the bits to `x`.
+        # We select here the higher value to get the highest subset.
+        # If y is not improving the score, ignore it.
+        x = max(x, x ^ y)
+        # Remove the bits from values which share the same MSB.
+        # All values with the same MSB as `y` are modified,
+        # while all other values stay the same.
+        # The remaining elements in the array,
+        # will be smaller than y and shorter in bit length.
+        a[:] = (min(e, e ^ y) for e in a)
+    return x
