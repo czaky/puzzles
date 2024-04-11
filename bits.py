@@ -79,7 +79,7 @@ def max_xor_sub_array(a: list) -> Tuple[int, list]:
     trie = BitTrie(bits=max(map(int.bit_length, a), default=1))
     # Insert 0 as the starter for the cumulative xor value.
     trie.insert(0, -1)
-    mx = (0, 0, 0)  # maximum result so far
+    mx = (0, 0, 0)  # (max-value, sub-start, sub-end-exclusive)
     cx = 0  # cumulative xor value for the array
     for i, e in enumerate(a):
         cx ^= e
