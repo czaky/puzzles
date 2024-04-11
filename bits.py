@@ -76,7 +76,7 @@ def max_xor_sub_array(a: list) -> Tuple[int, list]:
     # the tree by taking path matching the bits in the `~v` if possible.
     #
     # Build a bit trie using the longest bit_length.
-    trie = BitTrie(bits=max(map(int.bit_length, a)))
+    trie = BitTrie(bits=max(map(int.bit_length, a), default=1))
     # Insert 0 as the starter for the cumulative xor value.
     trie.insert(0, -1)
     mx = (0, 0, 0)  # maximum result so far
