@@ -1,6 +1,5 @@
 "Bit manipulation related puzzles."
 
-from math import log
 from typing import List, Tuple
 
 
@@ -16,7 +15,7 @@ def count_different_bit_pairs(a: List[int]) -> int:
     #
     # Runs in O(N * log(max(n))).
     # Determine the length of the array and the bit length of maximum number.
-    n, l = len(a), int(log(max(a), 2)) + 1
+    n, l = len(a), max(a, default=1).bit_length()
     # Compute the count of zero bits at each bit position.
     zeros = (sum(not x & b for x in a) for b in (1 << i for i in range(l)))
     # Sum the product of zero bits and set bits for each position.
@@ -76,7 +75,7 @@ def max_xor_sub_array(a: list) -> Tuple[int, list]:
     # the tree by taking path matching the bits in the `~v` if possible.
     #
     # Build a bit trie using the longest bit_length.
-    trie = BitTrie(bits=max(map(int.bit_length, a), default=1))
+    trie = BitTrie(bits=max(a, default=1).bit_length())
     # Insert 0 as the starter for the cumulative xor value.
     trie.insert(0, -1)
     mx = (0, 0, 0)  # (max-value, sub-start, sub-end-exclusive)
