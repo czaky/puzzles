@@ -90,3 +90,9 @@ class TestNumbers(unittest.TestCase):
         self.assertEqual((13, 5237), m.prime_sum(5250))
         self.assertEqual((173, 7253), m.prime_sum(7426))
         self.assertEqual((173, 33923), m.prime_sum(34096))
+
+    def test_best_numbers(self):
+        "Test `best_numbers`."
+        self.assertEqual(2, m.best_numbers(2, 1, 2, 3, 5))
+        self.assertEqual(4, m.best_numbers(4, 6, 7, 5, 3))
+        self.assertEqual(905821643, m.best_numbers(100000, 1, 5, 2, 5))
