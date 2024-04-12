@@ -90,23 +90,15 @@ class TestTrees(unittest.TestCase):
         self.assertEqual([1, 2], seq(t.insert(t.make_df("1"), 2)))
         self.assertEqual([2, 1, 3], seq(t.insert(t.make_df("2 1 N N 3"), 3)))
         self.assertEqual([2, 1, 3, 4], seq(t.insert(t.make_df("2 1 N N 3"), 4)))
-        self.assertEqual(
-            [5, 3, 6, 2, 4], seq(t.insert(t.make_df("5 3 N 4 N N 6"), 2))
-        )
+        self.assertEqual([5, 3, 6, 2, 4], seq(t.insert(t.make_df("5 3 N 4 N N 6"), 2)))
 
     def test_find_ancestor(self):
         "Test `find_ancestor` function."
         self.assertEqual(2, t.find_ancestor(t.make_df("2 1"), 1, 2).data)
         self.assertEqual(2, t.find_ancestor(t.make_df("2 1 N N 3"), 3, 1).data)
-        self.assertEqual(
-            5, t.find_ancestor(t.make_df("5 3 2 N N 4 N N 6"), 4, 6).data
-        )
-        self.assertEqual(
-            3, t.find_ancestor(t.make_df("5 3 2 N N 4 N N 6"), 3, 4).data
-        )
-        self.assertEqual(
-            3, t.find_ancestor(t.make_df("5 3 2 N N 4 N N 6"), 2, 4).data
-        )
+        self.assertEqual(5, t.find_ancestor(t.make_df("5 3 2 N N 4 N N 6"), 4, 6).data)
+        self.assertEqual(3, t.find_ancestor(t.make_df("5 3 2 N N 4 N N 6"), 3, 4).data)
+        self.assertEqual(3, t.find_ancestor(t.make_df("5 3 2 N N 4 N N 6"), 2, 4).data)
 
     def test_largest(self):
         "Test `largest` function."
@@ -174,9 +166,7 @@ class TestTrees(unittest.TestCase):
         "Test `nodes_at_distance`."
         self.assertEqual(
             [10, 14, 22],
-            t.nodes_at_distance(
-                t.make_df("20 8 4 N N 12 10 N N 14 N N 22"), 8, 2
-            ),
+            t.nodes_at_distance(t.make_df("20 8 4 N N 12 10 N N 14 N N 22"), 8, 2),
         )
         self.assertEqual(
             [1, 24],
@@ -332,12 +322,11 @@ class TestTrees(unittest.TestCase):
         # 2 7
         self.assertEqual("5 2 7", n.bfo_string())
 
-
-def test_candy_tree_equality(self):
-    "Test `candy_tree_equality`."
-    self.assertEqual(2, t.candy_tree_equality(t.make("3 0 0")))
-    self.assertEqual(3, t.candy_tree_equality(t.make("0 3 0")))
-    self.assertEqual(3, t.candy_tree_equality(t.make("0 0 3")))
-    self.assertEqual(1, t.candy_tree_equality(t.make("0 1 2")))
-    self.assertEqual(1, t.candy_tree_equality(t.make("2 1 0")))
-    self.assertEqual(2, t.candy_tree_equality(t.make("1 2 0")))
+    def test_candy_tree_equality(self):
+        "Test `candy_tree_equality`."
+        self.assertEqual(2, t.candy_tree_equality(t.make("3 0 0")))
+        self.assertEqual(3, t.candy_tree_equality(t.make("0 3 0")))
+        self.assertEqual(3, t.candy_tree_equality(t.make("0 0 3")))
+        self.assertEqual(1, t.candy_tree_equality(t.make("0 1 2")))
+        self.assertEqual(1, t.candy_tree_equality(t.make("2 1 0")))
+        self.assertEqual(2, t.candy_tree_equality(t.make("1 2 0")))
