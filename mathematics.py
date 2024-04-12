@@ -6,6 +6,9 @@ from functools import reduce
 from operator import mul
 
 
+# The modulo operation is crucial to efficiently solving the division problem.
+M = 10**9 + 7
+
 def digits(n: int):
     "Iterates over decimal digits of `n`."
     while n:
@@ -178,3 +181,47 @@ def prime_sum(n: int) -> Tuple[int, int]:  # pyright: ignore
             return a, b
 
     return 0, n
+
+def best_numbers(n: int, a: int, b: int, c: int, d: int) -> int:
+    """Return a count of integers of `n` length of decimal representation that fulfill:
+    1.) The numbers are made only of digits `a` and `b`.
+    2.) Sum of the digits of the numbers contains at least one of `c` and `d`.
+    """
+    # The idea is to find `n_a` and `n_b` split with the sum having the property 2.)
+    # Then return the number of permutations.
+
+    # A valid number (sum) contains `c` and `d` in the decimal representation.
+    cd = set([c, d])
+    valid = lambda s: bool(cd & set(digits(s)))
+
+    if a == b:
+        # If the digit sum of the `aaa...aaa` number intersects with `cd`,
+        # then there is just one hit, else 0.
+        return int(valid(a * n))
+
+    fac = [1] * (n + 1)
+    inv = [1] * (n + 1)
+    for i in range(1, n + 1):
+        fac[i] = fac[i - 1] * i % M
+        inv[i] = pow(fac[i], M - 2, M)
+
+    # Modulo inverse of a number is a number that:
+    #  inv(n) * n = n^(M - 2) * n = 1  (mod M)
+    # Inverse of the factorial uses the inductive property:
+    #  (f_n) ^ (M - 2) * f_n = 1
+    #  (f_n-1 * n) ^ (M - 2) * f_n = 1
+    #  (f_n-1) ^ (M - 2) * n ^ (M - 2) * f_n = 1
+    # So:
+    #  (f_n-1) ^ (M - 2)
+    #   = 1 / n ^ (M - 2) / f_n
+    #   = n / f_n
+    #   = n * (f_n) ^ (M - 2)
+    # So:
+    #  inv(f_n-1) = n * inv(f_n)
+    inv[-1] = pow(fac[-1], (M - 2), M)
+    for i in reversed(range(1, n + 1)):
+        inv[i - 1] = i * inv[i] % M
+
+    # Count of valid permuations for a number consisting of i a's and (n - i) b's.
+    p = lambda i: fac[n] * inv[i] * inv[n - i] % M if valid(a * i + b * (n - i)) else 0
+    return sum(map(p, range(n + 1))) % M
