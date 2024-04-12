@@ -85,17 +85,17 @@ class TreeNode:
             print(self.bfo_string())
             print("-" * mxl)
 
-    def bfo_string(self) -> str:
-        "Return a BFO string representation using 'N' for None."
+    def bfo_string(self, none: str = "N") -> str:
+        "Return a BFO string representation using none ('N') for None."
         o = []
         q: Deque[Node] = deque([self])
         while q:
             n = q.popleft()
-            o.append(str(n.data) if n else "N")
+            o.append(str(n.data) if n else none)
             if n:
                 q.append(n.left)
                 q.append(n.right)
-        while o and o[-1] == "N":
+        while o and o[-1] == none:
             o.pop()
         return " ".join(o)
 
@@ -195,44 +195,44 @@ def height(n: Node) -> int:
     return n and n.height or 0
 
 
-def make(s: str) -> Node:
-    "Make a binary tree from a string `s` in depth first order."
-
-    def des(it):
-        v = next(it, -1)
-        if v < 0:
-            return None
-        n = TreeNode(v)
-        n.left = des(it)
-        n.right = des(it)
-        n.update_height()
-        return n
-
-    return des(iter(map(int, s.split())))
-
-
-def make_bfo(s: str) -> Node:
+def make(s: str, none: str = "N") -> Node:
     "Make a binary tree from a string `s` in breadth first order."
     it = iter(s.split())
-    v = next(it, None)
-    if v is None:
+    v = next(it, none)
+    if v == none:
         return None
     root = TreeNode(int(v))
     q = deque([root])
     for v in it:
         n = q.popleft()
-        if v != "N":
+        if v != none:
             n.left = TreeNode(int(v))
             q.append(n.left)
         v = next(it, None)
         if v is None:
             break
-        if v != "N":
+        if v != none:
             n.right = TreeNode(int(v))
             q.append(n.right)
     for n in df_nodes(root):
         n.update_height()
     return root
+
+
+def make_df(s: str, none: str = "N") -> Node:
+    "Make a binary tree from a string `s` in depth first order."
+
+    def des(it):
+        v = next(it, none)
+        if v == none:
+            return None
+        n = TreeNode(int(v))
+        n.left = des(it)
+        n.right = des(it)
+        n.update_height()
+        return n
+
+    return des(iter(s.split()))
 
 
 def insert_balanced(n: Node, value: int):
@@ -689,3 +689,24 @@ def fix_two_nodes(root: Node):
 
     if a and b:
         a.data, b.data = b.data, a.data
+
+
+def candy_tree_equality(r: Node) -> int:
+    "Equalize values in the tree to one. Count minimum number of moves."
+    # Idea is to do it bottom-up.
+    # Candy is moved from parent to child if child's candy count is 0.
+    # Candy is moved up to the parent if child's candy count is more than 1.
+    moves = 0
+
+    def dfs(n) -> int:
+        nonlocal moves
+        l = dfs(n.left) - 1 if n.left else 0
+        r = dfs(n.right) - 1 if n.right else 0
+
+        # Add moves related to the child nodes.
+        moves += abs(l) + abs(r)
+        # Return candy balance for this node.
+        return n.data + l + r
+
+    assert r and dfs(r) == 1
+    return moves
