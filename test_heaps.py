@@ -13,7 +13,7 @@ class TestHeaps(unittest.TestCase):
         self.assertEqual(5, h.connect_ropes_cost([2, 3]))
         self.assertEqual(29, h.connect_ropes_cost([4, 3, 2, 6]))
 
-    def test_smallest_intersecting_rage(self):
+    def test_smallest_intersecting_range(self):
         "Test `smallest_intersecting_range`."
         self.assertEqual((1, 1), h.smallest_intersecting_range([[1]]))
         self.assertEqual(
