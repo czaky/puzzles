@@ -23,7 +23,7 @@ def smallest_intersecting_range(arrays: List[List[int]]) -> Tuple[int, int]:
     # The idea is to keep track of numbers from the `arrays` on the heap,
     # always increasing the lowest number with the next on the same array.
     # This approach tries to minimize the span of numbers on the heap.
-    # The heap then always has the `min and max values so far, which
+    # The heap then always has the `min` and `max` values so far, which
     # allow us to determine the running smallest range.
 
     # Start with the lowest number in each array.
@@ -40,11 +40,12 @@ def smallest_intersecting_range(arrays: List[List[int]]) -> Tuple[int, int]:
     while h:
         v, a, c = heappop(h)
         mnr = min(mnr, (mxh - v, v))
-        # Once we cannot add any more numbers from a list,
-        # we abort, otherwise the range would not include
-        # numbers from that particular list and would be invalid.
+        # Once we cannot add any more numbers from an array,
+        # we abort, since otherwise the range would not include
+        # numbers from that particular array and would be incorrect.
         if c == len(a):
             break
+        # `c` points to the next column.
         heappush(h, (a[c], a, c + 1))
         mxh = max(mxh, a[c])
 
