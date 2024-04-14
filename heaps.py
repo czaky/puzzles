@@ -1,6 +1,6 @@
 "Module contains puzzles related to heaps."
 
-from heapq import heapify, heappush, heappop
+from heapq import heapify, heappush, heappushpop, heappop
 from typing import List, Tuple
 
 
@@ -28,25 +28,22 @@ def smallest_intersecting_range(arrays: List[List[int]]) -> Tuple[int, int]:
 
     # Start with the lowest number in each array.
     h = [(a[0], a, int(1)) for a in arrays]
-    heapify(h)  # min-heap
+    heapify(h)  # make a min-heap out of the values
 
     # The minimum is always h[0], but we need to track the heap max.
-    mxh = max(h)[0]  # max value on the heap, so far
-
+    h_max = max(h)[0]  # max value on the heap, so far
+    h_min, a, c = heappop(h)  # heap-minimum, array, next column
     # The range is stored as `(<length>, <start>)`,
     # which allows to easily run `min` on it.
-    mnr = (mxh - h[0][0], h[0][0])  # minimum range, so far
+    min_range = (h_max - h_min, h_min)  # minimum range, so far
 
-    while h:
-        v, a, c = heappop(h)
-        mnr = min(mnr, (mxh - v, v))
-        # Once we cannot add any more numbers from an array,
-        # we abort, since otherwise the range would not include
-        # numbers from that particular array and would be incorrect.
-        if c == len(a):
-            break
+    # Once we cannot add any more numbers from an array,
+    # we abort, since otherwise the range would not include
+    # numbers from that particular array and would be incorrect.
+    while c < len(a):
         # `c` points to the next column.
-        heappush(h, (a[c], a, c + 1))
-        mxh = max(mxh, a[c])
+        h_max = max(h_max, a[c])
+        h_min, a, c = heappushpop(h, (a[c], a, c + 1))
+        min_range = min(min_range, (h_max - h_min, h_min))
 
-    return mnr[1], mnr[0] + mnr[1]
+    return min_range[1], sum(min_range)

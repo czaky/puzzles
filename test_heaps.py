@@ -15,6 +15,7 @@ class TestHeaps(unittest.TestCase):
 
     def test_smallest_intersecting_rage(self):
         "Test `smallest_intersecting_range`."
+        self.assertEqual((1, 1), h.smallest_intersecting_range([[1]]))
         self.assertEqual(
             (5, 8),
             h.smallest_intersecting_range(
