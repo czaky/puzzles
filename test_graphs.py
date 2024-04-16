@@ -34,3 +34,11 @@ class TestGraphs(unittest.TestCase):
         self.assertEqual(
             [(2, 3)], g.critical_connections([[1, 2], [0, 2], [0, 1, 3], [2]])
         )
+
+    def test_vertex_cover_optimal(self):
+        "Test `vertex_cover_optimal`."
+        self.assertEqual({1}, g.vertex_cover_optimal([[1, 2]]))
+        self.assertEqual(
+            {1, 2, 3},
+            g.vertex_cover_optimal([[1, 2], [4, 1], [2, 4], [3, 4], [5, 2], [1, 3]]),
+        )

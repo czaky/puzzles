@@ -2,6 +2,7 @@
 
 from typing import List, Sequence
 from operator import itemgetter
+from itertools import combinations
 
 
 class Disjoint:
@@ -94,3 +95,11 @@ def weighted_paths_in_tree(edges: List[Sequence[int]], queries: List[int]) -> Li
             start += 1
         results[i] = paths
     return results
+
+
+def powerset(iterable):
+    "powerset([1,2,3]) → () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
+    s = set(iterable)
+    for size in range(len(s)):
+        yield from map(set, combinations(s, size))
+    yield s

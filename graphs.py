@@ -1,7 +1,9 @@
 """Puzzles related to graphs."""
 
-from typing import List, Iterable
+from typing import List, Iterable, Set
 from collections import deque
+
+from sets import powerset
 
 
 def breadth_first(adj: List[List[int]], start: int = 0) -> List[int]:
@@ -128,6 +130,7 @@ def articulation_points(adj: List[List[int]]) -> List[int]:
     dfs(-1, 0, 1)
     return sorted(o)
 
+
 def critical_connections(adj: List[List[int]]) -> List[List[int]]:
     "Return a list of critical bridges in an unordered graph."
     # This uses single pass Tarjan's Algorithm.
@@ -160,3 +163,11 @@ def critical_connections(adj: List[List[int]]) -> List[List[int]]:
     # Start search from the first node (== 0).
     dfs(-1, 0, 1)
     return sorted(o)
+
+
+def vertex_cover_optimal(edges: List[List[int]]) -> Set[int]:
+    "Return the set of vertexes that cover the graph described by `edges`."
+    edges_ = list(map(set, edges))  # make edges undirected, easy to intersect
+    vertexes = set.union(*edges_)  # get all interesting vertexes.
+    # Iterate over the powerset of vertexes and intersect with the edges.
+    return next(s for s in powerset(vertexes) if all(e & s for e in edges_))
