@@ -3,6 +3,7 @@
 from typing import List, Iterable, Set
 from collections import deque
 
+from sequences import find_if
 from sets import powerset
 
 
@@ -166,8 +167,8 @@ def critical_connections(adj: List[List[int]]) -> List[List[int]]:
 
 
 def vertex_cover_optimal(edges: List[List[int]]) -> Set[int]:
-    "Return the set of vertexes that cover the graph described by `edges`."
-    edges_ = list(map(set, edges))  # make edges undirected, easy to intersect
-    vertexes = set.union(*edges_)  # get all interesting vertexes.
-    # Iterate over the powerset of vertexes and intersect with the edges.
-    return next(s for s in powerset(vertexes) if all(e & s for e in edges_))
+    "Return the vertices of a minimal vertex cover."
+    edges_ = list(map(set, edges))  # Make edges undirected and easy to intersect.
+    vertexes = set.union(*edges_)  # Limit to interesting vertexes.
+    covers_all_edges = lambda s: all(e & s for e in edges_)
+    return find_if(covers_all_edges, powerset(vertexes)) or vertexes
