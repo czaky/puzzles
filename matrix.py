@@ -9,11 +9,6 @@ import numpy as np
 import arrays
 
 
-def at(m, *indexes):
-    "Return element of `m` at the specific indexes."
-    return reduce(lambda m, i: m[i], indexes, m)
-
-
 def make(s: str) -> List[List[int]]:
     "Parse a string into a matrix."
     return [list(map(int, l.split())) for l in s.splitlines()]

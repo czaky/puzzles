@@ -2,17 +2,12 @@
 
 from itertools import islice
 from typing import Callable, Iterable
+from functools import reduce
 
 
 def at(*args):
     "Returns a function that indexes a sequence or a dictionary."
-
-    def index(x):
-        for i in args:
-            x = x[i]
-        return x
-
-    return index
+    return lambda x: reduce(lambda a, i: a[i], args, x)
 
 
 def find_if(
