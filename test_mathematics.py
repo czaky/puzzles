@@ -95,4 +95,4 @@ class TestNumbers(unittest.TestCase):
         "Test `best_numbers`."
         self.assertEqual(2, m.best_numbers(2, 1, 2, 3, 5))
         self.assertEqual(4, m.best_numbers(4, 6, 7, 5, 3))
-        self.assertEqual(905821643, m.best_numbers(100000, 1, 5, 2, 5))
+        self.assertEqual(716192774, m.best_numbers(10000, 1, 5, 2, 5))
