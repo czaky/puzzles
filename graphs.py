@@ -2,7 +2,6 @@
 
 from typing import List, Iterable, Set
 from collections import deque
-from functools import lru_cache
 
 from sequences import find_if
 from sets import powerset
