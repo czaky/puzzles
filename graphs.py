@@ -2,6 +2,7 @@
 
 from typing import List, Iterable, Set
 from collections import deque
+from functools import lru_cache
 
 from sequences import find_if
 from sets import powerset
@@ -172,3 +173,74 @@ def vertex_cover_optimal(edges: List[List[int]]) -> Set[int]:
     vertexes = set.union(*edges_)  # Limit to interesting vertexes.
     covers_all_edges = lambda s: all(e & s for e in edges_)
     return find_if(covers_all_edges, powerset(vertexes)) or vertexes
+
+
+def word_distance(words: Iterable[str], start: str, end: str) -> int:
+    "Return the minimum distance from `start` to `end` when using `words` intermediate steps."
+    # The idea is to use breadth first search BFS and keep track of the depth.
+    # The first time we hit the target end word, we return the depth calculated so far.
+    if start == end:
+        return 1
+    lookup = set(words)
+    q = deque([start])
+    depth = 2  # `start` and `end` are two words
+    while q:
+        # Standard BFS level expansion based on current queue length.
+        for _ in range(len(q)):
+            word = q.popleft()
+            # Generate the neighbors by manipulating the string.
+            for i in range(len(word)):
+                for rc in "abcdefghijklmnopqrstuvwxyz":
+                    # String manipulation and string set lookup are faster than
+                    # converting to a list and back to a hashable object.
+                    nw = word[:i] + rc + word[i + 1 :]
+                    if nw == end:
+                        return depth
+                    if nw in lookup:
+                        # Avoid cycles and mark visited nodes.
+                        lookup.remove(nw)
+                        q.append(nw)
+        depth += 1
+    return 0
+
+
+def word_paths(words: Iterable[str], start: str, end: str) -> List[List[str]]:
+    "Return the minimum paths from `start` to `end` when using `words` intermediate steps."
+    # The idea is to treat the words list as an adjacency list of a graph
+    # While traversing the, the set of adjacent words is reduced to keep track of
+    # visited nodes in breadth first search (BFS) and to remove any cycles.
+    # BFS will provide the shortest paths if aborted after the target end word is found.
+    # A queue is used to keep paths found so far.
+    #
+    # Current set of yet to be visited nodes in the graph.
+    lookup = set(words)
+    # The queue contains paths as Python lists.
+    q = deque([[start]])
+    # Keep track of the goal. Abort at the earliest hit.
+    found = start == end
+    # Using BFS while tracking the paths.
+    while q and not found:
+        # Track the visited nodes (words) in the BFS expansion.
+        used = set()
+        # Standard BFS level expansion based on current queue length.
+        for _ in range(len(q)):
+            path = q.popleft()
+            word = path[-1]
+            # Generate the neighbors by manipulating the string.
+            for i in range(len(word)):
+                for rc in "abcdefghijklmnopqrstuvwxyz":
+                    # String manipulation and string set lookup are faster than
+                    # converting to a list and back to a hashable object.
+                    nw = word[:i] + rc + word[i + 1 :]
+                    if nw in lookup:
+                        # Keeping track of "used" words as set is faster.
+                        used.add(nw)
+                        # Extending the path is faster than any other manipulations.
+                        q.append(path + [nw])
+                    # Terminate if found.
+                    found |= nw == end
+        # We can remove the used words after a level of BFS.
+        # This allows us to add multiple paths, even those share some words.
+        lookup -= used
+    # Filter the last level to only the paths ending in the target word.
+    return [p for p in q if p[-1] == end]

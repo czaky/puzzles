@@ -42,3 +42,129 @@ class TestGraphs(unittest.TestCase):
             {1, 2, 3},
             g.vertex_cover_optimal([[1, 2], [4, 1], [2, 4], [3, 4], [5, 2], [1, 3]]),
         )
+
+    def test_word_distance(self):
+        "Test `word_distance`."
+        self.assertEqual(1, g.word_distance([], "foo", "foo"))
+        self.assertEqual(0, g.word_distance([], "foo", "bar"))
+
+        self.assertEqual(2, g.word_distance(["foo", "baz", "qux"], "bar", "baz"))
+        self.assertEqual(
+            3, g.word_distance(["des", "der", "dfr", "dgt", "dfs"], "der", "dfs")
+        )
+        self.assertEqual(
+            3, g.word_distance(["des", "der", "dfr", "dgt", "dfs"], "dep", "dfs")
+        )
+        self.assertEqual(4, g.word_distance(WORDS, "lkljl", "ljkll"))
+
+    def test_word_paths(self):
+        "Test `word_paths`."
+        self.assertEqual([["foo"]], g.word_paths([], "foo", "foo"))
+        self.assertEqual([], g.word_paths([], "foo", "bar"))
+
+        self.assertEqual(
+            [["bar", "baz"]], g.word_paths(["foo", "baz", "qux"], "bar", "baz")
+        )
+        self.assertEqual(
+            [["der", "dfr", "dfs"], ["der", "des", "dfs"]],
+            g.word_paths(["des", "der", "dfr", "dgt", "dfs"], "der", "dfs"),
+        )
+        self.assertEqual(
+            [["dep", "dfp", "dfs"], ["dep", "des", "dfs"]],
+            g.word_paths(["des", "der", "dfp", "dgt", "dfs"], "dep", "dfs"),
+        )
+        self.assertEqual(
+            [
+                ["lkljl", "ljljl", "ljlll", "ljkll"],
+                ["lkljl", "lklll", "ljlll", "ljkll"],
+            ],
+            g.word_paths(WORDS, "lkljl", "ljkll"),
+        )
+
+
+# Test set for graph problems using a word list as adjacency list.
+WORDS = tuple(
+    map(
+        str.strip,
+        """\
+        ljjjk
+        ljjll
+        kklll
+        jklkl
+        lkjkk
+        klklk
+        llkjj
+        ljlll
+        kjjlk
+        jljjj
+        jlkjk
+        kjjjk
+        llklk
+        lklll
+        llkkj
+        jkllk
+        jjllk
+        kkljl
+        llljk
+        kkkkl
+        lljkj
+        ljkll
+        jklkj
+        jklkk
+        kjllj
+        ljllk
+        jlkjl
+        jjjlj
+        kjjjl
+        jjlll
+        jjjjj
+        klllj
+        kjlkj
+        lkjjj
+        kkjlj
+        llkkl
+        jjjjl
+        kjkll
+        jkjjk
+        ljljl
+        kklkj
+        jjkkj
+        kjkkl
+        jllkj
+        lkjkj
+        lkjjk
+        jjljl
+        kjjkl
+        jkjlk
+        lljlk
+        kkllj
+        jkkkj
+        ljkjj
+        klkjk
+        ljjjj
+        kkjkj
+        lkllk
+        jkllj
+        lljjj
+        kljkk
+        ljjjl
+        kkllk
+        kljlk
+        lkklk
+        jljll
+        llkll
+        jjkjk
+        jlkkl
+        llkjl
+        kkjkk
+        kjkkk
+        kkklj
+        jkkjj
+        kjklk
+        klkjj
+        jlkkk
+        lkljj
+        klkkj
+        jlkll""".splitlines(),
+    )
+)
