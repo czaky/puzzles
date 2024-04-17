@@ -2,7 +2,7 @@
 
 from typing import List, Tuple
 from itertools import product, accumulate, combinations
-from functools import lru_cache, reduce
+from functools import lru_cache
 from bisect import bisect_right
 import numpy as np
 
