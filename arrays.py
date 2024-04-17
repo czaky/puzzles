@@ -541,25 +541,46 @@ def aggressive_cows(stalls: list, cows: int) -> int:
     return search.binary(gt, 1, stalls[-1] - stalls[0]) + 0
 
 
-def smaller_on_right_count(arr: list) -> list:
+def smaller_on_right_counts(arr: list) -> list:
     "Return a list counting elements smaller that each element in `arr`."
+    # This uses merge-sort count-inversion to count the unsorted elements.
     n = len(arr)
+    # Output array
     o = [0] * n
+    # Index arrays using for sorting `arr`.
+    # This avoids actually overriding `arr`.
     x = list(range(n))
     t = x[:]
 
     def merge(l, m, h):
+        # k - number of sorted entries.
+        # i - index into the first half.
+        # j - index into the second half (m + 1).
         k, i, j = l, l, m + 1
+        # Iterate through both halves.
         while i <= m and j <= h:
+            # The elements in both halves are sorted in reverse order.
+            # IF element on the left is larger than on the right,
             if arr[t[i]] > arr[t[j]]:
+                # then remaining elements in the right half are smaller
+                # than `arr[t[i]]` as well and the number of unsorted elements
+                # is the number of remaining elements on the right.
                 o[t[i]] += h - j + 1
+                # Keep track of sorted indexes.
                 x[k] = t[i]
                 i += 1
             else:
+                # Keep track of sorted indexes.
                 x[k] = t[j]
                 j += 1
             k += 1
-        x[k : h + 1] = i <= m and t[i : m + 1] or t[j : h + 1]
+        # Fill the rest of the `x` array.
+        # If i <= m, all remaining elements on the left are smaller
+        # and all the elements on the right were sorted into `x`.
+        # Otherwise, left was sorted into `x` and all the remaining
+        # elements from the right are smaller than the rest.
+        x[k : h + 1] = t[i : m + 1] if i <= m else t[j : h + 1]
+        # Copy over this part into the temporary array.
         t[l : h + 1] = x[l : h + 1]
 
     def split(i, j):
@@ -570,8 +591,56 @@ def smaller_on_right_count(arr: list) -> list:
             merge(i, m, j)
 
     split(0, len(arr) - 1)
-
     return o
+
+
+def unsorted_count(a: list) -> int:
+    "Return a count of unsorted element pairs in `a`."
+    # This uses merge-sort count inversion to count the unsorted elements.
+    # See `smaller_on_the_right` count above for the same function returning an array.
+
+    t = a[:]
+
+    def merge(l, m, h) -> int:
+        o = 0
+        # k - number of sorted entries.
+        # i - index into the first half.
+        # j - index into the second half (m + 1).
+        k, i, j = l, l, m + 1
+        # Iterate through both halves.
+        while i <= m and j <= h:
+            # The elements in both halves are sorted in reverse order.
+            # IF element on the left is larger than on the right,
+            if t[i] > t[j]:
+                # then remaining elements in the right half are smaller
+                # than `arr[t[i]]` as well and the number of unsorted elements
+                # is the number of remaining elements on the right.
+                o += h - j + 1
+                # Keep track of sorted indexes.
+                a[k] = t[i]
+                i += 1
+            else:
+                # Keep track of sorted indexes.
+                a[k] = t[j]
+                j += 1
+            k += 1
+        # Fill the rest of the `x` array.
+        # If i <= m, all remaining elements on the left are smaller
+        # and all the elements on the right were sorted into `x`.
+        # Otherwise, left was sorted into `x` and all the remaining
+        # elements from the right are smaller than the rest.
+        a[k : h + 1] = t[i : m + 1] if i <= m else t[j : h + 1]
+        # Copy over this part into the temporary array.
+        t[l : h + 1] = a[l : h + 1]
+        return o
+
+    def split(i, j) -> int:
+        if i < j:
+            m = (i + j) // 2
+            return split(i, m) + split(m + 1, j) + merge(i, m, j)
+        return 0
+
+    return split(0, len(a) - 1)
 
 
 def min_sum_split(a: list, k: int) -> int:
