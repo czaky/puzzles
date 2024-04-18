@@ -285,3 +285,13 @@ class TestStrings(unittest.TestCase):
             ["rat cats and dog", "rat cat sand dog"],
             s.word_parts(["rat", "cats", "cat", "and", "sand", "dog"], "ratcatsanddog"),
         )
+
+    def test_k_alphabet_string_with_all_substrings(self):
+        "Test `k_alphabet_string_with_all_substrings`."
+        self.assertEqual("", s.k_alphabet_string_with_all_substrings(0, 5))
+        self.assertEqual("", s.k_alphabet_string_with_all_substrings(5, 0))
+        self.assertEqual("00000", s.k_alphabet_string_with_all_substrings(5, 1))
+        self.assertEqual("00110", s.k_alphabet_string_with_all_substrings(2, 2))
+        self.assertEqual("0001110100", s.k_alphabet_string_with_all_substrings(3, 2))
+        self.assertEqual("0011210220", s.k_alphabet_string_with_all_substrings(2, 3))
+        self.assertEqual("1234567890", s.k_alphabet_string_with_all_substrings(1, 10))

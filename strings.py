@@ -472,3 +472,37 @@ def sum_string(s: str) -> bool:
         sub(int(s[:i]), int(s[i:j]), s[j:])
         for i, j in combinations(range(1, len(s)), 2)
     )
+
+
+def k_alphabet_string_with_all_substrings(n: int, k: int) -> str:
+    "Return a string that contains all substrings of length `n` from the `k` alphabet."
+    # The k-alphabet is restricted to: "0123456789"[:k]
+    # The idea presented here is to greedily add digits to the string,
+    # while keeping track of visited substrings so far.
+    if k <= 0 or n <= 0:
+        return ""
+    if k == 1:
+        return "0" * n
+
+    # The alphabet.
+    # The trick here is to start with 1 and end with 0,
+    # otherwise the while loop may not be able to terminate.
+    digits = "0123456789"[1:k] + "0"
+    if n == 1:
+        return digits
+    # The output string is initialized with the base substring.
+    o = "0" * n
+    # The base substring is marked as visited.
+    v = set([o])
+    end = k**n  # count of all possible substrings.
+    while len(v) < end:
+        p = o[1 - n :]  # last n - 1 digits in the output string.
+        for d in digits:
+            s = p + d  # add the nth digit
+            if s not in v:
+                v.add(s)
+                o += d
+                break
+        # else: The for loop may not add any new digit for a choice of
+        # the alphabet or the initialization string.
+    return o
