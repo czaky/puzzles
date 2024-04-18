@@ -809,3 +809,15 @@ def count_changes_to_make_strict(a: list) -> int:
 
     # Return the number of characters left after removing the longest increasing subsequence.
     return len(a) - max(map(lis, range(len(a))), default=0)
+
+
+def repeated_numbers(a: List[int]) -> tuple:
+    "Return repeated numbers from `a` which contains number in the range 1 .. `n` + repeats."
+    # The idea is to mark the numbers as repeated by flipping the sign at their index position.
+    # Since the values may become negative, we need to use `abs`
+
+    def repeated(e):
+        f = a[abs(e)] = -a[abs(e)]
+        return f > 0 and abs(e)
+
+    return tuple(filter(None, map(repeated, a)))

@@ -388,3 +388,12 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual(
             7, ar.count_changes_to_make_strict([10, 5, 5, 2, 4, 10, 3, 2, 7, 9])
         )
+
+    def test_repeated_numbers(self):
+        "Test `repeated_numbers`."
+        self.assertEqual((), ar.repeated_numbers([]))
+        self.assertEqual((1,), ar.repeated_numbers([1, 1]))
+        self.assertEqual((1,), ar.repeated_numbers([1, 2, 1]))
+        self.assertEqual((2,), ar.repeated_numbers([1, 2, 2]))
+        self.assertEqual((2, 3), ar.repeated_numbers([1, 2, 3, 2, 3, 4, 5]))
+        self.assertEqual((3, 2), ar.repeated_numbers([1, 2, 3, 3, 2, 4, 5]))
