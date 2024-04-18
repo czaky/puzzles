@@ -96,3 +96,9 @@ class TestNumbers(unittest.TestCase):
         self.assertEqual(2, m.best_numbers(2, 1, 2, 3, 5))
         self.assertEqual(4, m.best_numbers(4, 6, 7, 5, 3))
         self.assertEqual(716192774, m.best_numbers(10000, 1, 5, 2, 5))
+
+    def test_find_nth_k_bit_number(self):
+        "Test `find_nth_k_bit_number`."
+        self.assertEqual(1, m.find_nth_k_bit_number(2, 3))
+        self.assertEqual(8, m.find_nth_k_bit_number(5, 1))
+        self.assertEqual(5, m.find_nth_k_bit_number(6, 2))

@@ -1,13 +1,14 @@
 """Module for number and arithmetic related puzzles."""
 
 from typing import Tuple
-from math import floor, log
+from math import floor, log, comb
 from functools import reduce
 from operator import mul
 
 
 # The modulo operation is crucial to efficiently solving the division problem.
 M = 10**9 + 7
+
 
 def digits(n: int):
     "Iterates over decimal digits of `n`."
@@ -182,6 +183,7 @@ def prime_sum(n: int) -> Tuple[int, int]:  # pyright: ignore
 
     return 0, n
 
+
 def best_numbers(n: int, a: int, b: int, c: int, d: int) -> int:
     """Return a count of integers of `n` length of decimal representation that fulfill:
     1.) The numbers are made only of digits `a` and `b`.
@@ -225,3 +227,42 @@ def best_numbers(n: int, a: int, b: int, c: int, d: int) -> int:
     # Count of valid permuations for a number consisting of i a's and (n - i) b's.
     p = lambda i: fac[n] * inv[i] * inv[n - i] % M if valid(a * i + b * (n - i)) else 0
     return sum(map(p, range(n + 1))) % M
+
+
+def find_nth_k_bit_number(n: int, k: int) -> int:
+    "Find the `n`th number that has at most `k` bits."
+    # The puzzle requires combinatorics, bit-manipulations, and binary-search.
+    # The idea is to use binary search, while calculating.
+    # the count of numbers for a given speculated solution.
+
+    def k_bit_count(n: int, k: int) -> int:
+        # Count of numbers below or equal to `n` with exactly `k` bits.
+        if k == 0:
+            return 1  # There is only one number with 0 bits.
+        m = n.bit_length()
+        if m < k:
+            return 0  # Cannot have `k` bits in `m < k` bit number.
+
+        # Number of combinations o `k` set bits in `m - 1` length number.
+        # Remaining `k - 1` numbers, after discarding the highest bit.
+        # For example (n = 25 (11001), k = 4):
+        #    Numbers & 1111 = C(4, 4) = 1
+        #    Numbers between 1|0000 ... 1|1001 = k_bit_count(1001, 4 - 3)
+        return comb(m - 1, k) + k_bit_count(n ^ (1 << m - 1), k - 1)
+
+    # Sum all the combinations for k-bits from 0 to `k`.
+    at_most_k_bit_count = lambda n: sum(k_bit_count(n, j) for j in range(k + 1))
+
+    # Determine starting low and high markers.
+    l, h = 0, n
+    while at_most_k_bit_count(h) < n:
+        l, h = h, h + h
+
+    # Binary search.
+    while l < h:
+        m = (l + h) // 2
+        if at_most_k_bit_count(m) >= n:
+            h = m
+        else:
+            l = m + 1
+    return l
