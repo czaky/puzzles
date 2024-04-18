@@ -279,16 +279,24 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual(3, ar.aggressive_cows([1, 2, 4, 8, 9], 3))
         self.assertEqual(4, ar.aggressive_cows([10, 1, 2, 7, 5], 3))
 
-    def test_smaller_on_right_count(self):
-        "Test `smaller_on_right_count`"
+    def test_smaller_on_right_counts(self):
+        "Test `smaller_on_right_counts`"
         self.assertEqual(
-            [6, 1, 1, 1, 0, 1, 0], ar.smaller_on_right_count([12, 1, 2, 3, 0, 11, 4])
+            [6, 1, 1, 1, 0, 1, 0], ar.smaller_on_right_counts([12, 1, 2, 3, 0, 11, 4])
         )
-        self.assertEqual([0, 0, 0, 0], ar.smaller_on_right_count([1, 2, 3, 4]))
-        self.assertEqual([0, 0, 0, 0, 0], ar.smaller_on_right_count([1, 2, 3, 4, 5]))
+        self.assertEqual([0, 0, 0, 0], ar.smaller_on_right_counts([1, 2, 3, 4]))
+        self.assertEqual([0, 0, 0, 0, 0], ar.smaller_on_right_counts([1, 2, 3, 4, 5]))
 
-        self.assertEqual([3, 2, 1, 0], ar.smaller_on_right_count([4, 3, 2, 1]))
-        self.assertEqual([4, 3, 2, 1, 0], ar.smaller_on_right_count([5, 4, 3, 2, 1]))
+        self.assertEqual([3, 2, 1, 0], ar.smaller_on_right_counts([4, 3, 2, 1]))
+        self.assertEqual([4, 3, 2, 1, 0], ar.smaller_on_right_counts([5, 4, 3, 2, 1]))
+
+    def test_unsorted_pairs_count(self):
+        "Test `unsorted_pairs_count`"
+        self.assertEqual(10, ar.unsorted_pairs_count([12, 1, 2, 3, 0, 11, 4]))
+        self.assertEqual(0, ar.unsorted_pairs_count([1, 2, 3, 4]))
+        self.assertEqual(0, ar.unsorted_pairs_count([1, 2, 3, 4, 5]))
+        self.assertEqual(6, ar.unsorted_pairs_count([4, 3, 2, 1]))
+        self.assertEqual(10, ar.unsorted_pairs_count([5, 4, 3, 2, 1]))
 
     def test_min_sum_split(self):
         "Test `min_sum_split`."

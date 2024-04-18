@@ -594,7 +594,7 @@ def smaller_on_right_counts(arr: list) -> list:
     return o
 
 
-def unsorted_count(a: list) -> int:
+def unsorted_pairs_count(a: list) -> int:
     "Return a count of unsorted element pairs in `a`."
     # This uses merge-sort count inversion to count the unsorted elements.
     # See `smaller_on_the_right` count above for the same function returning an array.
