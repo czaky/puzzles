@@ -3,13 +3,41 @@
 from itertools import islice, starmap
 from typing import Callable, Iterable, Sequence
 from functools import reduce
+from operator import indexOf
 
 from functional import bit
 
 
 def at(*args):
     "Returns a function that indexes a sequence or a dictionary."
-    return lambda x: reduce(lambda a, i: a[i], args, x)
+    # This is similar to itemgetter, except that in case of multiple indexes,
+    # it recursively descends the hierarchy instead of returning a tuple.
+    return lambda s: reduce(lambda s, i: s[i], args, s)
+
+
+def assign(s, v, i, *indexes):
+    """Assign value `v` to `s` at the recursive `indexes`.
+
+    For example:
+        s = [[1, 2, 3], [4, 5, 6]]
+
+        assign(s, "abc", 0, 2) => "abc"
+
+        s => [[1, 2, "abc"], [4, 5, 6]]
+
+    Returns:
+        Value `v`.
+    """
+    if indexes:
+        s = reduce(lambda s, i: s[i], islice(indexes, len(indexes) - 1), s[i])
+        i = indexes[-1]
+    s[i] = v
+    return v
+
+
+def rindex(a: list, v) -> int:
+    "Return the rear index of `v` in `a`."
+    return len(a) - indexOf(reversed(a), v) - 1
 
 
 def find_if(
