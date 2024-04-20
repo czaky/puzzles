@@ -178,6 +178,7 @@ class TreeNode:
 
     def serialize_in_order(self, lr: str = "()") -> str:
         "Return a DFS, in-order string representation using brackets."
+        l, r = lr
 
         # Recursive implementation using DFS.
         # This implementation uses brackets to represent a tree in in-order.
@@ -185,7 +186,7 @@ class TreeNode:
             if not n:
                 return lr
             if n.left or n.right:
-                return f"{lr[0]}{dfs(n.left)} {str(n.data)} {dfs(n.right)}{lr[1]}"
+                return f"{l}{dfs(n.left)} {str(n.data)} {dfs(n.right)}{r}"
             return str(n.data)
 
         return dfs(self)
@@ -224,6 +225,8 @@ class TreeNode:
 
     def __str__(self):
         return self.serialize_level_order()
+
+    # Balancing
 
     def update_height(self):
         "Update the height of this node based on its children."
@@ -374,10 +377,10 @@ def make(s: str, order="level", none: str = "N") -> Node:
     """
     if order == "level":
         return make_level_order(s, none)
-    if order in ("pre", "pre-order"):
+    if order in ("pre", "pre"):
         return make_pre_order(s, none)
 
-    assert order in ("level", "pre", "pre-order")  # , "post", "in")
+    assert order in ("level", "pre", "pre")  # , "post", "in")
 
 
 def level_order(n: Node, nodes=False):
