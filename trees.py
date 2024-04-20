@@ -16,23 +16,82 @@ class TreeNode:
         self.right: Optional[TreeNode] = None
         self.height: int = 1
 
-    def __iter__(self):
-        # level order (breadth first)
-        r: Node = self
-        q = deque([r])
+    # Iterators
+
+    def level_order(self, nodes=False):
+        """Breadth First Search (level order) iterator.
+
+        Args:
+            nodes (bool, optional): If true, yield nodes instead of values.
+        """
+        # Iterative implementation using a queue.
+        q: Deque[Node] = deque([self])
         while q:
             n = q.popleft()
-            yield n.data
+            yield (n if nodes else n.data)
             n.left and q.append(n.left)
             n.right and q.append(n.right)
 
-    def inorder(self):
-        "In-order iterator."
-        if self.left:
-            yield from self.left.inorder()
-        yield self.data
-        if self.right:
-            yield from self.right.inorder()
+    def __iter__(self):
+        # BFS (breadth first search) or level order.
+        return self.level_order()
+
+    # Depth first traversals.
+
+    def preorder(self, nodes=False):
+        """Pre-order, depth first (DFS) traversal of the binary tree.
+
+        Args:
+            nodes (bool, optional): It true, yield nodes instead of value.
+        """
+        r: TreeNode = self
+        s = [r]
+        while s:
+            n = s.pop()
+            yield (n if nodes else n.data)
+            n.right and s.append(n.right)
+            n.left and s.append(n.left)
+
+    def inorder(self, nodes=False):
+        """In-order, depth first (DFS) traversal of the binary tree.
+
+        Args:
+            nodes (bool, optional): It true, yield nodes instead of value.
+        """
+        # Iterative implementation using a stack.
+        s = []
+        n = self
+        while s or n:
+            while n:
+                s.append(n)
+                n = n.left
+            n = s.pop()
+            yield (n if nodes else n.data)
+            n = n.right
+
+    def postorder(self, nodes=False):
+        """Post-order, depth first (DFS) traversal of the binary tree.
+
+        Args:
+            nodes (bool, optional): It true, yield nodes instead of value.
+        """
+        s = []
+        p = None  # previous
+        n: None | Node = self  # current node
+        while s or n:
+            # descend left
+            while n:
+                s.append(n)
+                n = n.left
+            # descend right
+            r = s[-1].right
+            if r and r != p:
+                n = r
+            else:
+                p = s.pop()
+                yield (p if nodes else p.data)
+
+    # Presentation
 
     def display(self, v=False):
         "Display the tree in a visual 2D manner."
@@ -82,11 +141,13 @@ class TreeNode:
 
         if v:
             print("-" * mxl)
-            print(self.bfo_string())
+            print(self)
             print("-" * mxl)
 
-    def bfo_string(self, none: str = "N") -> str:
-        "Return a BFO string representation using none ('N') for None."
+    def serialize_level_order(self, none: str = "N") -> str:
+        "Return a BFS, level-order string representation using none ('N') for None."
+
+        # Iterative implementation using DFS and a queue.
         o = []
         q: Deque[Node] = deque([self])
         while q:
@@ -98,6 +159,71 @@ class TreeNode:
         while o and o[-1] == none:
             o.pop()
         return " ".join(o)
+
+    def serialize_pre_order(self, none: str = "N") -> str:
+        "Return a DFS, pre-order string representation using none ('N') for None."
+
+        # Iterative implementation using DFS and a stack.
+        o = []
+        s: List[Node] = [self]
+        while s:
+            n = s.pop()
+            o.append(str(n.data) if n else none)
+            if n:
+                s.append(n.right)
+                s.append(n.left)
+        while o and o[-1] == none:
+            o.pop()
+        return " ".join(o)
+
+    def serialize_in_order(self, lr: str = "()") -> str:
+        "Return a DFS, in-order string representation using brackets."
+
+        # Recursive implementation using DFS.
+        # This implementation uses brackets to represent a tree in in-order.
+        def dfs(n: Node):
+            if not n:
+                return lr
+            if n.left or n.right:
+                return f"{lr[0]}{dfs(n.left)} {str(n.data)} {dfs(n.right)}{lr[1]}"
+            return str(n.data)
+
+        return dfs(self)
+
+    def serialize_post_order(self, none: str = "N") -> str:
+        "Return a DFS, post-order string representation using none ('N') for None."
+
+        # Recursive implementation using DFS.
+        def dfs(n: Node):
+            return f"{dfs(n.left)} {dfs(n.right)} {str(n.data)}" if n else none
+
+        return dfs(self)
+
+    def serialize(self, order="level", none: str = "N", lr: str = "()") -> str:
+        """Return string representation of `order` using `none` ('N') for `None`.
+
+        Args:
+            none (str): representation for missing node. Defaults to "N".
+            order (str): one-of: "level" (default), "pre", "post", "in".
+            lr (str): brackets used for in-order representation. Default "()".
+
+        Returns:
+            str: a space separated representation of the tree with 'N' for missing nodes.
+        """
+        if order == "level":
+            return self.serialize_level_order(none)
+        if order == "pre":
+            return self.serialize_pre_order(none)
+        if order == "in":
+            return self.serialize_in_order(lr)
+        if order == "post":
+            return self.serialize_post_order(none)
+
+        assert order in ("level", "pre", "post", "in")
+        return ""
+
+    def __str__(self):
+        return self.serialize_level_order()
 
     def update_height(self):
         "Update the height of this node based on its children."
@@ -195,8 +321,8 @@ def height(n: Node) -> int:
     return n and n.height or 0
 
 
-def make(s: str, none: str = "N") -> Node:
-    "Make a binary tree from a string `s` in breadth first order."
+def make_level_order(s: str, none: str = "N") -> Node:
+    "Make a binary tree from a string `s` in breadth first, level order."
     it = iter(s.split())
     v = next(it, none)
     if v == none:
@@ -214,13 +340,13 @@ def make(s: str, none: str = "N") -> Node:
         if v != none:
             n.right = TreeNode(int(v))
             q.append(n.right)
-    for n in df_nodes(root):
+    for n in root.inorder(nodes=True):
         n.update_height()
     return root
 
 
-def make_df(s: str, none: str = "N") -> Node:
-    "Make a binary tree from a string `s` in depth first order."
+def make_pre_order(s: str, none: str = "N") -> Node:
+    "Make a binary tree from a string `s` in depth first, pre-order."
 
     def des(it):
         v = next(it, none)
@@ -235,23 +361,35 @@ def make_df(s: str, none: str = "N") -> Node:
     return des(iter(s.split()))
 
 
-def insert_balanced(n: Node, value: int):
-    "Insert a node with `value`"
-    return n.insert_balanced(value) if n else TreeNode(value)
+def make(s: str, order="level", none: str = "N") -> Node:
+    """Make a binary tree from string `s` using terminating token `none`.
+
+    Args:
+        s (str): String with values and terminating tokens.
+        none (str, optional): Terminating token indicating None. Defaults to "N".
+        order (str, optional): One of: 'level', 'pre'. Defaults to "level".
+
+    Returns:
+        Node: A root TreeNode or None.
+    """
+    if order == "level":
+        return make_level_order(s, none)
+    if order in ("pre", "pre-order"):
+        return make_pre_order(s, none)
+
+    assert order in ("level", "pre", "pre-order")  # , "post", "in")
 
 
-# Determine if a tree is an ordered BST (may be unbalanced)
-def is_bst(root: Node) -> bool:
-    "True if `root` is a BST."
+def level_order(n: Node, nodes=False):
+    "Yield node values in breadth first order."
+    if n:
+        yield from n.level_order(nodes)
 
-    def ordered(n: Node, mn: float, mx: float) -> bool:
-        return not n or (
-            (mn <= n.data <= mx)
-            and ordered(n.left, mn, n.data - 1)
-            and ordered(n.right, n.data + 1, mx)
-        )
 
-    return ordered(root, -math.inf, math.inf)
+def ino(n: Node, nodes=False):
+    "Yield node values in in-order traversal."
+    if n:
+        yield from n.inorder(nodes)
 
 
 def left_view(root: Node) -> list:
@@ -286,21 +424,6 @@ def right_view(root: Node) -> list:
     return view
 
 
-def bfo(t: Node):
-    "Yield node values in breadth first order."
-    q = deque([t])
-    while q:
-        n = q.popleft()
-        yield n.data
-        n.left and q.append(n.left)
-        n.right and q.append(n.right)
-
-
-def breadth_first(t: Node) -> list:
-    """Return the node values in breadth first order."""
-    return list(bfo(t))
-
-
 def reversed_level_order(t: Node) -> list:
     "Return reversed breadth first (level order) enumeration."
     q = deque([t])
@@ -314,33 +437,43 @@ def reversed_level_order(t: Node) -> list:
     return list(reversed(r))
 
 
-def dfo(c: Node):
-    "Yield node values in depth first order."
-    s = []
-    while s or c:
-        while c:
-            s.append(c)
-            c = c.left
-        c = s.pop()
-        yield c.data
-        c = c.right
+def spiral_order(t: Node) -> list:
+    """
+    Return the node values in spiral.
+    Spiral order is alternating from left to right on each level.
+    """
+    q = deque([t])
+    o = []
+    lvl = 0
+    while q:
+        lvl += 1
+        ro = []
+        for _ in range(len(q)):
+            n = q.popleft()
+            (ro if lvl % 2 else o).append(n.data)
+            n.left and q.append(n.left)
+            n.right and q.append(n.right)
+        o.extend(reversed(ro))
+    return o
 
 
-def df_nodes(c: Node):
-    "Yield nodes in depth first order."
-    s = []
-    while s or c:
-        while c:
-            s.append(c)
-            c = c.left
-        c = s.pop()
-        yield c
-        c = c.right
+def insert_balanced(n: Node, value: int):
+    "Insert a node with `value`"
+    return n.insert_balanced(value) if n else TreeNode(value)
 
 
-def depth_first(t: Node) -> list:
-    """Return the node values in depth first order."""
-    return list(dfo(t))
+# Determine if a tree is an ordered BST (may be unbalanced)
+def is_bst(root: Node) -> bool:
+    "True if `root` is a BST."
+
+    def ordered(n: Node, mn: float, mx: float) -> bool:
+        return not n or (
+            (mn <= n.data <= mx)
+            and ordered(n.left, mn, n.data - 1)
+            and ordered(n.right, n.data + 1, mx)
+        )
+
+    return ordered(root, -math.inf, math.inf)
 
 
 def successor(t: Node, x: int) -> Optional[Node]:
@@ -362,7 +495,7 @@ def successor(t: Node, x: int) -> Optional[Node]:
 
 def largest(r: Node, k: int = 1, default: int = -1) -> int:
     "Return k-largest element from a BST at `r`."
-    # Depth First Search on the right side.
+    # Reverse-order search on the right side.
     s = []
     c = r
     while s or c:
@@ -375,26 +508,6 @@ def largest(r: Node, k: int = 1, default: int = -1) -> int:
             return c.data
         c = c.left
     return default
-
-
-def spiral_order(t: Node) -> list:
-    """
-    Return the node values in spiral.
-    Spiral order is alternating from left to right on each level.
-    """
-    q = deque([t])
-    o = []
-    lvl = 0
-    while q:
-        lvl += 1
-        ro = []
-        for _ in range(len(q)):
-            n = q.popleft()
-            (ro if lvl % 2 else o).append(n.data)
-            n.left and q.append(n.left)
-            n.right and q.append(n.right)
-        o.extend(reversed(ro))
-    return o
 
 
 def balanced(root: Node) -> bool:
@@ -524,8 +637,8 @@ def count_in_range(n: Node, l: int, h: int) -> int:
 
 def median(t: Node) -> float:
     "Return median value for tree starting at `t`."
-    n = sum(1 for _ in dfo(t))
-    it = islice(dfo(t), (n - 1) // 2, None)
+    n = sum(1 for _ in ino(t))
+    it = islice(ino(t), (n - 1) // 2, None)
     return next(it) if n % 2 else (next(it) + next(it)) / 2
 
 
@@ -565,7 +678,7 @@ def max_path_sum(t: Node) -> int:
 def to_linked_list(r: Node) -> Node:
     "Transform tree `r` into a double linked list in order."
     h = t = None
-    for n in df_nodes(r):
+    for n in ino(r, nodes=True):
         h = h or n
         if t:
             t.right = n
@@ -616,8 +729,8 @@ def merge_sorted(r1: Node, r2: Node) -> list:
     # Auxiliary space (necessary for the DFO stack):
     #    O(max(|r1|, |r2|)) < O(M+N)
     out = []
-    it1 = dfo(r1)
-    it2 = dfo(r2)
+    it1 = ino(r1)
+    it2 = ino(r2)
     v1 = next(it1, None)
     v2 = next(it2, None)
     while v1 is not None and v2 is not None:
