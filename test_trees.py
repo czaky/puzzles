@@ -58,7 +58,7 @@ class TestTrees(unittest.TestCase):
         self.assertEqual([2, 4, 3, 6, 7, 5], seq(r.postorder()))
         self.assertEqual("5 3 7 2 4 6", str(r))
         self.assertEqual("5 3 2 N N 4 N N 7 6", r.serialize("pre"))
-        self.assertEqual("((2 3 4) 5 (6 7 ()))", r.serialize("in"))
+        self.assertEqual("((2 3 4) 5 (6 7))", r.serialize("in"))
         self.assertEqual("N N 2 N N 4 3 N N 6 N 7 5", r.serialize("post"))
 
         r: t.Node = t.make("1 2 4 N 3")
@@ -83,6 +83,31 @@ class TestTrees(unittest.TestCase):
         self.assertEqual("1 2 N 3 N N 4", r.serialize("pre"))
         self.assertEqual("((() 2 3) 1 4)", r.serialize("in"))
         self.assertEqual("N N N 3 2 N N 4 1", r.serialize("post"))
+
+        r: t.Node = t.make("1 2 4 N 3 7 N 5 N 8 9")
+        #  __1___
+        # /      \
+        # 2_    _4
+        #   \  /
+        #   3  7
+        #  /  / \
+        #  5  8 9
+        # lvo: [1, 2, 4, 3, 7, 5, 8, 9]
+        # pre: [1, 2, 3, 5, 4, 7, 8, 9]
+        # ino: [2, 5, 3, 1, 8, 7, 9, 4]
+        # pst: [5, 3, 2, 8, 9, 7, 4, 1]
+        # lvo: 1 2 4 N 3 7 N 5 N 8 9
+        # pre: 1 2 N 3 5 N N N 4 7 8 N N 9
+        # ino: ((() 2 (5 3)) 1 ((8 7 9) 4))
+        # pst: N N N 5 N 3 2 N N 8 N N 9 7 N 4 1
+        self.assertEqual([1, 2, 4, 3, 7, 5, 8, 9], seq(r))
+        self.assertEqual([1, 2, 3, 5, 4, 7, 8, 9], seq(r.preorder()))
+        self.assertEqual([2, 5, 3, 1, 8, 7, 9, 4], seq(r.inorder()))
+        self.assertEqual([5, 3, 2, 8, 9, 7, 4, 1], seq(r.postorder()))
+        self.assertEqual("1 2 4 N 3 7 N 5 N 8 9", str(r))
+        self.assertEqual("1 2 N 3 5 N N N 4 7 8 N N 9", r.serialize("pre"))
+        self.assertEqual("((() 2 (5 3)) 1 ((8 7 9) 4))", r.serialize("in"))
+        self.assertEqual("N N N 5 N 3 2 N N 8 N N 9 7 N 4 1", r.serialize("post"))
 
     def test_is_bst(self):
         "Test the `is_bst` function."

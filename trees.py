@@ -178,18 +178,35 @@ class TreeNode:
 
     def serialize_in_order(self, lr: str = "()") -> str:
         "Return a DFS, in-order string representation using brackets."
-        l, r = lr
-
-        # Recursive implementation using DFS.
-        # This implementation uses brackets to represent a tree in in-order.
-        def dfs(n: Node):
-            if not n:
-                return lr
-            if n.left or n.right:
-                return f"{l}{dfs(n.left)} {str(n.data)} {dfs(n.right)}{r}"
-            return str(n.data)
-
-        return dfs(self)
+        lb, rb = lr
+        # Iterative implementation using a stack.
+        s = []
+        v = []
+        n : Node = self
+        while s or n:
+            # Descend left from node.
+            while n:
+                s.append(n)
+                s.append(n)
+                n = n.left
+            n = s.pop()
+            if s and s[-1] == n:
+                # Descend right from node.
+                n = n.right
+            else:
+                # Consume this node and
+                # generate intermediate values.
+                mv = str(n.data)
+                if n.right:
+                    rv = v.pop()
+                    lv = v.pop() if n.left else lr
+                    v.append(f"{lb}{lv} {mv} {rv}{rb}")
+                elif n.left:
+                    v.append(f"{lb}{v.pop()} {mv}{rb}")
+                else:
+                    v.append(mv)
+                n = None
+        return v[0]
 
     def serialize_post_order(self, none: str = "N") -> str:
         "Return a DFS, post-order string representation using none ('N') for None."
