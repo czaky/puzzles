@@ -1,6 +1,7 @@
 """Test module for the search."""
 
 import unittest
+
 import search as s
 
 
