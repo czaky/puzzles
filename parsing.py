@@ -1,6 +1,9 @@
 "Algorithms used to parse and process formal languages."
 
-def parse_arithmetic_expression(tokens: list) -> tuple:
+from typing import List
+
+
+def parse_binop_expression(tokens: list) -> tuple:
     """Parses an arithmetic expression consisting of literals and operators from '+-*/()'.
 
     The parsed expression is represented as tripples of the form:
@@ -61,9 +64,54 @@ def parse_arithmetic_expression(tokens: list) -> tuple:
             b, a = args.pop(), args.pop()
             args.append((ops.pop(), a, b))
 
-
     # Finally, we close the first implicit bracket.
     close_bracket()
     # And return the remaining only expression on the args stack.
     assert len(args) == 1
     return args[0]
+
+
+def format_binop_expression(e: str | tuple) -> str:
+    "Format expressions consisting of (<operator>, <arg1>, <arg2>)."
+    if isinstance(e, str):
+        return e
+    # This is a depth first, iterative algorithm using two stacks.
+    s: List[tuple] = []
+    v: List[str | tuple] = []
+    n: tuple | str | None = e
+    # Flatten an expression.
+    f = lambda v: v if isinstance(v, str) else v[1]
+
+    def fop(op: str, a: str | tuple, b: str | tuple) -> tuple:
+        "Format an operation adding parantheses to the arguments if needed."
+
+        def p(v):
+            if isinstance(v, str) or op == "+" or op in "*-" and v[0] in "*/":
+                return f(v)
+            return "(" + f(v) + ")"
+
+        # Returns the operator and the string representation.
+        # We keep the operator so it is easier to know the type of the expression later.
+        return op, f(a) + op + p(b)
+
+    while s or n:
+        # Repeatedly, descend left from node.
+        while isinstance(n, tuple):
+            # If this is on the stack, we consume the node.
+            s.append(n)
+            # If this is on the stack, we descend right.
+            s.append(n)
+            n = n[1]
+        if n is not None:
+            v.append(n)
+        n = s.pop()
+        if s and s[-1] == n:
+            # Descend right from node.
+            n = n[2]
+        else:
+            # Consume this node and
+            # generate intermediate values.
+            rv, lv = v.pop(), v.pop()
+            v.append(fop(n[0], lv, rv))
+            n = None
+    return f(v[0])

@@ -15,5 +15,6 @@ disable_error_code = [
     "has-type",
     "misc",
     "union-attr",
-    "var-annotated"
+    "var-annotated",
+    "annotation-unchecked"
 ]
