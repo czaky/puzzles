@@ -2,9 +2,9 @@
 
 import math
 from collections import deque
-from typing import Tuple, Optional, List, Deque
-from itertools import islice
 from functools import reduce
+from itertools import islice
+from typing import Deque, List, Optional, Tuple
 
 
 class TreeNode:
@@ -41,6 +41,9 @@ class TreeNode:
     def preorder(self, nodes=False):
         """Pre-order, depth first (DFS) traversal of the binary tree.
 
+        Useful to create a copy of the tree and generate prefix expressions.
+        Nodes are enumerated top-down.
+
         Args:
             nodes (bool, optional): It true, yield nodes instead of value.
         """
@@ -54,6 +57,8 @@ class TreeNode:
 
     def inorder(self, nodes=False):
         """In-order, depth first (DFS) traversal of the binary tree.
+
+        Useful to sequence a binary search tree (BST) in sorted order.
 
         Args:
             nodes (bool, optional): It true, yield nodes instead of value.
@@ -71,6 +76,9 @@ class TreeNode:
 
     def postorder(self, nodes=False):
         """Post-order, depth first (DFS) traversal of the binary tree.
+
+        Useful to delete a tree and to generate a postfix expression.
+        Nodes are enumerated bottom-up.
 
         Args:
             nodes (bool, optional): It true, yield nodes instead of value.
@@ -90,6 +98,24 @@ class TreeNode:
             else:
                 p = s.pop()
                 yield (p if nodes else p.data)
+
+    def iter(self, order="level", nodes=False):
+        """Return an iterator for a tree traversal in the specific `order`.
+
+        Args:
+            order (str, optional): One of: "level" (default), "pre", "in", "post"
+            nodes (bool, optional): If true, yields nodes instead of values. Defaults to False.
+        """
+        if order == "level":
+            yield from self.level_order(nodes)
+        elif order == "pre":
+            yield from self.preorder(nodes)
+        elif order == "in":
+            yield from self.inorder(nodes)
+        elif order == "post":
+            yield from self.postorder(nodes)
+
+        assert order in ("level", "pre", "in", "post")
 
     # Presentation
 
@@ -180,9 +206,9 @@ class TreeNode:
         "Return a DFS, in-order string representation using brackets."
         lb, rb = lr
         # Iterative implementation using a stack.
-        s = []
-        v = []
-        n : Node = self
+        s: List[Node] = []
+        v: List[str] = []
+        n: Node = self
         while s or n:
             # Descend left from node.
             while n:
@@ -344,10 +370,10 @@ def height(n: Node) -> int:
 def make_level_order(s: str, none: str = "N") -> Node:
     "Make a binary tree from a string `s` in breadth first, level order."
     it = iter(s.split())
-    v = next(it, none)
+    v: None | str = next(it, none)
     if v == none:
         return None
-    root = TreeNode(int(v))
+    root = TreeNode(int(v or 0))
     q = deque([root])
     for v in it:
         n = q.popleft()
@@ -394,20 +420,21 @@ def make(s: str, order="level", none: str = "N") -> Node:
     """
     if order == "level":
         return make_level_order(s, none)
-    if order in ("pre", "pre"):
+    if order in ("pre"):
         return make_pre_order(s, none)
 
     assert order in ("level", "pre", "pre")  # , "post", "in")
+    return None
 
 
-def level_order(n: Node, nodes=False):
-    "Yield node values in breadth first order."
+def lvo(n: Node, nodes=False):
+    "Yield nodes or values in breadth first, level order."
     if n:
         yield from n.level_order(nodes)
 
 
 def ino(n: Node, nodes=False):
-    "Yield node values in in-order traversal."
+    "Yield nodes or values in in-order traversal."
     if n:
         yield from n.inorder(nodes)
 
@@ -452,8 +479,10 @@ def reversed_level_order(t: Node) -> list:
         n = q.popleft()
         r.append(n.data)
         # append right first
-        n.right and q.append(n.right)
-        n.left and q.append(n.left)
+        if n.right:
+            q.append(n.right)
+        if n.left:
+            q.append(n.left)
     return list(reversed(r))
 
 
@@ -471,8 +500,10 @@ def spiral_order(t: Node) -> list:
         for _ in range(len(q)):
             n = q.popleft()
             (ro if lvl % 2 else o).append(n.data)
-            n.left and q.append(n.left)
-            n.right and q.append(n.right)
+            if n.left:
+                q.append(n.left)
+            if n.right:
+                q.append(n.right)
         o.extend(reversed(ro))
     return o
 
@@ -760,8 +791,12 @@ def merge_sorted(r1: Node, r2: Node) -> list:
         else:
             out.append(v2)
             v2 = next(it2, None)
-    v1 is not None and (out.append(v1), out.extend(it1))
-    v2 is not None and (out.append(v2), out.extend(it2))
+    if v1 is not None:
+        out.append(v1)
+        out.extend(it1)
+    elif v2 is not None:
+        out.append(v2)
+        out.extend(it2)
     return out
 
 
