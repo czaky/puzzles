@@ -139,18 +139,17 @@ def word_parts(d: List[str], s: str) -> List[str]:
     return [" ".join(b) for b in sub(len(s))]
 
 
-def longest_palindrome(s: str) -> str:
-    "Return longest palindrome substring from `s`."
+def longest_palindrome_substring_lengths(s: str) -> List[int]:
+    "Returns an array of lengths for each palindrome substring in `s`."
     # Uses Manacher's algorithm.
     # Runs in O(N)
     n = len(s) * 2
     if n == 0:
-        return ""
+        return []
     lps = [0] * n
     lps[1] = 1  # size of the first palindrome
     c = 1  # center of the outer palindrome (in s*2)
     r = 2  # right border of the outer palindrome (in s*2)
-    mxs, mxe = 0, 1  # borders of the largest palindrome (in s)
     for i in range(2, n):
         # Use the mirror length if `i` is between `c` and `r`.
         l = int(i < r and min(lps[2 * c - i], r - i))
@@ -160,16 +159,71 @@ def longest_palindrome(s: str) -> str:
             l += 2
         # Store the value.
         l = lps[i] = l - 1
-        # Update the max interval.
-        if l > mxe - mxs:
-            mxs, mxe = (i - l) // 2, (i + l) // 2
         # If the current palindrome expanded beyond the
         # previous one, replace the old by this one.
         if i + l > r:
             c = i
             r = i + l
+    return lps
 
-    return s[mxs:mxe]
+
+def longest_palindrome(s: str) -> str:
+    "Return longest palindrome substring from `s`."
+    if s == "":
+        return ""
+    lps = longest_palindrome_substring_lengths(s)
+    i = max(range(len(lps)), key=lambda i: lps[i])
+    l = lps[i]
+    return s[(i - l) // 2 : (i + l) // 2]
+
+
+def longest_palindrome_length(s: str) -> int:
+    "Return the size of the longest palindrome in `s`."
+    if len(s) <= 1:
+        return len(s)
+    return max(longest_palindrome_substring_lengths(s))
+
+
+def count_of_palindrome_substrings(s: str) -> int:
+    "Return the count of all palindrome substrings in `s`."
+    if len(s) <= 1:
+        return len(s)
+    return sum((l + 1) // 2 for l in longest_palindrome_substring_lengths(s))
+
+
+def distinct_palindrome_substrings(s: str) -> int:
+    "Return the count of distinct palindromes within `s`."
+    # Uses Manacher's algorithm.
+    # Runs in O(N*N) :
+    #   O(N) for the Manacher's algorithm.
+    #   O(N) for cutting the string into pieces and a hash-set operation.
+    n = len(s) * 2
+    if n == 0:
+        return 0
+    pals = set()
+    lps = [0] * n
+    lps[1] = 1  # size of the first palindrome
+    c = 1  # center of the outer palindrome (in s*2)
+    r = 2  # right border of the outer palindrome (in s*2)
+    for i in range(2, n):
+        # Use the mirror length if `i` is between `c` and `r`.
+        l = int(i < r and min(lps[2 * c - i], r - i))
+        # Try to expand the length (skip filler chars).
+        l += (i + l) % 2 + 1
+        a, b = (i - l) // 2, (i + l) // 2
+        while 0 <= a and b < len(s) and s[a] == s[b]:
+            # There is no point to register the smaller sub-palindromes.
+            # This was already done on the left.
+            pals.add(s[a : b + 1])
+            a, b = a - 1, b + 1
+        # Store the value.
+        l = lps[i] = b - a - 1
+        # If the current palindrome expanded beyond the
+        # previous one, replace the old by this one.
+        if i + l > r:
+            c = i
+            r = i + l
+    return len(pals) + len(set(iter(s)))
 
 
 def subsequence_count(s: str, t: str) -> int:
@@ -506,20 +560,3 @@ def k_alphabet_string_with_all_substrings(n: int, k: int) -> str:
         # else: The for loop may not add any new digit for a choice of
         # the alphabet or the initialization string.
     return o
-
-
-def distinct_palindrome_substrings(s: str) -> int:
-    "Return the count of distinct palindromes within `s`."
-    n = len(s)
-
-    def expand(i, j, p):
-        oj = j
-        while 0 <= i and j < n and s[i] == s[j]:
-            p.add(s[i:oj])
-            i, j = i - 1, j + 1
-
-    p1, p2 = set(), set()
-    for i in range(n):
-        expand(i, i + 1, p1)
-        expand(i, i + 2, p2)
-    return len(set(iter(s))) + len(p1) + len(p2)
