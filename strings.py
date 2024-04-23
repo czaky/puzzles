@@ -506,3 +506,18 @@ def k_alphabet_string_with_all_substrings(n: int, k: int) -> str:
         # else: The for loop may not add any new digit for a choice of
         # the alphabet or the initialization string.
     return o
+
+def distinct_palindrome_substrings(s: str) -> int:
+    "Return the count of distinct palindromes within `s`."
+    p = set()
+    n = len(s)
+
+    def expand(i, j):
+        while 0 <= i and j < n and s[i] == s[j]:
+            p.add(s[i : j + 1])
+            i, j = i - 1, j + 1
+
+    for i in range(n):
+        expand(i, i)
+        expand(i, i + 1)
+    return len(p)

@@ -1,6 +1,7 @@
 """Test module for the string puzzles."""
 
 import unittest
+
 import strings as s
 
 
@@ -295,3 +296,20 @@ class TestStrings(unittest.TestCase):
         self.assertEqual("0001110100", s.k_alphabet_string_with_all_substrings(3, 2))
         self.assertEqual("0011210220", s.k_alphabet_string_with_all_substrings(2, 3))
         self.assertEqual("1234567890", s.k_alphabet_string_with_all_substrings(1, 10))
+
+    def test_distinct_palindrome_substrings(self):
+        "Test `distinct_palindrome_substrings`."
+        self.assertEqual(0, s.distinct_palindrome_substrings(""))
+        self.assertEqual(1, s.distinct_palindrome_substrings("a"))
+        self.assertEqual(2, s.distinct_palindrome_substrings("aa"))
+        self.assertEqual(2, s.distinct_palindrome_substrings("ab"))
+        self.assertEqual(3, s.distinct_palindrome_substrings("aba"))
+        self.assertEqual(3, s.distinct_palindrome_substrings("abc"))
+        self.assertEqual(4, s.distinct_palindrome_substrings("abba"))
+        self.assertEqual(10, s.distinct_palindrome_substrings("abaaaaabba"))
+        self.assertEqual(
+            26,
+            s.distinct_palindrome_substrings(
+                "mdnvznwlylygvstwarpibrfgvdhkdcrlmfgqweveqyo"
+            ),
+        )
