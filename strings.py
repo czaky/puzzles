@@ -1,12 +1,12 @@
 """Puzzles related to strings."""
 
 from collections import Counter
-from typing import List, Optional
 from functools import lru_cache, reduce
 from itertools import accumulate, combinations
+from typing import List, Optional
 
-from graphs import topological_order
 from future import pairwise
+from graphs import topological_order
 
 
 def reverse_words(s: str, sep: str = " ") -> str:
@@ -507,17 +507,19 @@ def k_alphabet_string_with_all_substrings(n: int, k: int) -> str:
         # the alphabet or the initialization string.
     return o
 
+
 def distinct_palindrome_substrings(s: str) -> int:
     "Return the count of distinct palindromes within `s`."
-    p = set()
     n = len(s)
 
-    def expand(i, j):
+    def expand(i, j, p):
+        oj = j
         while 0 <= i and j < n and s[i] == s[j]:
-            p.add(s[i : j + 1])
+            p.add(s[i:oj])
             i, j = i - 1, j + 1
 
+    p1, p2 = set(), set()
     for i in range(n):
-        expand(i, i)
-        expand(i, i + 1)
-    return len(p)
+        expand(i, i + 1, p1)
+        expand(i, i + 2, p2)
+    return len(set(iter(s))) + len(p1) + len(p2)
