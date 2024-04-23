@@ -1,7 +1,7 @@
 """Puzzles related to graphs."""
 
-from typing import List, Iterable, Set
 from collections import deque
+from typing import Iterable, List, Set
 
 from sequences import find_if
 from sets import powerset
@@ -16,7 +16,7 @@ def breadth_first(adj: List[List[int]], start: int = 0) -> List[int]:
         n = q.popleft()
         o.append(n)
         for d in adj[n]:
-            if not d in v:
+            if d not in v:
                 q.append(d)
                 v.add(d)
     return o
@@ -45,7 +45,7 @@ def depth_first_r(adj: List[List[int]], start: int = 0) -> List[int]:
         v.add(n)
         o.append(n)
         for a in adj[n]:
-            if not a in v:
+            if a not in v:
                 dfs(a)
 
     dfs(start)
@@ -58,7 +58,7 @@ def topological_order(vertexes: Iterable, edges: dict) -> Iterable:
     v = set()
 
     def sort(n):
-        if not n in v:
+        if n not in v:
             v.add(n)
             any(map(sort, edges.get(n, [])))
             s.append(n)

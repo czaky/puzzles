@@ -73,7 +73,7 @@ def a_star_grid(grid: List[List[int]]) -> int:
     "Search a path in an NxN grid of costs per cell. Return overall cost."
     n = len(grid)
     g = n - 1
-    d = grid[0][0]
+    d: float = grid[0][0]
     q = [(float(d + g + g), int(0), int(0))]
     m = [[math.inf] * n for _ in grid]
     m[0][0] = d
