@@ -64,3 +64,14 @@ class TestSearch(unittest.TestCase):
         m = [list(map(int, l.split())) for l in mat.splitlines()]
 
         self.assertEqual(15, s.connect_islands(m))
+
+    def test_enclosed_islands_count(self):
+        "Test `enclosed_islands_count`."
+        grid = [
+            [0, 0, 0, 0, 0, 0, 0, 1],
+            [0, 1, 1, 1, 1, 0, 0, 1],
+            [0, 1, 0, 1, 0, 0, 0, 1],
+            [0, 1, 1, 1, 1, 0, 1, 0],
+            [1, 0, 0, 0, 0, 1, 0, 1],
+        ]
+        self.assertEqual(2, s.enclosed_islands_count(grid))

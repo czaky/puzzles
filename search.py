@@ -1,10 +1,10 @@
 """Search Utils"""
 
 import math
-from heapq import heappop, heappush
-from typing import Optional, List
-from itertools import product
 from collections.abc import Callable
+from heapq import heappop, heappush
+from itertools import product
+from typing import List, Optional
 
 
 def binary(gt: Callable, l: int, h: int, i: Optional[int] = None) -> Optional[int]:
@@ -131,3 +131,39 @@ def connect_islands(grid: List[List[int]]) -> int:
 
     # If `ms == 0`, then `grid` is one big island.
     return ms or n * n
+
+
+def enclosed_islands_count(grid: List[List[int]]) -> int:
+    """Return the count of islands of 1s fully enclosed by 0s.
+
+    If an island touches the edge it is not considered fully enclosed.
+
+    Args:
+        grid (List[List[int]]): a grid of 1s and 0s.
+
+    Returns:
+        int: count of fully enclosed islands.
+    """
+    n, m = len(grid), len(grid[0])
+
+    # Idea is to do a graph DFS and mark the grid points as visited.
+    # This way we determine each point as belonging to an island.
+    # The DFS functions returns 3 values:
+    #    0 - no new island,
+    #    1 - new fully enclosed island,
+    #    2 - new island touching an edge.
+    # The function below takes a `max` of the values.
+
+    def v(x: int, y: int) -> int:
+        # Check if (x, y) is valid and that it is an unexplored point.
+        if not (0 <= x < n and 0 <= y < m and grid[x][y] == 1):
+            return 0
+        grid[x][y] = 0
+        # Determine if this point touches the edge (=> 2)
+        t = 2 - (0 < x < n - 1 and 0 < y < m - 1)
+        # Visit all the adjacent points.
+        # Return 2 for an island touching the edge, 1 otherwise.
+        return max(t, v(x + 1, y), v(x - 1, y), v(x, y + 1), v(x, y - 1))
+
+    # Sum only islands that are new and fully enclosed by 0s.
+    return sum(v(x, y) == 1 for x, y in product(range(n), range(m)))
