@@ -127,7 +127,7 @@ def connect_islands(grid: List[List[int]]) -> int:
             # Determine (the set of) adjacent islands.
             adjacent = set(g(x + dx, y + dy) for dx, dy in adjacency)
             # Compute the size of a joined island. Draw maximum.
-            ms = max(ms, sum(islands[i] for i in adjacent if i) + 1)
+            ms = max(ms, sum(islands[i] for i in adjacent) + 1)
 
     # If `ms == 0`, then `grid` is one big island.
     return ms or n * n
@@ -167,3 +167,31 @@ def enclosed_islands_count(grid: List[List[int]]) -> int:
 
     # Sum only islands that are new and fully enclosed by 0s.
     return sum(v(x, y) == 1 for x, y in product(range(n), range(m)))
+
+
+def largest_sum_cycle(edges: List[int]) -> int:
+    "Return the max node index sum of cycles in graph defined by `edges`."
+    # Simplest recursive solution in `O(|E|)`.
+    # For each cycle we compute the total path sum reached so far.
+    # This allows us to remove any tangling prefix nodes from the sum.
+    # At the same time the `edges` are marked as dead-end.
+    # This allows the code to run in `O(|E|)`
+
+    # Contains the sums of the paths.
+    v = [-1] * len(edges)
+
+    def visit(i: int, s: int):
+        if edges[i] < 0:
+            return -1
+        s += i
+        if v[i] >= 0:
+            # Remove any prefix from the sum.
+            return s - v[i]
+        # Mark the cell with the sum so far.
+        v[i] = s
+        result = visit(edges[i], s)
+        # Mark the cell as dead-end to prevent revisits.
+        edges[i] = -1
+        return result
+
+    return max(visit(i, 0) for i in range(len(edges)))
