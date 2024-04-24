@@ -2,8 +2,8 @@
 
 from collections import Counter
 from functools import lru_cache, reduce
-from itertools import accumulate, combinations
-from typing import List, Optional
+from itertools import accumulate, combinations, islice
+from typing import List, Optional, Sequence
 
 from future import pairwise
 from graphs import topological_order
@@ -191,38 +191,113 @@ def count_of_palindrome_substrings(s: str) -> int:
     return sum((l + 1) // 2 for l in longest_palindrome_substring_lengths(s))
 
 
+class StringView(Sequence):
+    "View into a string."
+
+    M = int(10**9 + 9)
+
+    def __init__(self, s: str, start: int, stop: int, h=None):
+        self.s = s
+        start, stop, _ = slice(start, stop).indices(len(s))
+        self.start = start
+        self.stop = stop
+        assert 0 <= start <= stop <= len(s)
+        self.h = h or sum(ord(s[i]) for i in range(start, stop)) % self.M
+
+    def expand(self, a: int, b: int) -> "StringView":
+        """Expand the view to the left and to the right.
+
+        `a` and `b` are relative to existing ends of the view.
+        Negative values move to the left, positive move to the right.
+
+        Example:
+            v = View("abcdef", 2, 4) => "cd"
+            v.extend(-1, 1) => "bcde"
+        """
+        start, stop, h = self.start, self.stop, self.h
+        if a < 0:
+            start = max(0, self.start + a)
+            for i in range(start, self.start):
+                h += ord(self.s[i])
+        elif a > 0:
+            start = min(self.start + a, len(self.s))
+            for i in range(self.start, start):
+                h -= ord(self.s[i])
+        if b > 0:
+            stop = min(self.stop + b, len(self.s))
+            for i in range(self.stop, stop):
+                h += ord(self.s[i])
+        elif b < 0:
+            stop = max(0, self.stop + b)
+            for i in range(stop, self.stop):
+                h -= ord(self.s[i])
+
+        return StringView(self.s, start, stop, h=h % self.M)
+
+    def __hash__(self) -> int:
+        return self.h
+
+    def __len__(self) -> int:
+        return self.stop - self.start
+
+    def __iter__(self):
+        return islice(self.s, self.start, self.stop)
+
+    def __getitem__(self, i: slice | int) -> str:
+        if isinstance(i, int):
+            return self.s[i + self.start if i >= 0 else self.stop + i]
+        if isinstance(i, slice):
+            start, stop, step = i.indices(len(self))
+            return self.s[start + self.start : stop + self.start : step]
+
+    def __eq__(self, other: object) -> bool:
+        return (
+            isinstance(other, StringView)
+            and len(self) == len(other)
+            and hash(self) == hash(other)
+            and all(a == b for a, b in zip(self, other))
+        )
+
+    def __str__(self):
+        return self.s[self.start : self.stop]
+
+    def __repr__(self) -> str:
+        return '"' + self.s[self.start : self.stop] + '"'
+
+
 def distinct_palindrome_substrings(s: str) -> int:
     "Return the count of distinct palindromes within `s`."
     # Uses Manacher's algorithm.
-    # Runs in O(N*N) :
-    #   O(N) for the Manacher's algorithm.
-    #   O(N) for cutting the string into pieces and a hash-set operation.
+    # Runs in O(N).
     n = len(s) * 2
     if n == 0:
         return 0
     pals = set()
-    lps = [0] * n
-    lps[1] = 1  # size of the first palindrome
+    lps = [StringView("", 0, 0)] * n
+    lps[1] = StringView(s, 0, 1)  # View of the first palindrome
     c = 1  # center of the outer palindrome (in s*2)
     r = 2  # right border of the outer palindrome (in s*2)
     for i in range(2, n):
-        # Use the mirror length if `i` is between `c` and `r`.
-        l = int(i < r and min(lps[2 * c - i], r - i))
-        # Try to expand the length (skip filler chars).
-        l += (i + l) % 2 + 1
-        a, b = (i - l) // 2, (i + l) // 2
-        while 0 <= a and b < len(s) and s[a] == s[b]:
-            # There is no point to register the smaller sub-palindromes.
-            # This was already done on the left.
-            pals.add(s[a : b + 1])
-            a, b = a - 1, b + 1
+        if i < r:
+            # Use the mirror length if `i` is between `c` and `r`.
+            v = lps[2 * c - i]
+            l = min(len(v), r - i)
+            # Reuse previous hash.
+            h = l == len(v) and hash(v)
+        else:
+            l, h = 0, None
+
+        v = StringView(s, (i - l) // 2, (i + l + 1) // 2, h=h)
+        while 0 < v.start and v.stop < len(s) and s[v.start - 1] == s[v.stop]:
+            v = v.expand(-1, 1)
+            pals.add(v)
         # Store the value.
-        l = lps[i] = b - a - 1
+        lps[i] = v
         # If the current palindrome expanded beyond the
         # previous one, replace the old by this one.
-        if i + l > r:
+        if i + len(v) > r:
             c = i
-            r = i + l
+            r = i + len(v)
     return len(pals) + len(set(iter(s)))
 
 
