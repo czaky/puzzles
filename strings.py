@@ -9,6 +9,74 @@ from future import pairwise
 from graphs import topological_order
 
 
+class StringView(Sequence):
+    "View into a string."
+
+    M = int(10**9 + 9)  # 30 bits
+    P = int(29791)
+
+    def __init__(self, s: str, start: int, stop: int, h=None):
+        self.s = s
+        self.start = start
+        self.stop = stop
+        if h is None:
+            # Hash only half of the string. Useful for palindromes.
+            m, p = self.M, self.P
+            l = (stop - start + 1) // 2
+            self._hash = sum(ord(s[i + start]) * pow(p, i, m) for i in range(l)) % m
+        else:
+            self._hash = h
+
+    def expandable(self) -> bool:
+        "True if the view can be expanded."
+        return 0 < self.start and self.stop < len(self.s)
+
+    def expand(self) -> "StringView":
+        """Expand the view to the left and to the right.
+
+        Test that the string is `expandable` before.
+        Useful for palindromes.
+
+        Example:
+            v = View("abcdef", 2, 4) => "cd"
+            v.expand() => "bcde"
+        """
+        assert self.expandable()
+        start, stop = self.start - 1, self.stop + 1
+        # Rolling hash is multiplied by `P` moving the previous hash to the right.
+        h = self._hash * self.P + ord(self.s[start])
+        return StringView(self.s, start, stop, h=h % self.M)
+
+    def __hash__(self) -> int:
+        return self._hash
+
+    def __len__(self) -> int:
+        return self.stop - self.start
+
+    def __iter__(self):
+        return islice(self.s, self.start, self.stop)
+
+    def __getitem__(self, i: int | slice) -> str:
+        if isinstance(i, int):
+            return self.s[i + self.start if i >= 0 else self.stop + i]
+        if isinstance(i, slice):
+            start, stop, step = i.indices(len(self))
+            return self.s[start + self.start : stop + self.start : step]
+
+    def __eq__(self, other: object) -> bool:
+        return (
+            isinstance(other, StringView)
+            and len(self) == len(other)
+            and all(a == b for a, b in zip(self, other))
+        )
+
+    def __str__(self) -> str:
+        return self.s[self.start : self.stop]
+
+    def __repr__(self) -> str:
+        return '"' + self.s[self.start : self.stop] + '"'
+
+
 def reverse_words(s: str, sep: str = " ") -> str:
     "Reverse the order of words in `s`, separated by `sep`."
     return sep.join(reversed(s.split(sep)))
@@ -191,105 +259,31 @@ def count_of_palindrome_substrings(s: str) -> int:
     return sum((l + 1) // 2 for l in longest_palindrome_substring_lengths(s))
 
 
-class StringView(Sequence):
-    "View into a string."
-
-    M = int(10**9 + 9)
-
-    def __init__(self, s: str, start: int, stop: int, h=None):
-        self.s = s
-        start, stop, _ = slice(start, stop).indices(len(s))
-        self.start = start
-        self.stop = stop
-        assert 0 <= start <= stop <= len(s)
-        self.h = h or sum(ord(s[i]) for i in range(start, stop)) % self.M
-
-    def expand(self, a: int, b: int) -> "StringView":
-        """Expand the view to the left and to the right.
-
-        `a` and `b` are relative to existing ends of the view.
-        Negative values move to the left, positive move to the right.
-
-        Example:
-            v = View("abcdef", 2, 4) => "cd"
-            v.extend(-1, 1) => "bcde"
-        """
-        start, stop, h = self.start, self.stop, self.h
-        if a < 0:
-            start = max(0, self.start + a)
-            for i in range(start, self.start):
-                h += ord(self.s[i])
-        elif a > 0:
-            start = min(self.start + a, len(self.s))
-            for i in range(self.start, start):
-                h -= ord(self.s[i])
-        if b > 0:
-            stop = min(self.stop + b, len(self.s))
-            for i in range(self.stop, stop):
-                h += ord(self.s[i])
-        elif b < 0:
-            stop = max(0, self.stop + b)
-            for i in range(stop, self.stop):
-                h -= ord(self.s[i])
-
-        return StringView(self.s, start, stop, h=h % self.M)
-
-    def __hash__(self) -> int:
-        return self.h
-
-    def __len__(self) -> int:
-        return self.stop - self.start
-
-    def __iter__(self):
-        return islice(self.s, self.start, self.stop)
-
-    def __getitem__(self, i: slice | int) -> str:
-        if isinstance(i, int):
-            return self.s[i + self.start if i >= 0 else self.stop + i]
-        if isinstance(i, slice):
-            start, stop, step = i.indices(len(self))
-            return self.s[start + self.start : stop + self.start : step]
-
-    def __eq__(self, other: object) -> bool:
-        return (
-            isinstance(other, StringView)
-            and len(self) == len(other)
-            and hash(self) == hash(other)
-            and all(a == b for a, b in zip(self, other))
-        )
-
-    def __str__(self):
-        return self.s[self.start : self.stop]
-
-    def __repr__(self) -> str:
-        return '"' + self.s[self.start : self.stop] + '"'
-
-
 def distinct_palindrome_substrings(s: str) -> int:
     "Return the count of distinct palindromes within `s`."
     # Uses Manacher's algorithm.
     # Runs in O(N).
-    n = len(s) * 2
-    if n == 0:
-        return 0
+    n = len(s)
+    if n <= 3:
+        return n
     pals = set()
-    lps = [StringView("", 0, 0)] * n
+    lps = [StringView("", 0, 0, h=0)] * n * 2
     lps[1] = StringView(s, 0, 1)  # View of the first palindrome
     c = 1  # center of the outer palindrome (in s*2)
     r = 2  # right border of the outer palindrome (in s*2)
-    for i in range(2, n):
+    for i in range(2, n * 2):
         if i < r:
             # Use the mirror length if `i` is between `c` and `r`.
             v = lps[2 * c - i]
             l = min(len(v), r - i)
             # Reuse previous hash.
-            h = l == len(v) and hash(v)
+            h = hash(v) if l == len(v) else None
         else:
             l, h = 0, None
 
         v = StringView(s, (i - l) // 2, (i + l + 1) // 2, h=h)
-        while 0 < v.start and v.stop < len(s) and s[v.start - 1] == s[v.stop]:
-            v = v.expand(-1, 1)
+        while v.expandable() and s[v.start - 1] == s[v.stop]:
+            v = v.expand()
             pals.add(v)
         # Store the value.
         lps[i] = v
