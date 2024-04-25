@@ -1,10 +1,9 @@
 """Module for number and arithmetic related puzzles."""
 
-from typing import Tuple
-from math import floor, log, comb
 from functools import reduce
+from math import comb, floor, log
 from operator import mul
-
+from typing import Tuple
 
 # The modulo operation is crucial to efficiently solving the division problem.
 M = 10**9 + 7
@@ -202,10 +201,8 @@ def best_numbers(n: int, a: int, b: int, c: int, d: int) -> int:
         return int(valid(a * n))
 
     fac = [1] * (n + 1)
-    inv = [1] * (n + 1)
     for i in range(1, n + 1):
         fac[i] = fac[i - 1] * i % M
-        inv[i] = pow(fac[i], M - 2, M)
 
     # Modulo inverse of a number is a number that:
     #  inv(n) * n = n^(M - 2) * n = 1  (mod M)
@@ -220,11 +217,12 @@ def best_numbers(n: int, a: int, b: int, c: int, d: int) -> int:
     #   = n * (f_n) ^ (M - 2)
     # So:
     #  inv(f_n-1) = n * inv(f_n)
+    inv = [1] * (n + 1)
     inv[-1] = pow(fac[-1], (M - 2), M)
     for i in reversed(range(1, n + 1)):
         inv[i - 1] = i * inv[i] % M
 
-    # Count of valid permuations for a number consisting of i a's and (n - i) b's.
+    # Count of valid combinations for a number consisting of i a's and (n - i) b's.
     p = lambda i: fac[n] * inv[i] * inv[n - i] % M if valid(a * i + b * (n - i)) else 0
     return sum(map(p, range(n + 1))) % M
 
@@ -266,3 +264,28 @@ def find_nth_k_bit_number(n: int, k: int) -> int:
         else:
             l = m + 1
     return l
+
+
+def combmod(n: int, k: int, mod: int) -> int:
+    "Return binominal, combinatorial factor modulo `mod`"
+    if k < 0 or k > n:
+        return 0
+    k = min(k, n - k)
+    g = lambda a, x: a * x % mod
+    fk = reduce(g, range(1, k + 1), 1)
+    fn = reduce(g, range(n - k + 1, n + 1), 1)
+    return fn * pow(fk, -1, mod) % mod
+
+
+def grid_path_count(m: int, n: int, mod: int = 10**9 + 7) -> int:
+    "Return number of paths that can be taken from (m,n) down to (0,0) modulo `mod`."
+    # Runs in O(m+n) due to factorial.
+    # This is a combinatorial problem.
+    # We have `m+n` steps of left or down.
+    # Across the `m+n` steps, we need to choose `n` steps down.
+    # The `n` steps down have no definite order.
+    # The `m` steps left have no definite order.
+    # This makes:
+    #   ```(m+n)!/m!/n! = binom(m+n, m)```
+    # different paths.
+    return combmod(m + n, m, mod)

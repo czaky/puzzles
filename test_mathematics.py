@@ -1,6 +1,8 @@
 """Test module for the numbers related puzzles."""
 
 import unittest
+from math import comb
+
 import mathematics as m
 
 
@@ -102,3 +104,18 @@ class TestNumbers(unittest.TestCase):
         self.assertEqual(1, m.find_nth_k_bit_number(2, 3))
         self.assertEqual(8, m.find_nth_k_bit_number(5, 1))
         self.assertEqual(5, m.find_nth_k_bit_number(6, 2))
+
+    def test_combmod(self):
+        "Test `combmod`."
+        self.assertEqual(comb(1, 1), m.combmod(1, 1, 7))
+        self.assertEqual(comb(6, 2) % 7, m.combmod(6, 2, 7))
+        self.assertEqual(comb(6, 2), m.combmod(6, 2, 23))
+        self.assertEqual(comb(11, 7) % 23, m.combmod(11, 7, 23))
+
+    def test_grid_path_count(self):
+        "Test `grid_path_count`."
+        self.assertEqual(1, m.grid_path_count(3, 0))
+        self.assertEqual(84, m.grid_path_count(3, 6))
+        self.assertEqual(84, m.grid_path_count(6, 3))
+        self.assertEqual(924, m.grid_path_count(6, 6))
+        self.assertEqual(21144547, m.grid_path_count(35, 31))
