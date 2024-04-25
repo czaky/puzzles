@@ -275,17 +275,3 @@ def combmod(n: int, k: int, mod: int) -> int:
     fk = reduce(g, range(1, k + 1), 1)
     fn = reduce(g, range(n - k + 1, n + 1), 1)
     return fn * pow(fk, -1, mod) % mod
-
-
-def grid_path_count(m: int, n: int, mod: int = 10**9 + 7) -> int:
-    "Return number of paths that can be taken from (m,n) down to (0,0) modulo `mod`."
-    # Runs in O(m+n) due to factorial.
-    # This is a combinatorial problem.
-    # We have `m+n` steps of left or down.
-    # Across the `m+n` steps, we need to choose `n` steps down.
-    # The `n` steps down have no definite order.
-    # The `m` steps left have no definite order.
-    # This makes:
-    #   ```(m+n)!/m!/n! = binom(m+n, m)```
-    # different paths.
-    return combmod(m + n, m, mod)

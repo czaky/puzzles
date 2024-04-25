@@ -1,7 +1,8 @@
 """Test module for the matrix related puzzles."""
 
-from itertools import islice
 import unittest
+from itertools import islice
+
 import matrix as m
 
 
@@ -35,38 +36,6 @@ class TestMatrixPuzzles(unittest.TestCase):
         self.assertEqual("ABCD", m.optimum_brackets([1, 2, 3, 4, 5]))
         self.assertEqual("A(B(CD))", m.optimum_brackets([5, 4, 3, 2, 1]))
         self.assertEqual("A(BC)D", m.optimum_brackets([4, 2, 3, 1, 3]))
-
-    def test_sudoku(self):
-        "Test `sudoku` puzzle solver."
-        grid = parse(
-            9,
-            9,
-            """
-3 0 6 5 0 8 4 0 0
-5 2 0 0 0 0 0 0 0
-0 8 7 0 0 0 0 3 1
-0 0 3 0 1 0 0 8 0
-9 0 0 8 6 3 0 0 5
-0 5 0 0 9 0 6 0 0
-1 3 0 0 0 0 2 5 0
-0 0 0 0 0 0 0 7 4
-0 0 5 2 0 6 3 0 0""",
-        )
-        self.assertTrue(m.sudoku(grid))
-        self.assertEqual(
-            [
-                [3, 1, 6, 5, 7, 8, 4, 9, 2],
-                [5, 2, 9, 1, 3, 4, 7, 6, 8],
-                [4, 8, 7, 6, 2, 9, 5, 3, 1],
-                [2, 6, 3, 4, 1, 5, 9, 8, 7],
-                [9, 7, 4, 8, 6, 3, 1, 2, 5],
-                [8, 5, 1, 7, 9, 2, 6, 4, 3],
-                [1, 3, 8, 9, 4, 7, 2, 5, 6],
-                [6, 9, 2, 3, 5, 1, 8, 7, 4],
-                [7, 4, 5, 2, 8, 6, 3, 1, 9],
-            ],
-            grid,
-        )
 
     def test_fib(self):
         "Test `fib."
@@ -147,18 +116,4 @@ class TestMatrixPuzzles(unittest.TestCase):
         self.assertEqual(
             [[-6, -2], [5, 5], [1, 0], [3, 1], [-2, -6], [-9, 4], [7, -1]],
             m.zero_sum_sub_matrix(mat),
-        )
-
-    def test_min_points_traverse(self):
-        "Test `min_points_traverse`."
-        self.assertEqual(1, m.min_points_traverse([[]]))
-        self.assertEqual(1, m.min_points_traverse([[1]]))
-        self.assertEqual(1, m.min_points_traverse([[0]]))
-        self.assertEqual(2, m.min_points_traverse([[-1]]))
-        self.assertEqual(6, m.min_points_traverse([[-5]]))
-        self.assertEqual(1, m.min_points_traverse([[1, 2, 3]]))
-        self.assertEqual(1, m.min_points_traverse([[1, 2, 3], [4, 5, 6]]))
-        self.assertEqual(6, m.min_points_traverse([[-5, 2, 3], [4, 5, 6]]))
-        self.assertEqual(
-            7, m.min_points_traverse([[-2, -3, 3], [-5, -10, 1], [10, 30, -5]])
         )

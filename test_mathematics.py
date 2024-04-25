@@ -111,11 +111,3 @@ class TestNumbers(unittest.TestCase):
         self.assertEqual(comb(6, 2) % 7, m.combmod(6, 2, 7))
         self.assertEqual(comb(6, 2), m.combmod(6, 2, 23))
         self.assertEqual(comb(11, 7) % 23, m.combmod(11, 7, 23))
-
-    def test_grid_path_count(self):
-        "Test `grid_path_count`."
-        self.assertEqual(1, m.grid_path_count(3, 0))
-        self.assertEqual(84, m.grid_path_count(3, 6))
-        self.assertEqual(84, m.grid_path_count(6, 3))
-        self.assertEqual(924, m.grid_path_count(6, 6))
-        self.assertEqual(21144547, m.grid_path_count(35, 31))
