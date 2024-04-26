@@ -1,6 +1,6 @@
 """Puzzles around linked lists."""
 
-from typing import Optional, Iterable, Any
+from typing import Any, Iterable, Optional
 
 
 class ListNode(Iterable):
@@ -15,6 +15,10 @@ class ListNode(Iterable):
         while n:
             yield n.data
             n = n.next
+
+    def append(self, n: "Node"):
+        "Append node `n` to this list."
+        self.next = n
 
 
 Node = Optional[ListNode]
@@ -273,3 +277,43 @@ def subtract_lists(l1: Node, l2: Node) -> Node:
         r = n
         h1, h2 = h1.next, h2 and h2.next
     return trim(r) or ListNode(0)
+
+
+def merge_sort(h: Node) -> Node:
+    "Merge sort a linked list by editing the pointers."
+    if h is None or h.next is None:
+        return h
+    # split
+    m = f = h
+    while f.next and f.next.next:
+        m = m.next
+        f = f.next.next
+    n = m.next
+    m.next = None
+    # n.prev = None
+    # sort
+    h1 = merge_sort(h)
+    h2 = merge_sort(n)
+    h = n = None
+    # merge
+    while h1 and h2:
+        if h1.data < h2.data:
+            nn = h1
+            h1 = h1.next
+        else:
+            nn = h2
+            h2 = h2.next
+
+        # nn.prev = n
+        if n:
+            n.next = n = nn
+        else:
+            h = n = nn
+    if not n:
+        return h1 or h2
+    if h1:
+        n.append(h1)
+    elif h2:
+        n.append(h2)
+
+    return h
