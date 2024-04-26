@@ -886,45 +886,31 @@ def geek_roads(a: List[int], b: List[int]) -> int:
             c.append((b, jv, jc))
         return c
 
-    # Compress the roads and
-    # assure the compressed representation is of the same length.
+    # Compress the roads and assure that
+    # the compressed representations are of the same length.
     lr = compress(a)
     rr = compress(b)
     if len(lr) < len(rr):
         lr.append((0, 0, 0))
     elif len(rr) < len(lr):
         rr.append((0, 0, 0))
-    n = len(lr)
-    assert n == len(rr)
+    assert len(lr) == len(rr)
 
     # Sum of the balls on the `a` (left) and `b` (right) roads.
-    left = right = 0
-    for i in reversed(range(n)):
+    l = r = 0
+    for (lb, v, lil), (rb, rv, ril) in zip(reversed(lr), reversed(rr)):
         # Assert that intersection values are aligned.
-        assert lr[i][1] == rr[i][1]
-        lb, v, ljc = lr[i]
-        rb, v, rjc = rr[i]
+        assert v == rv
+        # Step through or wave in and out.
         # When waving in and out, we sacrifice two 'v' buckets.
-        wave = v * (ljc + rjc - 2)
+        # Waving is only possible if there are at least
+        # two buckets on each side.
+        c = v if lil < 2 or ril < 2 else v * (lil + ril - 2)
         # When crossing over, only one 'v' bucket is sacrificed.
-        cross = v * (ljc + rjc - 1)
+        x = v * (lil + ril - 1)
+        # Update the left and right path sums,
+        # choosing the max for continuing on the same road
+        # or crossing from the other one.
+        l, r = lb + max(l + c, r + x), rb + max(r + c, l + x)
 
-        # If continuing on road `a`, the number of balls is
-        # the baggage plus:
-        #  - `v` - for a single step or
-        #  - `v * (jc + rjc - 2)` - for a wave in and wave out
-        # Note: the wave in/out is at least as big as the single step.
-        lc = left + (v if ljc == 1 else wave)
-        # Cross from right.
-        # When crossing we sacrifice one of the 'v' buckets.
-        lx = right + cross
-
-        # Right continue.
-        rc = right + (v if rjc == 1 else wave)
-        # Cross from left.
-        rx = left + cross
-
-        left = lb + max(lc, lx)
-        right = rb + max(rc, rx)
-
-    return max(left, right)
+    return max(l, r)
