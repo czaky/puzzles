@@ -67,6 +67,7 @@ class StringView(Sequence):
         if isinstance(i, slice):
             start, stop, step = i.indices(len(self))
             return self.s[start + self.start : stop + self.start : step]
+        return ""  # pylint: disable
 
     def __eq__(self, other: object) -> bool:
         return (

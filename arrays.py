@@ -824,6 +824,42 @@ def repeated_numbers(a: List[int]) -> tuple:
     return tuple(filter(None, map(repeated, a)))
 
 
+def compress_geek_road(r: List[int], sections: set) -> List[tuple]:
+    """Compress the road `r` into a following representation:
+        (<baggage>, <intersection-value>, <intersection-length>)
+
+    where:
+        - baggage is the sum of all values since the last intersection.
+        - intersection-value is the number of balls shared between roads.
+        - intersection-length is the count of the intersection buckets
+            repeating with the same intersection-value.
+    Args:
+        r (List[int]): road consisting of counts of balls
+        sections (set): counts of balls that mark intersections
+
+    Returns:
+        List(tuple): list of tuples describing intersections
+            and values in-between.
+    """
+
+    c = []
+    i = 0
+    while i < len(r):
+        b = 0  # baggage collected on the way
+        while i < len(r) and r[i] not in sections:
+            b += r[i]
+            i += 1
+        # Intersection value.
+        jv = r[i] if i < len(r) else 0
+        # Intersection length.
+        jc = 0
+        while i < len(r) and r[i] == jv:
+            jc += 1
+            i += 1
+        c.append((b, jv, jc))
+    return c
+
+
 def geek_roads(a: List[int], b: List[int]) -> int:
     """Two roads `a` and `b` are given. On each road there are buckets
     with balls, which can be collected when Geek is on that road.
@@ -851,45 +887,20 @@ def geek_roads(a: List[int], b: List[int]) -> int:
     # if the multiple errors in the verifier logic still exist.
 
     # Intersecting numbers
-    sect = set(a) & set(b)
-    if len(sect) == 0:
+    sections = set(a) & set(b)
+    if len(sections) == 0:
         # If the roads do not intersect,
         # there are only two path possible.
         return max(sum(a), sum(b))
 
+    # Compress the roads and assure that
+    # the compressed representations are of the same length.
     # The compression could be done in-line,
     # but this makes the code easier,
     # as it separates the two aspects and allows
     # for easier debugging.
-    def compress(r: List[int]):
-        # Compress the road `r` into a following representation:
-        #  (<baggage>, <intersection-value>, <intersection-length>)
-        # where:
-        #  - baggage is the sum of all values since the last intersection.
-        #  - intersection-value is the number of balls shared between roads.
-        #  - intersection-length is the count of the intersection buckets
-        #      repeating with the same intersection-value.
-        c = []
-        i = 0
-        while i < len(r):
-            b = 0  # baggage collected on the way
-            while i < len(r) and r[i] not in sect:
-                b += r[i]
-                i += 1
-            # Intersection value.
-            jv = r[i] if i < len(r) else 0
-            # Intersection length.
-            jc = 0
-            while i < len(r) and r[i] == jv:
-                jc += 1
-                i += 1
-            c.append((b, jv, jc))
-        return c
-
-    # Compress the roads and assure that
-    # the compressed representations are of the same length.
-    lr = compress(a)
-    rr = compress(b)
+    lr = compress_geek_road(a, sections)
+    rr = compress_geek_road(b, sections)
     if len(lr) < len(rr):
         lr.append((0, 0, 0))
     elif len(rr) < len(lr):
