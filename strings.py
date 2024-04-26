@@ -9,6 +9,11 @@ from future import pairwise
 from graphs import topological_order
 
 
+def splint(s: str) -> List[int]:
+    "Split string `s` into ints."
+    return list(map(int, s.split()))
+
+
 class StringView(Sequence):
     "View into a string."
 
@@ -220,7 +225,7 @@ def longest_palindrome_substring_lengths(s: str) -> List[int]:
     r = 2  # right border of the outer palindrome (in s*2)
     for i in range(2, n):
         # Use the mirror length if `i` is between `c` and `r`.
-        l = int(i < r and min(lps[2 * c - i], r - i))
+        l: int = min(lps[2 * c - i], max(r - i, 0))
         # Try to expand the length (skip filler chars).
         l += (i + l) % 2 + 1
         while l <= i < n - l and s[(i - l) // 2] == s[(i + l) // 2]:

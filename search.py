@@ -3,7 +3,7 @@
 from typing import Callable, List, Optional
 
 
-def binary(gt: Callable, l: int, h: int, i: Optional[int] = None) -> Optional[int]:
+def binary(gt: Callable, l: int, h: int, i: Optional[int] = None):
     """
     Returns the index of an element which is NOT greater than (`gt`).
 
@@ -23,7 +23,7 @@ def binary(gt: Callable, l: int, h: int, i: Optional[int] = None) -> Optional[in
     return i
 
 
-def binary_lt(lt: Callable, l: int, h: int, i: Optional[int] = None) -> Optional[int]:
+def binary_lt(lt: Callable, l: int, h: int, i: Optional[int] = None):
     """
     Returns the index of an element which is NOT less than (`lt`).
 

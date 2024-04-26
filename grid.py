@@ -199,7 +199,7 @@ def min_points_traverse(grid: List[List[int]]) -> int:
     # We add an additional column, which will be always at least
     # the maximum possible points that would be necessary for the traversal.
     # This will allow to do `min(v[n-1], v[n])` without extra code.
-    v[-1] = 1 - (n and m and m * n * min(map(min, grid)))
+    v[-1] = 1 - (n and m and (m * n * min(map(min, grid))))
     # We iterate through the grid in reverse order.
     for i, j in product(reversed(range(m)), reversed(range(n))):
         # The `v[j]` for this current row is calculated by taking

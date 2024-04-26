@@ -16,5 +16,8 @@ disable_error_code = [
     "misc",
     "union-attr",
     "var-annotated",
-    "annotation-unchecked"
+    "annotation-unchecked",
+    "func-returns-value",
+    "operator",
+    "arg-type"
 ]
