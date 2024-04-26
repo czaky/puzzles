@@ -1,11 +1,12 @@
-"""Module for the array/list related puzzles."""
+"""Module for the array related puzzles."""
 
 import math
 from collections import Counter, deque
-from typing import List, Optional, Tuple, Iterable
-from functools import reduce, lru_cache
-from operator import mul, neg, add
-from itertools import accumulate, starmap, islice, chain
+from functools import lru_cache, reduce
+from itertools import accumulate, chain, islice, starmap
+from operator import add, mul, neg
+from typing import Iterable, List, Optional, Tuple
+
 import search
 
 
@@ -821,3 +822,109 @@ def repeated_numbers(a: List[int]) -> tuple:
         return f > 0 and abs(e)
 
     return tuple(filter(None, map(repeated, a)))
+
+
+def geek_roads(a: List[int], b: List[int]) -> int:
+    """Two roads `a` and `b` are given. On each road there are buckets
+    with balls, which can be collected when Geek is on that road.
+
+    Geek can switch between roads at intersections marked by the same
+    number of balls in a bucket.
+
+    The buckets on each road are sorted in increasing order.
+
+    Return the maximum number of balls that can be collected.
+
+    E.g.:
+    For the following roads:
+        a: 2 3 5
+        b: 1 3 3 4
+    The paths taken can be:
+        1. 2 3 5 = 10
+        2. 1 3 3 4 = 11
+        3. 2 3 3 4 = 12
+        4. 1 3 3 5 = 12
+    The result is 12.
+    """
+    # Note: As of 2024-04-26 the G4G golden solution was broken.
+    # So this will not solve G4G: "Geek Collects Balls" problem
+    # if the multiple errors in the verifier logic still exist.
+
+    # Intersecting numbers
+    sect = set(a) & set(b)
+    if len(sect) == 0:
+        # If the roads do not intersect,
+        # there are only two path possible.
+        return max(sum(a), sum(b))
+
+    # The compression could be done in-line,
+    # but this makes the code easier,
+    # as it separates the two aspects and allows
+    # for easier debugging.
+    def compress(r: List[int]):
+        # Compress the road `r` into a following representation:
+        #  (<baggage>, <intersection-value>, <intersection-length>)
+        # where:
+        #  - baggage is the sum of all values since the last intersection.
+        #  - intersection-value is the number of balls shared between roads.
+        #  - intersection-length is the count of the intersection buckets
+        #      repeating with the same intersection-value.
+        c = []
+        i = 0
+        while i < len(r):
+            b = 0  # baggage collected on the way
+            while i < len(r) and r[i] not in sect:
+                b += r[i]
+                i += 1
+            # Intersection value.
+            jv = r[i] if i < len(r) else 0
+            # Intersection length.
+            jc = 0
+            while i < len(r) and r[i] == jv:
+                jc += 1
+                i += 1
+            c.append((b, jv, jc))
+        return c
+
+    # Compress the roads and
+    # assure the compressed representation is of the same length.
+    lr = compress(a)
+    rr = compress(b)
+    if len(lr) < len(rr):
+        lr.append((0, 0, 0))
+    elif len(rr) < len(lr):
+        rr.append((0, 0, 0))
+    n = len(lr)
+    assert n == len(rr)
+
+    # Sum of the balls on the `a` (left) and `b` (right) roads.
+    left = right = 0
+    for i in reversed(range(n)):
+        # Assert that intersection values are aligned.
+        assert lr[i][1] == rr[i][1]
+        lb, v, ljc = lr[i]
+        rb, v, rjc = rr[i]
+        # When waving in and out, we sacrifice two 'v' buckets.
+        wave = v * (ljc + rjc - 2)
+        # When crossing over, only one 'v' bucket is sacrificed.
+        cross = v * (ljc + rjc - 1)
+
+        # If continuing on road `a`, the number of balls is
+        # the baggage plus:
+        #  - `v` - for a single step or
+        #  - `v * (jc + rjc - 2)` - for a wave in and wave out
+        # Note: the wave in/out is at least as big as the single step.
+        lc = left + (v if ljc == 1 else wave)
+        # Cross from right.
+        # When crossing we sacrifice one of the 'v' buckets.
+        lx = right + cross
+
+        # Right continue.
+        rc = right + (v if rjc == 1 else wave)
+        # Cross from left.
+        rx = left + cross
+
+        left = lb + max(lc, lx)
+        right = rb + max(rc, rx)
+
+    return max(left, right)

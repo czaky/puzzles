@@ -1,6 +1,7 @@
 """Test module for the array/list related puzzles."""
 
 import unittest
+
 import arrays as ar
 
 
@@ -397,3 +398,23 @@ class TestUnsortedArray(unittest.TestCase):
         self.assertEqual((2,), ar.repeated_numbers([1, 2, 2]))
         self.assertEqual((2, 3), ar.repeated_numbers([1, 2, 3, 2, 3, 4, 5]))
         self.assertEqual((3, 2), ar.repeated_numbers([1, 2, 3, 3, 2, 4, 5]))
+
+    def test_geek_roads(self):
+        "Test `geek_roads`."
+        self.assertEqual(3, ar.geek_roads([2], [3]))
+        self.assertEqual(12, ar.geek_roads([2, 3, 5], [1, 3, 3, 4]))
+        self.assertEqual(16, ar.geek_roads([4, 5, 6], [1, 5, 7]))
+        self.assertEqual(29, ar.geek_roads([1, 4, 5, 6, 8], [2, 3, 4, 6, 9]))
+        self.assertEqual(35, ar.geek_roads([0, 1, 2, 3, 4], [5, 6, 7, 8, 9]))
+        self.assertEqual(61, ar.geek_roads([1, 4, 5, 8, 8, 8], [2, 8, 9, 9, 9]))
+        self.assertEqual(61, ar.geek_roads([1, 8, 8, 9, 11, 12], [6, 6, 8, 9, 10, 14]))
+        self.assertEqual(69, ar.geek_roads([1, 4, 5, 8, 8, 8], [2, 8, 8, 9, 9, 9]))
+        self.assertEqual(
+            71, ar.geek_roads([4, 5, 6, 7, 8, 8, 9], [1, 1, 8, 8, 8, 8, 8])
+        )
+        self.assertEqual(
+            49,
+            ar.geek_roads(
+                [1, 2, 3, 4, 5, 6, 6, 7], [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 7]
+            ),
+        )
