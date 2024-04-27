@@ -6,6 +6,7 @@ from typing import Iterable, List, Set
 
 from sequences import find_if
 from sets import powerset
+from stack import CountedStack
 
 
 def breadth_first(adj: List[List[int]], start: int = 0) -> List[int]:
@@ -190,8 +191,7 @@ def strongly_connected_components(adj: List[List[int]]) -> List[List[int]]:
     # node of a SCC. Nodes on the stack form the SCC.
     #
     ct = [0] * len(adj)  # child/circle time
-    on_stack = ct[:]  # n in stack
-    stack = []  # SCC nodes on the stack of current DFS descend.
+    stack = CountedStack()  # SCC nodes on the stack of current DFS descend.
     t = 0  # index time
     ccs = []  # result
 
@@ -203,9 +203,8 @@ def strongly_connected_components(adj: List[List[int]]) -> List[List[int]]:
             # Preset the `ct` to the incremental time.
             ct[n] = vt = t = t + 1
             # Push the node onto the active stack.
-            on_stack[n] = 1
             sl = len(stack)
-            stack.append(n)
+            stack.push(n)
             # For each child on the active stack,
             # we take the minimum `ct` and update the current `ct`.
             # Note, roots of SCCs, remove themselves from the
@@ -220,17 +219,13 @@ def strongly_connected_components(adj: List[List[int]]) -> List[List[int]]:
                 # `n` is the root node of the SCC.
                 # Pick up all the nodes relevant to this SCC
                 # from the stack up to the current node.
-                cc = stack[sl:]
-                del stack[sl:]
-                for c in cc:
-                    on_stack[c] = 0
                 # Form the SCC and append it to the result list.
-                cc.sort()
-                ccs.append(cc)
+                ccs.append(stack.cut(sl))
         # Return ct[n] for nodes on stack, else value higher than parents.
-        return ct[n] if on_stack[n] else t
+        return ct[n] if n in stack else t
 
     all(map(visit, range(len(ct))))
+    any(map(list.sort, ccs))
     ccs.sort()
     return ccs
     # Example:
