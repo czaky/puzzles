@@ -1,6 +1,7 @@
 """Test module for the graph based puzzles."""
 
 import unittest
+
 import graphs as g
 
 
@@ -34,6 +35,21 @@ class TestGraphs(unittest.TestCase):
         self.assertEqual(
             [(2, 3)], g.critical_connections([[1, 2], [0, 2], [0, 1, 3], [2]])
         )
+
+    def test_strongly_connected_components(self):
+        "Test `strongly_connected_components`."
+        adj = [[2, 3], [0], [1], [4], []]
+        scc = [[0, 1, 2], [3], [4]]
+        self.assertEqual(scc, g.strongly_connected_components(adj))
+        adj = [[], [3], [1], [9, 0, 8], [5], [4, 3], [6], [3], [5, 6], [5, 9]]
+        scc = [[0], [1], [2], [3, 4, 5, 8, 9], [6], [7]]
+        self.assertEqual(scc, g.strongly_connected_components(adj))
+        adj = [[9, 3, 8], [0], [1], [], [5], [4, 0], [6], [0], [5, 6], [5, 9]]
+        scc = [[0, 4, 5, 8, 9], [1], [2], [3], [6], [7]]
+        self.assertEqual(scc, g.strongly_connected_components(adj))
+        adj = [[2], [4, 7, 0], [], [1, 7, 3], [4, 3], [], [3, 5], [6]]
+        scc = [[0], [1, 3, 4, 6, 7], [2], [5]]
+        self.assertEqual(scc, g.strongly_connected_components(adj))
 
     def test_vertex_cover_optimal(self):
         "Test `vertex_cover_optimal`."

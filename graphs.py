@@ -166,6 +166,108 @@ def critical_connections(adj: List[List[int]]) -> List[List[int]]:
     return sorted(o)
 
 
+def strongly_connected_components(adj: List[List[int]]) -> List[List[int]]:
+    """Return strongly connected components (SSCs) as list of vertices.
+
+    Args:
+        adj (List[List[int]]): Array of adjacent nodes `adj[i]` for node `i`.
+
+    Returns:
+        List[List[int]]: List of lists containing nodes of SSCs.
+    """
+    vt = [0] * len(adj)  # visit time
+    ct = vt[:]  # circle time
+    on_stack = vt[:]
+    stack = []
+    t = 1
+    ccs = []  # result
+
+    def dfs(n):
+        nonlocal t
+        ct[n] = vt[n] = t
+        t += 1
+        on_stack[n] = 1
+        stack.append(n)
+        for c in adj[n]:
+            if not vt[c]:
+                dfs(c)
+                # Direct tree edge
+                ct[n] = min(ct[n], ct[c])
+            elif on_stack[c]:
+                # Back edge
+                ct[n] = min(ct[n], vt[c])
+            # else: cross edge
+
+        if vt[n] == ct[n]:
+            # `n` is the root node of the SCC.
+            cc = [stack.pop()]
+            on_stack[cc[-1]] = 0
+            while cc[-1] != n:
+                cc.append(stack.pop())
+                on_stack[cc[-1]] = 0
+            cc.sort()
+            ccs.append(cc)
+
+    for i, visited in enumerate(vt):
+        if not visited:
+            dfs(i)
+
+    ccs.sort()
+    return ccs
+    # Example:
+    # adj = [[], [3], [1], [9, 0, 8], [5], [4, 3], [6], [3], [5, 6], [5, 9]]
+    #
+    # The algorithm starts at node 0 which is only pointed from 3.
+    # 0
+    # > 0: vt: 1, ct: 1, s: []
+    # < 0: vt: 1, ct: 1, s: [0]
+    # + cc: [0]
+    # vt: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    # ct: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    # ----------------------------------------
+    # Node 1 connects to the largest SCC.
+    # In this trace one can observe how the stack is being
+    # manipulated. We see that the nodes are not popped off
+    # the stack until their root node is reached.
+    # In this trace we can also see that nodes in the same
+    # SCC are not necessary sharing the same CT.
+    # 1
+    # > 1: vt: 2, ct: 2, s: []
+    #   > 3: vt: 3, ct: 3, s: [1]
+    #     > 9: vt: 4, ct: 4, s: [1, 3]
+    #       > 5: vt: 5, ct: 5, s: [1, 3, 9]
+    #         > 4: vt: 6, ct: 6, s: [1, 3, 9, 5]
+    #         < 4: vt: 6, ct: 5, s: [1, 3, 9, 5, 4]
+    #       < 5: vt: 5, ct: 3, s: [1, 3, 9, 5, 4]
+    #     < 9: vt: 4, ct: 3, s: [1, 3, 9, 5, 4]
+    #     > 8: vt: 7, ct: 7, s: [1, 3, 9, 5, 4]
+    #       > 6: vt: 8, ct: 8, s: [1, 3, 9, 5, 4, 8]
+    #       < 6: vt: 8, ct: 8, s: [1, 3, 9, 5, 4, 8, 6]
+    #       + cc: [6]
+    #     < 8: vt: 7, ct: 5, s: [1, 3, 9, 5, 4, 8]
+    #   < 3: vt: 3, ct: 3, s: [1, 3, 9, 5, 4, 8]
+    #   + cc: [8, 4, 5, 9, 3]
+    # < 1: vt: 2, ct: 2, s: [1]
+    # + cc: [1]
+    # vt: [1, 2, 0, 3, 6, 5, 8, 0, 7, 4]
+    # ct: [1, 2, 0, 3, 5, 3, 8, 0, 5, 3]
+    # ----------------------------------------
+    # Node 2 connects to 1.
+    # 2
+    # > 2: vt: 9, ct: 9, s: []
+    # < 2: vt: 9, ct: 9, s: [2]
+    # + cc: [2]
+    # vt: [1, 2, 9, 3, 6, 5, 8, 0, 7, 4]
+    # ct: [1, 2, 9, 3, 5, 3, 8, 0, 5, 3]
+    # ----------------------------------------
+    # 7
+    # > 7: vt: 10, ct: 10, s: []
+    # < 7: vt: 10, ct: 10, s: [7]
+    # + cc: [7]
+    # vt: [1, 2, 9, 3, 6, 5, 8, 10, 7, 4]
+    # ct: [1, 2, 9, 3, 5, 3, 8, 10, 5, 3]
+
+
 def vertex_cover_optimal(edges: List[List[int]]) -> Set[int]:
     "Return the vertices of a minimal vertex cover."
     edges_ = list(map(set, edges))  # Make edges undirected and easy to intersect.
