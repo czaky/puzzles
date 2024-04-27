@@ -44,10 +44,10 @@ class CountedStack(Sequence):
         return len(self.stack) > 0
 
     def __iter__(self) -> Iterator:
-        return reversed(self.stack)
+        yield from self.stack
 
     def __reversed__(self) -> Iterator:
-        yield from self.stack
+        return reversed(self.stack)
 
     def __contains__(self, value: object) -> bool:
         return self.counter[value] > 0
