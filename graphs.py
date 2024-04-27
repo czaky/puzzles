@@ -1,6 +1,7 @@
 """Puzzles related to graphs."""
 
 from collections import deque
+from functools import reduce
 from typing import Iterable, List, Set
 
 from sequences import find_if
@@ -167,7 +168,7 @@ def critical_connections(adj: List[List[int]]) -> List[List[int]]:
 
 
 def strongly_connected_components(adj: List[List[int]]) -> List[List[int]]:
-    """Return strongly connected components (SSCs) as list of vertices.
+    """Return strongly connected components (SSCs) as a list of vertices.
 
     Args:
         adj (List[List[int]]): Array of adjacent nodes `adj[i]` for node `i`.
@@ -189,53 +190,47 @@ def strongly_connected_components(adj: List[List[int]]) -> List[List[int]]:
     # node of a SCC. Nodes on the stack form the SCC.
     #
     ct = [0] * len(adj)  # child/circle time
-    on_stack = ct[:]
-    stack = []
-    t = 0
+    on_stack = ct[:]  # n in stack
+    stack = []  # SCC nodes on the stack of current DFS descend.
+    t = 0  # index time
     ccs = []  # result
 
-    def visit(n):
-        nonlocal t
-        t += 1
-        ct[n] = vt = t
-        on_stack[n] = 1
-        stack.append(n)
-        for c in adj[n]:
-            # For each unvisited child we descend.
-            if not ct[c]:
-                # direct tree-edge
-                # adds `c` to active node stack,
-                # unless it is a root of its own SCC.
-                visit(c)
-            # For each child that is now on the active stack,
+    def visit(n: int) -> int:
+        "Returns the circle-time for nodes on the stack or index time otherwise."
+        # skip for visited nodes.
+        if not ct[n]:
+            nonlocal t
+            # Preset the `ct` to the incremental time.
+            ct[n] = vt = t = t + 1
+            # Push the node onto the active stack.
+            on_stack[n] = 1
+            sl = len(stack)
+            stack.append(n)
+            # For each child on the active stack,
             # we take the minimum `ct` and update the current `ct`.
-            # Note, and roots of SCCs, removed itself from the
-            # stack already, so those are not considered.
-            if on_stack[c]:
-                # direct tree-edge or a back-edge
-                ct[n] = min(ct[n], ct[c])
-            # else: do nothing for any cross edge
+            # Note, roots of SCCs, remove themselves from the
+            # stack, so those return higher values and are not considered.
+            ct[n] = reduce(min, map(visit, adj[n]), vt)
 
-        # If we connected through a child tree-edge or a child back-edge
-        # to a node higher in the active stack, this means that the
-        # current node is not the root of the SCC. This can be determined
-        # by comparing the `vt` and `ct` timestamps.
-        if vt == ct[n]:
-            # `n` is the root node of the SCC.
-            # Pick up all the nodes relevant to this SCC
-            # from the stack up to the current node.
-            cc = [stack.pop()]
-            on_stack[cc[-1]] = 0
-            while cc[-1] != n:
-                cc.append(stack.pop())
-                on_stack[cc[-1]] = 0
-            # Form the SCC and append it to the result list.
-            cc.sort()
-            ccs.append(cc)
+            # If we connected through a child tree-edge or a child back-edge
+            # to a node higher in the active stack, this means that the
+            # current node is not the root of the SCC. This can be determined
+            # by comparing the `vt` and `ct` timestamps.
+            if vt == ct[n]:
+                # `n` is the root node of the SCC.
+                # Pick up all the nodes relevant to this SCC
+                # from the stack up to the current node.
+                cc = stack[sl:]
+                del stack[sl:]
+                for c in cc:
+                    on_stack[c] = 0
+                # Form the SCC and append it to the result list.
+                cc.sort()
+                ccs.append(cc)
+        # Return ct[n] for nodes on stack, else value higher than parents.
+        return ct[n] if on_stack[n] else t
 
-    for i, visited in enumerate(ct):
-        if not visited:
-            visit(i)
+    all(map(visit, range(len(ct))))
     ccs.sort()
     return ccs
     # Example:
