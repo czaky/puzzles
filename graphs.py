@@ -175,43 +175,67 @@ def strongly_connected_components(adj: List[List[int]]) -> List[List[int]]:
     Returns:
         List[List[int]]: List of lists containing nodes of SSCs.
     """
-    vt = [0] * len(adj)  # visit time
-    ct = vt[:]  # circle time
-    on_stack = vt[:]
+    # The Tarjan's idea is to do DFS on the graph noting the visit time
+    # (or index) of each node visited. This time is stored in `vt`.
+    #
+    # We also maintain another timestamp `ct` which is the minimum lowest
+    # time determined from the children. `ct` is originally equal to `vt`.
+    # The `ct` timestamp let's us determine if we connected to
+    # an active node in the current stack higher, and answer the
+    # question if we are the root of the current SCC.
+    #
+    # At the same time we maintain the stack of the nodes in current
+    # DFS descend. The stack is only unwound if we encounter a root
+    # node of a SCC. Nodes on the stack form the SCC.
+    #
+    ct = [0] * len(adj)  # child/circle time
+    on_stack = ct[:]
     stack = []
-    t = 1
+    t = 0
     ccs = []  # result
 
-    def dfs(n):
+    def visit(n):
         nonlocal t
-        ct[n] = vt[n] = t
         t += 1
+        ct[n] = vt = t
         on_stack[n] = 1
         stack.append(n)
         for c in adj[n]:
-            if not vt[c]:
-                dfs(c)
-                # Direct tree edge
+            # For each unvisited child we descend.
+            if not ct[c]:
+                # direct tree-edge
+                # adds `c` to active node stack,
+                # unless it is a root of its own SCC.
+                visit(c)
+            # For each child that is now on the active stack,
+            # we take the minimum `ct` and update the current `ct`.
+            # Note, and roots of SCCs, removed itself from the
+            # stack already, so those are not considered.
+            if on_stack[c]:
+                # direct tree-edge or a back-edge
                 ct[n] = min(ct[n], ct[c])
-            elif on_stack[c]:
-                # Back edge
-                ct[n] = min(ct[n], vt[c])
-            # else: cross edge
+            # else: do nothing for any cross edge
 
-        if vt[n] == ct[n]:
+        # If we connected through a child tree-edge or a child back-edge
+        # to a node higher in the active stack, this means that the
+        # current node is not the root of the SCC. This can be determined
+        # by comparing the `vt` and `ct` timestamps.
+        if vt == ct[n]:
             # `n` is the root node of the SCC.
+            # Pick up all the nodes relevant to this SCC
+            # from the stack up to the current node.
             cc = [stack.pop()]
             on_stack[cc[-1]] = 0
             while cc[-1] != n:
                 cc.append(stack.pop())
                 on_stack[cc[-1]] = 0
+            # Form the SCC and append it to the result list.
             cc.sort()
             ccs.append(cc)
 
-    for i, visited in enumerate(vt):
+    for i, visited in enumerate(ct):
         if not visited:
-            dfs(i)
-
+            visit(i)
     ccs.sort()
     return ccs
     # Example:

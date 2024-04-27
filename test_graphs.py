@@ -38,6 +38,15 @@ class TestGraphs(unittest.TestCase):
 
     def test_strongly_connected_components(self):
         "Test `strongly_connected_components`."
+        adj = [[1], [2, 3], [0], [4], [5], [3]]
+        scc = [[0, 1, 2], [3, 4, 5]]
+        self.assertEqual(scc, g.strongly_connected_components(adj))
+        adj = [[1], [2, 4], [3], [1], [0]]
+        scc = [[0, 1, 2, 3, 4]]
+        self.assertEqual(scc, g.strongly_connected_components(adj))
+        adj = [[3, 2, 1, 0], [3, 2, 1, 0], [3, 2, 1, 0], [3, 2, 1, 0]]
+        scc = [[0, 1, 2, 3]]
+        self.assertEqual(scc, g.strongly_connected_components(adj))
         adj = [[2, 3], [0], [1], [4], []]
         scc = [[0, 1, 2], [3], [4]]
         self.assertEqual(scc, g.strongly_connected_components(adj))
