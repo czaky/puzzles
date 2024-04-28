@@ -31,10 +31,24 @@ class TestGraphs(unittest.TestCase):
 
     def test_critical_connections(self):
         "Test `critical_connections`."
-        self.assertEqual([(0, 1), (0, 2)], g.critical_connections([[1, 2], [0], [0]]))
-        self.assertEqual(
-            [(2, 3)], g.critical_connections([[1, 2], [0, 2], [0, 1, 3], [2]])
-        )
+        adj = [[1, 2], [0], [0]]
+        self.assertEqual([(0, 1), (0, 2)], g.critical_connections(adj))
+        adj = [[1], [2, 0], [1, 4, 3], [2, 4], [3, 2]]
+        self.assertEqual([(0, 1), (1, 2)], g.critical_connections(adj))
+        adj = [[1, 2], [0, 2], [0, 1, 3], [2]]
+        self.assertEqual([(2, 3)], g.critical_connections(adj))
+        adj = [
+            [6, 5, 4],
+            [8, 5],
+            [6, 7],
+            [5],
+            [8, 0],
+            [0, 3, 1],
+            [0, 8, 7, 2],
+            [6, 2],
+            [6, 4, 1],
+        ]
+        self.assertEqual([(3, 5)], g.critical_connections(adj))
 
     def test_strongly_connected_components(self):
         "Test `strongly_connected_components`."

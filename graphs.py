@@ -135,42 +135,45 @@ def articulation_points(adj: List[List[int]]) -> List[int]:
 
 
 def critical_connections(adj: List[List[int]]) -> List[List[int]]:
-    "Return a list of critical bridges in an unordered graph."
+    "Return a list of critical bridges in an undirected graph."
     # This uses single pass Tarjan's Algorithm.
-    vt = [0] * len(adj)  # visited time for each node in DFS-tree order
-    ct = vt[:]  # circle time for the parent/root of the whole circle
-    o = set()
+    # It expects a strongly connected undirected graph
+    # with (directed) edges specified in `adj` one for each way.
+    #
+    # The idea is to DFS the graph and at each node to
+    # to compute the minimum of child nodes connection times: `ct`.
+    # If any child connects to a higher node in the stack,
+    # its `ct` will be lower or equal to the parent visit time.
+    # Otherwise, the child is only connected to the parent through
+    # a critical edge.
+    ct = [0] * len(adj)  # minimum connection time
+    ccs = []  # results
 
     # Depth first search to determine the parent of each node
     # and created the DFS-tree.
-    def dfs(p, n, t):
-        vt[n] = ct[n] = t  # set the times
-        for c in adj[n]:
-            if not vt[c]:  # If the child node was not visited...
-                dfs(n, c, t + 1)
-                # If the child circle time is lower than ours,
-                # it has reached another node up in the DFT-tree.
-                # This indicates that we are in a circle with the child.
-                ct[n] = min(ct[n], ct[c])
-                # If the child is in a circle later than our visit time,
-                # this means that child can only be visited through this node.
-                if ct[c] > t:
-                    o.add((n, c))
-            elif c != p:  # visited node before
-                # If we reached another node (but the parent) higher
-                # in the DFS-tree, update our circle time.
-                # Use the original visited time, given that
-                # the child may be in another circle.
-                ct[n] = min(ct[n], vt[c])
+    def visit(p, n, vt):
+        # Skip visited nodes.
+        if not ct[n]:
+            ct[n] = vt  # Initialize the ct time.
+            # Descend recursively, skipping the parent.
+            descend = lambda c: visit(n, c, vt + 1) if c != p else vt
+            # Choose the minimum of the recursive connection times.
+            ct[n] = reduce(min, map(descend, adj[n]), vt)
+            # Add all edges for which the child `ct` is larger than `vt`.
+            ccs.extend((min(n, c), max(n, c)) for c in adj[n] if vt < ct[c])
+        return ct[n]
 
-    # Start search from the first node (== 0).
-    dfs(-1, 0, 1)
-    return sorted(o)
+    # Start search from the first node (== 0)
+    # of the strongly connected graph.
+    visit(-1, 0, 1)
+    ccs.sort()
+    return ccs
 
 
 def strongly_connected_components(adj: List[List[int]]) -> List[List[int]]:
     """Return strongly connected components (SSCs) as a list of vertices.
 
+    Note that this algorithm only applies to directed graphs.
     Args:
         adj (List[List[int]]): Array of adjacent nodes `adj[i]` for node `i`.
 
@@ -193,7 +196,7 @@ def strongly_connected_components(adj: List[List[int]]) -> List[List[int]]:
     ct = [0] * len(adj)  # child/circle time
     stack = StackSet()  # SCC nodes on the stack of current DFS descend.
     t = 0  # index time
-    ccs = []  # result
+    sccs = []  # result
 
     def visit(n: int) -> int:
         "Returns the circle-time for nodes on the stack or index time otherwise."
@@ -220,14 +223,14 @@ def strongly_connected_components(adj: List[List[int]]) -> List[List[int]]:
             if vt == ct[n]:
                 # Pick up all the nodes relevant to this SCC
                 # from the stack up to the current node.
-                ccs.append(stack.cut(sl))
+                sccs.append(stack.cut(sl))
         # Return ct[n] for nodes on stack, else value higher than parents.
         return ct[n] if n in stack else t
 
     all(map(visit, range(len(ct))))
-    any(map(list.sort, ccs))
-    ccs.sort()
-    return ccs
+    any(map(list.sort, sccs))
+    sccs.sort()
+    return sccs
     # Example:
     # adj = [[], [3], [1], [9, 0, 8], [5], [4, 3], [6], [3], [5, 6], [5, 9]]
     #
