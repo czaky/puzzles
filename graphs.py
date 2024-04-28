@@ -6,7 +6,7 @@ from typing import Iterable, List, Set
 
 from sequences import find_if
 from sets import powerset
-from stack import CountedStack
+from stack import StackSet
 
 
 def breadth_first(adj: List[List[int]], start: int = 0) -> List[int]:
@@ -191,7 +191,7 @@ def strongly_connected_components(adj: List[List[int]]) -> List[List[int]]:
     # node of a SCC. Nodes on the stack form the SCC.
     #
     ct = [0] * len(adj)  # child/circle time
-    stack = CountedStack()  # SCC nodes on the stack of current DFS descend.
+    stack = StackSet()  # SCC nodes on the stack of current DFS descend.
     t = 0  # index time
     ccs = []  # result
 
