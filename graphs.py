@@ -211,15 +211,15 @@ def strongly_connected_components(adj: List[List[int]]) -> List[List[int]]:
             # stack, so those return higher values and are not considered.
             ct[n] = reduce(min, map(visit, adj[n]), vt)
 
-            # If we connected through a child tree-edge or a child back-edge
-            # to a node higher in the active stack, this means that the
-            # current node is not the root of the SCC. This can be determined
-            # by comparing the `vt` and `ct` timestamps.
+            # If we connected through a child back-edge
+            # to a node higher in the active stack, then the
+            # current node is not the root of the SCC. In this case `ct`
+            # will be lower than the `vt`.
+            #
+            # Otherwise, `n` is the root node of the SCC.
             if vt == ct[n]:
-                # `n` is the root node of the SCC.
                 # Pick up all the nodes relevant to this SCC
                 # from the stack up to the current node.
-                # Form the SCC and append it to the result list.
                 ccs.append(stack.cut(sl))
         # Return ct[n] for nodes on stack, else value higher than parents.
         return ct[n] if n in stack else t
