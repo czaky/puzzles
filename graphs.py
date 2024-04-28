@@ -151,16 +151,16 @@ def critical_connections(adj: List[List[int]]) -> List[List[int]]:
 
     # Depth first search to determine the parent of each node
     # and created the DFS-tree.
-    def visit(p, n, vt):
+    def visit(p, n, t):
         # Skip visited nodes.
         if not ct[n]:
-            ct[n] = vt  # Initialize the ct time.
+            ct[n] = t  # Initialize the ct time.
             # Descend recursively, skipping the parent.
-            descend = lambda c: visit(n, c, vt + 1) if c != p else vt
+            descend = lambda c: visit(n, c, t + 1) if c != p else t
             # Choose the minimum of the recursive connection times.
-            ct[n] = reduce(min, map(descend, adj[n]), vt)
+            ct[n] = reduce(min, map(descend, adj[n]), t)
             # Add all edges for which the child `ct` is larger than `vt`.
-            ccs.extend((min(n, c), max(n, c)) for c in adj[n] if vt < ct[c])
+            ccs.extend((min(n, c), max(n, c)) for c in adj[n] if t < ct[c])
         return ct[n]
 
     # Start search from the first node (== 0)
