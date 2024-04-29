@@ -122,7 +122,7 @@ def articulation_points(adj: List[List[int]]) -> List[int]:
     # Using a set as a parent node may be an AP
     # for multiple other nodes.
     # Root is an articulate point
-    # if it had mode than one child node.
+    # if it had more than one child node.
     aps = set([0] if root_kids > 1 else [])
     # process non root child nodes, bottom-up in DFS-tree order
     while s2:
