@@ -90,8 +90,58 @@ def circle_of_words(words: List[str]) -> bool:
 
 
 def articulation_points(adj: List[List[int]]) -> List[int]:
+    "Return graph articulation points."
+    # This is an iterative (non-recursive) version using two stacks.
+    # For the recursive version see below.
+    # Expects a strongly connected graph. `adj` contains symmetric edges.
+    vt = [0] * len(adj)  # visited time for each node in DFS-tree order
+    ct = vt[:]  # uplink min connection time
+    t = 0  # Tarjan's DFS node index
+    s1 = [(int(-1), int(0))]  # root node with -1 as parent
+    s2 = []  # second stack for non root child nodes
+
+    root_kids = -1  # used for the root only
+    while s1:
+        p, n = s1.pop()
+        if vt[n]:  # skip visited
+            continue
+        vt[n] = ct[n] = t = t + 1  # set the times
+        # We move the nodes to the second stack
+        # after they were popped out of the first
+        # to properly retain the parent relation,
+        # and preserve the bottom-up DFS-tree order.
+        if p > 0:  # non-root children
+            s2.append((p, n))
+        else:
+            # The root node and its DFS-tree are counted here.
+            root_kids += 1
+        for c in adj[n]:
+            if not vt[c]:  # skip visited - shortcut
+                s1.append((n, c))
+
+    # Using a set as a parent node may be an AP
+    # for multiple other nodes.
+    # Root is an articulate point
+    # if it had mode than one child node.
+    aps = set([0] if root_kids > 1 else [])
+    # process non root child nodes, bottom-up in DFS-tree order
+    while s2:
+        p, n = s2.pop()
+        # Use min vt for any tree- or back-edges (except parent)
+        ct[n] = reduce(min, (vt[c] for c in adj[n] if c != p), ct[n])
+        # Lower parent `ct`
+        ct[p] = min(ct[p], ct[n])
+        # If this node `ct` is higher than parent `vt`,
+        # then we were unable to connect to parent component
+        # using any other edge or node. Parent must be an AP.
+        if vt[p] <= ct[n]:
+            aps.add(p)
+    return sorted(aps)
+
+
+def articulation_points_recursive(adj: List[List[int]]) -> List[int]:
     "Return the articulation points for a graph defined by the `adj` list."
-    # This uses single pass Tarjan's Algorithm.
+    # This uses single pass Tarjan's recursive algorithm.
     vt = [0] * len(adj)  # visited time for each node in DFS-tree order
     ct = vt[:]  # circle time for the parent/root of the whole circle
     o = []
