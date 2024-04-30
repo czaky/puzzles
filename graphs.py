@@ -115,9 +115,7 @@ def articulation_points(adj: List[List[int]]) -> List[int]:
         else:
             # The root node and its DFS-tree are counted here.
             root_kids += 1
-        for c in adj[n]:
-            if not vt[c]:  # skip visited - shortcut
-                s1.append((n, c))
+        s1.extend((n, c) for c in adj[n] if not vt[c])
 
     # Using a set as a parent node may be an AP
     # for multiple other nodes.
@@ -221,6 +219,74 @@ def critical_connections(adj: List[List[int]]) -> List[List[int]]:
 
 
 def strongly_connected_components(adj: List[List[int]]) -> List[List[int]]:
+    """Return strongly connected components (SSCs) as a list of vertices.
+
+    Note that this algorithm only applies to directed graphs.
+    Args:
+        adj (List[List[int]]): Array of adjacent nodes `adj[i]` for node `i`.
+
+    Returns:
+        List[List[int]]: List of lists containing nodes of SSCs.
+    """
+    # This is an iterative implementation using two stacks and
+    # stack doubling approach to emulate recursive DFS descend.
+    #
+    # The Tarjan's idea is to do DFS on the graph noting the visit time
+    # (or index) of each node visited. This time is stored in `vt`.
+    #
+    # We also maintain another timestamp `ct` which is the minimum lowest
+    # time determined from the children. `ct` is originally equal to `vt`.
+    # The `ct` timestamp let's us determine if we connected to
+    # an active node in the current stack higher, and answer the
+    # question if we are the root of the current SCC.
+    #
+    # At the same time we maintain the stack of the nodes in current
+    # DFS descend. The stack is only unwound if we encounter a root
+    # node of a SCC. Nodes on the stack form the SCC.
+    #
+    ln = len(adj)
+    ct = [0] * ln  # child/circle/uplink connection time
+    vt = ct[:]  # first visit time
+    t = 0  # rolling index time
+    # Stack contains nodes that form the SCCs.
+    scc_stack = StackSet()
+    sccs = []  # result
+
+    for i, visited in enumerate(ct):
+        # Values on `s1` are encoded as negative numbers
+        # for the first visit of the node and as positive numbers
+        # for the second visit of the node.
+        dfs_stack = [] if visited else [i - ln]
+        while dfs_stack:  # the dfs_stack is used to simulate recursive DFS.
+            n = dfs_stack.pop()
+            if n >= 0 and n in scc_stack:
+                # Second occurrence of `n`.
+                # Minimize the `ct` based on kids on the active stack.
+                ct[n] = reduce(min, (ct[c] for c in adj[n] if c in scc_stack), ct[n])
+                # If we connected through a child back-edge
+                # to a node higher in the active stack, then the
+                # current node is not the root of the SCC. In this case `ct`
+                # will be lower than the `vt`.
+                #
+                # Otherwise, `n` is the root node of the SCC.
+                if vt[n] == ct[n]:
+                    sccs.append(scc_stack.cut(scc_stack.index(n)))
+                    sccs[-1].sort()
+            elif not ct[n]:
+                # First occurrence of `n`.
+                n += ln  # normalize as it is negative.
+                # Initialize the times.
+                vt[n] = ct[n] = t = t + 1
+                scc_stack.push(n)
+                # Put the node back on the dfs_stack.
+                dfs_stack.append(n)
+                # Add all the kids unvisited, yet.
+                dfs_stack.extend(c - ln for c in adj[n] if not ct[c])
+    sccs.sort()
+    return sccs
+
+
+def strongly_connected_components_recursive(adj: List[List[int]]) -> List[List[int]]:
     """Return strongly connected components (SSCs) as a list of vertices.
 
     Note that this algorithm only applies to directed graphs.
