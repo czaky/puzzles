@@ -5,7 +5,7 @@ from itertools import islice
 from typing import Any, Iterable, Iterator, List, Sequence, Set
 
 
-class StackSet(Sequence, Set):
+class IndexStack(Sequence, Set):
     """A set that is also a stack. Keeps track of elements' positions."""
 
     def __init__(self, iterable=()):
@@ -40,14 +40,19 @@ class StackSet(Sequence, Set):
             return removed
         return [][:]
 
+    def cut_from(self, n) -> list:
+        "Cut off the stack down from element `n`. Return removed ones."
+        i = self.pos.get(n)
+        return [] if i is None else self.cut(i)
+
     def clear(self):
         "Remove and return all elements from the stack-set."
         del self.stack[:]
         self.pos.clear()
 
-    def copy(self) -> "StackSet":
+    def copy(self) -> "IndexStack":
         "Return a shallow copy of the stack-set."
-        return StackSet(self.stack)
+        return IndexStack(self.stack)
 
     def count(self, value: object) -> int:
         "Return the count of `value` on the stack."
@@ -96,7 +101,7 @@ class StackSet(Sequence, Set):
         del self.stack[i]
 
     def __eq__(self, other: object) -> bool:
-        return isinstance(other, StackSet) and self.stack == other.stack
+        return isinstance(other, IndexStack) and self.stack == other.stack
 
 
 class CountedStack(Sequence):
