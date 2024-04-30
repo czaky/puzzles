@@ -69,31 +69,23 @@ def fruit_pickup_min_time_recursive(locs: List[int], types: List[int]) -> int:
     @lru_cache(None)
     def pick(i: int, lr: int):
         if i == n:
-            print(f"[{i}] ===> 0")
             return 0
         pp = tsort[i - 1][lr]
         mn, mx = tsort[i]
         if mx <= pp:
             # mn ... mx , pp
             # move all the way left (=0) to mn
-            print(f"[{i}] {pp} \t=> {mn} \t+{pp - mn}")
             return pp - mn + pick(i + 1, 0)
-        elif pp <= mn:
+        if pp <= mn:
             # pp, mn ... mx
             # move all the way right (=1) to mx
-            print(f"[{i}] {pp} \t=> {mx} \t+{mx - pp}")
             return mx - pp + pick(i + 1, 1)
-        else:
-            # mn, pp, mx
-            # move to mx then to mn (= 0)
-            opt1 = (mx - pp) + pick(i + 1, 0)
-            # move to mn then to mx (= 1)
-            opt2 = (pp - mn) + pick(i + 1, 1)
-            print(f"[{i}] opt1: {opt1}, opt2: {opt2}")
-            if opt1 < opt2:
-                print(f"[{i}] {pp} \t=> {mn}  \t+{mx - pp}+{mx - mn}")
-            else:
-                print(f"[{i}] {pp} \t=> {mx}  \t+{pp - mn}+{mx - mn}")
-            return min(opt1, opt2) + (mx - mn)
+
+        # mn, pp, mx
+        # move to mx then to mn (= 0)
+        opt1 = (mx - pp) + pick(i + 1, 0)
+        # move to mn then to mx (= 1)
+        opt2 = (pp - mn) + pick(i + 1, 1)
+        return min(opt1, opt2) + (mx - mn)
 
     return min(pick(1, 0), pick(1, 1))
