@@ -16,6 +16,17 @@ class ListNode(Iterable):
             yield n.data
             n = n.next
 
+    def __len__(self) -> int:
+        c = 1
+        n = self.next
+        while n:
+            c += 1
+            n = n.next
+        return c
+
+    def __bool__(self) -> bool:
+        return True
+
     def append(self, n: "Node"):
         "Append node `n` to this list."
         self.next = n
