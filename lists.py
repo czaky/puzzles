@@ -226,6 +226,37 @@ def swap_pairs(h: Node) -> Node:
     return h
 
 
+def add_lists(l1: Node, l2: Node) -> Node:
+    "Add two numbers represented as linked lists."
+    n1 = reverse(l1)
+    n2 = reverse(l2)
+
+    h = s = ListNode(0)
+
+    c = 0
+    while n1 or n2:
+        d = c
+        if n1:
+            d += n1.data
+            n1 = n1.next
+        if n2:
+            d += n2.data
+            n2 = n2.next
+        c = d // 10
+        s.next = ListNode(d % 10)
+        s = s.next
+
+    if c != 0:
+        s.next = ListNode(c)
+        s = s.next
+
+    s = reverse(h.next)
+    while s and s.data == 0:
+        s = s.next
+    h.next = None
+    return s or h
+
+
 def subtract_lists(l1: Node, l2: Node) -> Node:
     "Subtract the smaller from the larger list representing numbers."
     # This exercise uses Node traversal instead of simple arithmetic.
