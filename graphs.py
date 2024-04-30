@@ -271,7 +271,6 @@ def strongly_connected_components(adj: List[List[int]]) -> List[List[int]]:
                 # Otherwise, `n` is the root node of the SCC.
                 if vt[n] == ct[n]:
                     sccs.append(scc_stack.cut(scc_stack.index(n)))
-                    sccs[-1].sort()
             elif not ct[n]:
                 # First occurrence of `n`.
                 n += ln  # normalize as it is negative.
@@ -282,6 +281,8 @@ def strongly_connected_components(adj: List[List[int]]) -> List[List[int]]:
                 dfs_stack.append(n)
                 # Add all the kids unvisited, yet.
                 dfs_stack.extend(c - ln for c in adj[n] if not ct[c])
+
+    any(map(list.sort, sccs))
     sccs.sort()
     return sccs
 
@@ -322,7 +323,6 @@ def strongly_connected_components_recursive(adj: List[List[int]]) -> List[List[i
             # Preset the `ct` to the incremental time.
             ct[n] = vt = t = t + 1
             # Push the node onto the active stack.
-            sl = len(stack)
             stack.push(n)
             # For each child on the active stack,
             # we take the minimum `ct` and update the current `ct`.
@@ -339,7 +339,7 @@ def strongly_connected_components_recursive(adj: List[List[int]]) -> List[List[i
             if vt == ct[n]:
                 # Pick up all the nodes relevant to this SCC
                 # from the stack up to the current node.
-                sccs.append(stack.cut(sl))
+                sccs.append(stack.cut(stack.index(n)))
         # Return ct[n] for nodes on stack, else value higher than parents.
         return ct[n] if n in stack else t
 
