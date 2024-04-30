@@ -6,6 +6,8 @@ from functools import reduce
 from itertools import islice
 from typing import Deque, List, Optional, Tuple
 
+import lists
+
 
 class TreeNode:
     "Node of a binary tree."
@@ -425,6 +427,22 @@ def make(s: str, order="level", none: str = "N") -> Node:
 
     assert order in ("level", "pre", "pre")  # , "post", "in")
     return None
+
+
+def from_list(ln: lists.Node) -> Node:
+    "Create a balanced tree from a linked list starting at `ln`."
+
+    def tree(stop: int) -> Node:
+        if stop > 0:
+            nonlocal ln
+            left = tree(stop // 2)
+            tn = TreeNode(ln.data)
+            ln = ln.next
+            tn.left = left
+            tn.right = tree((stop - 1) // 2)
+            return tn
+
+    return tree(len(ln)) if ln else None
 
 
 def lvo(n: Node, nodes=False):

@@ -1,7 +1,9 @@
 """Test module for the tree based puzzles."""
 
-from typing import Optional, Iterable, Sequence
 import unittest
+from typing import Iterable, Optional, Sequence
+
+import lists as ll
 import trees as t
 
 
@@ -108,6 +110,11 @@ class TestTrees(unittest.TestCase):
         self.assertEqual("1 2 N 3 5 N N N 4 7 8 N N 9", r.serialize("pre"))
         self.assertEqual("((() 2 (5 3)) 1 ((8 7 9) 4))", r.serialize("in"))
         self.assertEqual("N N N 5 N 3 2 N N 8 N N 9 7 N 4 1", r.serialize("post"))
+
+    def test_from_list(self):
+        "Test `from_list` constructor."
+        r: t.Node = t.from_list(ll.make([2, 3, 4, 5, 6, 7]))
+        self.assertEqual("((2 3 4) 5 (6 7))", r.serialize("in"))
 
     def test_is_bst(self):
         "Test the `is_bst` function."
