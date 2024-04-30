@@ -5,8 +5,6 @@ from functools import lru_cache
 from itertools import accumulate, combinations
 from typing import List, Tuple
 
-import numpy as np
-
 import arrays
 
 
@@ -107,34 +105,6 @@ def sorted_median(m: List[List[int]]) -> int:
         else:
             l = x + 1
     return l
-
-
-def fib(n, m):
-    "Return `n`th Fibonacci number of the form: `(fib(n-1) + fib(n-2))%m`."
-    # Runs in O(log N)
-    mat = np.array([[1, 1], [1, 0]], dtype=int)
-    res = np.array([1, 0], dtype=int)
-    n -= 2
-    while n > 0:
-        if n & 1:
-            res = (res @ mat) % m
-        mat = (mat @ mat) % m
-        n >>= 1
-    return sum(res) % m
-
-
-def generic_fib(a, b, c, n, m):
-    "Return `n`th Fibonacci number of the form: `(a*f(n-1) + b*f(n-2) + c)%m`."
-    # Runs in O(log N)
-    mat = np.array([[a, b, c], [1, 0, 0], [0, 0, 1]], dtype=int)
-    res = np.array([1, 0, 0], dtype=int)
-    n -= 2
-    while n > 0:
-        if n & 1:
-            res = (res @ mat) % m
-        mat = (mat @ mat) % m
-        n >>= 1
-    return sum(res) % m
 
 
 def max_sum_rectangle(m: List[List[int]]) -> int:

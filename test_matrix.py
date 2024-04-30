@@ -37,20 +37,6 @@ class TestMatrixPuzzles(unittest.TestCase):
         self.assertEqual("A(B(CD))", m.optimum_brackets([5, 4, 3, 2, 1]))
         self.assertEqual("A(BC)D", m.optimum_brackets([4, 2, 3, 1, 3]))
 
-    def test_fib(self):
-        "Test `fib."
-        self.assertEqual(1, m.fib(0, 5))
-        self.assertEqual(1, m.fib(2, 5))
-        self.assertEqual(1, m.fib(1, 5))
-        self.assertEqual(2, m.fib(3, 5))
-        self.assertEqual(3, m.fib(4, 5))
-        self.assertEqual(0, m.fib(5, 5))
-        self.assertEqual(3, m.fib(6, 5))
-
-    def test_generic_fib(self):
-        "Test `generic_fib."
-        self.assertEqual(4, m.generic_fib(3, 3, 3, 3, 5))
-
     def test_max_sum_rectangle(self):
         "Test `max_sum_rectangle`."
         self.assertEqual(3, m.max_sum_rectangle([[1, 2]]))
