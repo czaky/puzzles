@@ -69,3 +69,19 @@ def largest_sum_cycle(edges: List[int]) -> int:
         return result
 
     return max(visit(i, 0) for i in range(len(edges)))
+
+
+def geek_cake_distribution(chunks: List[int], k: int) -> int:
+    "Divide the cake into k + 1 slices. Return the sweetness of the least sweet slice."
+
+    def slices(min_sweetness: int) -> int:
+        sc = 0  # slices-count
+        ss = 0  # slice-sweetness
+        for s in chunks:
+            ss += s
+            if ss >= min_sweetness:
+                sc += 1
+                ss = 0
+        return sc
+
+    return binary(lambda m: k > slices(m), min(chunks), sum(chunks), 0) or 0
