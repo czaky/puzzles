@@ -441,6 +441,7 @@ def from_list(ln: lists.Node) -> Node:
             tn.left = left
             tn.right = tree((stop - 1) // 2)
             return tn
+        return None
 
     return tree(len(ln)) if ln else None
 
