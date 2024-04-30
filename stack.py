@@ -6,23 +6,23 @@ from typing import Any, Iterable, Iterator, List, Sequence, Set
 
 
 class StackSet(Sequence, Set):
-    """A set that is also a stack."""
+    """A set that is also a stack. Keeps track of elements' positions."""
 
     def __init__(self, iterable=()):
         self.stack = list(iterable)
-        self.set = set(self.stack)
+        self.pos = {e: i + 1 for i, e in enumerate(self.stack)}
 
     def push(self, n):
         "Push `n` onto the stack adding it to the set if not present yet."
-        if n not in self.set:
+        if n not in self.pos:
+            self.pos[n] = len(self.stack)
             self.stack.append(n)
-            self.set.add(n)
 
     def pop(self, default=None) -> Any:
         "Pop the last element from the stack and remove it from the set."
         if self.stack:
             e = self.stack.pop()
-            self.set.remove(e)
+            del self.pos[e]
             return e
         return default
 
@@ -35,14 +35,15 @@ class StackSet(Sequence, Set):
         if len(self.stack) >= size:
             removed = self.stack[size:]
             del self.stack[size:]
-            self.set.difference_update(removed)
+            for e in removed:
+                del self.pos[e]
             return removed
         return [][:]
 
     def clear(self):
         "Remove and return all elements from the stack-set."
         del self.stack[:]
-        self.set.clear()
+        self.pos.clear()
 
     def copy(self) -> "StackSet":
         "Return a shallow copy of the stack-set."
@@ -50,13 +51,11 @@ class StackSet(Sequence, Set):
 
     def count(self, value: object) -> int:
         "Return the count of `value` on the stack."
-        return 1 if value in self.set else 0
+        return 1 if value in self.pos else 0
 
     def index(self, value: object, start: int = 0, stop=None) -> int:
         "Index of the first occurence of `value` in the stack."
-        if value in self.set:
-            return self.stack.index(value, start, stop)
-        raise ValueError(f"Element '{value}' not found in StackSet.")
+        return self.pos[value]
 
     def reverse(self):
         "Reverse the stack."
@@ -74,7 +73,7 @@ class StackSet(Sequence, Set):
         return len(self.stack) > 0
 
     def __contains__(self, value: object) -> bool:
-        return value in self.set
+        return value in self.pos
 
     def __str__(self) -> str:
         return str(self.stack)
@@ -90,9 +89,10 @@ class StackSet(Sequence, Set):
 
     def __delitem__(self, i: int | slice):
         if isinstance(i, slice):
-            self.set.difference_update(self.stack[i])
+            for e in self.stack[i]:
+                del self.pos[e]
         elif isinstance(i, int):
-            self.set.discard(self.stack[i])
+            del self.pos[self.stack[i]]
         del self.stack[i]
 
     def __eq__(self, other: object) -> bool:
