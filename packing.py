@@ -7,7 +7,8 @@ from typing import List
 def walls_coloring(cost: List[List[int]]) -> int:
     """Given N walls, paint those using K colors, reducing cost from the `cost` matrix.
 
-    The restriction here is that two walls next to each other need to be painted differently.
+    The restriction here is that two walls next to each other
+    have to be painted differently.
 
     Args:
         cost (List[List[int]]): NxK cost matrix

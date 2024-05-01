@@ -1,7 +1,7 @@
 """Test module for the schedule or interval based puzzles."""
 
-from typing import List
 from functools import reduce
+from typing import List
 
 
 def meetings(start: List[int], end: List[int]) -> int:

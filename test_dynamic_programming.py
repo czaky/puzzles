@@ -1,6 +1,7 @@
 """Test module for the dynamic programming related puzzles."""
 
 import unittest
+
 import dynamic_programming as dp
 
 

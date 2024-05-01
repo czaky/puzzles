@@ -1,7 +1,8 @@
 """Test module for the linked lists puzzles."""
 
-from typing import Optional, Iterable, Sequence
 import unittest
+from typing import Iterable, Optional, Sequence
+
 import lists as ll
 
 

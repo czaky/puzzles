@@ -1,6 +1,7 @@
 """Test module for the schedule or interval based puzzles."""
 
 import unittest
+
 import schedule as s
 
 

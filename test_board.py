@@ -1,6 +1,7 @@
 """Test module for the board puzzles."""
 
 import unittest
+
 import board as b
 
 

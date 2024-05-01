@@ -9,14 +9,17 @@ def expression_tuple(*args):
 
 
 def parse_binop_expression(tokens: Sequence, make: Callable = expression_tuple):
-    """Parses an arithmetic expression consisting of literals and operators from '+-*/()'.
+    """Parses an arithmetic expression consisting of literals or symbols and operators.
+
+    The literals and symbols are single letters or numbers and
+    the operators are from the '+-*/()' set.
 
     The parsed expression is represented as triples of the form:
         (<operator>, <arg1>, <arg2>)
     Alternatively, a `make` function can be passed in for alternative representation.
 
     Parameters:
-        tokens (Sequence): tokenized expression consisting of operators '+-*/()' and literals.
+        tokens (Sequence): tokenized expression.
         make (Callable): generates binary expression objects out of arguments.
 
     Returns:

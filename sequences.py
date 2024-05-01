@@ -1,9 +1,9 @@
 "Utilities handling iterators."
 
-from itertools import islice, starmap
-from typing import Callable, Iterable, Sequence
 from functools import reduce
+from itertools import islice, starmap
 from operator import indexOf
+from typing import Callable, Iterable, Sequence
 
 from functional import bit
 
@@ -55,8 +55,8 @@ def find_if(
         it (Iterable): iterable to search for an object.
         key (Callable, optional): function applied to each object.
         start (int, optional): start position on the iterable. Defaults to 0.
-        end (None | int, optional): end position (exclusive) on the iterable. Defaults to None.
-        default (_type_, optional): Value returned if nothing else is found. Defaults to None.
+        end (None | int, optional): end position (exclusive) on the iterable.
+        default (_type_, optional): Value returned if nothing else is found.
 
     Returns:
         Object: the object fulfilling the `predicate` or `default` if not found.
@@ -78,9 +78,9 @@ def count(
     Args:
         x (Object): the object to count.
         iterable (Iterable): iterable providing the objects.
-        key (None | Callable, optional): applied on items from the `iterable`. Defaults to None.
+        key (None | Callable, optional): applied on items from the `iterable`.
         start (int, optional): start position on the iterable. Defaults to 0.
-        end (None | int, optional): end position (exclusive) on the iterable. Defaults to None.
+        end (None | int, optional): end position (exclusive) on the iterable.
 
     Returns:
         int: _description_

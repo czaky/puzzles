@@ -1,7 +1,7 @@
 """Module for algorithms and puzzles that do not fit to other categories."""
 
 from functools import lru_cache
-from typing import List
+from typing import Dict, List
 
 
 def fruit_pickup_min_time(locations: List[int], types: List[int]) -> int:
@@ -17,7 +17,7 @@ def fruit_pickup_min_time(locations: List[int], types: List[int]) -> int:
     Returns:
         int: minimum number of steps to pickup the fruits.
     """
-    tl = {0: (int(0), int(0)), (max(types) + 1): (0, 0)}
+    tl: Dict[int, List[int]] = {0: [0, 0], (max(types) + 1): [0, 0]}
     for t, loc in zip(types, locations):
         tnl, txl = tl.get(t) or tl.setdefault(t, [loc, loc])
         tl[t][:] = min(loc, tnl), max(loc, txl)

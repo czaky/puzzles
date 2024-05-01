@@ -106,7 +106,7 @@ class TreeNode:
 
         Args:
             order (str, optional): One of: "level" (default), "pre", "in", "post"
-            nodes (bool, optional): If true, yields nodes instead of values. Defaults to False.
+            nodes (bool, optional): If true, yields nodes instead of values.
         """
         if order == "level":
             yield from self.level_order(nodes)
@@ -254,7 +254,7 @@ class TreeNode:
             lr (str): brackets used for in-order representation. Default "()".
 
         Returns:
-            str: a space separated representation of the tree with 'N' for missing nodes.
+            str: a representation of the tree with 'N' for missing nodes.
         """
         if order == "level":
             return self.serialize_level_order(none)

@@ -131,7 +131,8 @@ def zero_sum_sub_matrix(m: List[List[int]]) -> List[List[int]]:
     "Return the largest sub-matrix of `m` that sums to zero."
     # The idea is borrowed from the 2D Kadane's algorithm.
     # We use top, bottom cutoff to accumulate the values for the columns into an array.
-    # Then we apply the `zero_sum_sub_array` above to determine the left and right brackets.
+    # Then we apply the `zero_sum_sub_array` above
+    # to determine the left and right brackets.
     # Using top, bottom, left, and right we calculate the area,
     # which is used to determine the largest matrix.
     r, c = len(m), len(m[0])

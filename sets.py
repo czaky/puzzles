@@ -1,8 +1,8 @@
 "Code related to sets and puzzels on sets."
 
-from typing import List, Sequence
-from operator import itemgetter
 from itertools import combinations
+from operator import itemgetter
+from typing import List, Sequence
 
 
 class Disjoint:
@@ -46,7 +46,7 @@ class Disjoint:
 
 
 def weighted_paths_in_tree(edges: List[Sequence[int]], queries: List[int]) -> List[int]:
-    """Given a list of weighted edges and a list of queries, return count of paths for each query.
+    """Given a list of weighted edges and a list of queries, return counts of paths.
 
     Each query specifies the maximum weight of edges that can count in paths.
     Connections between edges count un-directed as only once.

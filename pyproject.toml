@@ -3,14 +3,10 @@ line-length = 88
 target-version = "py38"
 
 [tool.ruff.lint]
-# 1. Enable flake8-bugbear (`B`) rules, in addition to the defaults.
 select = ["E", "F", "UP", "B", "Q", "SIM", "I"]
 
-# 2. Avoid enforcing line-length violations
 ignore = ["E741", "E731"]
-
 exclude = ["builtins.pyi"]
-
 
 [tool.mypy]
 disable_error_code = [

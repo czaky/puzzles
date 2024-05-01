@@ -17,8 +17,8 @@ def splint(s: str) -> List[int]:
 class StringView(Sequence):
     "View into a string."
 
-    M = int(10**9 + 9)  # 30 bits
-    P = int(29791)
+    M = 10**9 + 9  # 30 bits
+    P = 29791
 
     def __init__(self, s: str, start: int, stop: int, h=None):
         self.s = s
@@ -34,7 +34,7 @@ class StringView(Sequence):
 
     def expandable(self) -> bool:
         "True if the view can be expanded."
-        return 0 < self.start and self.stop < len(self.s)
+        return self.start > 0 and self.stop < len(self.s)
 
     def expand(self) -> "StringView":
         """Expand the view to the left and to the right.

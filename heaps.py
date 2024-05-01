@@ -1,6 +1,6 @@
 "Module contains puzzles related to heaps."
 
-from heapq import heapify, heappush, heappushpop, heappop
+from heapq import heapify, heappop, heappush, heappushpop
 from typing import List, Tuple
 
 
@@ -27,7 +27,7 @@ def smallest_intersecting_range(arrays: List[List[int]]) -> Tuple[int, int]:
     # allow us to determine the running smallest range.
 
     # Start with the lowest number in each array.
-    h = [(a[0], a, int(1)) for a in arrays]
+    h: List[Tuple[int, list, int]] = [(a[0], a, 1) for a in arrays]
     heapify(h)  # make a min-heap out of the values
 
     # The minimum is always h[0], but we need to track the heap max.

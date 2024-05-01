@@ -3,7 +3,7 @@
 import math
 from heapq import heappop, heappush
 from itertools import product
-from typing import List
+from typing import List, Set, Tuple
 
 import mathematics
 
@@ -12,10 +12,10 @@ def dijkstra(grid: List[List[int]]) -> int:
     "Search a path in an NxN grid of costs per cell. Return overall cost."
     n = len(grid)
     goal = (n - 1, n - 1)
-    start = (int(0), int(0))
-    v = set([start])
+    start = (0, 0)
+    v: Set[Tuple[int, int]] = set([start])
     dc = grid[0][0]
-    q = [(dc, start)]
+    q: List[Tuple[int, Tuple[int, int]]] = [(dc, start)]
     while q:
         d, p = heappop(q)
         if p == goal:
@@ -35,7 +35,7 @@ def a_star(grid: List[List[int]]) -> int:
     n = len(grid)
     g = n - 1
     d: float = grid[0][0]
-    q = [(float(d + g + g), int(0), int(0))]
+    q: List[Tuple[float, int, int]] = [(float(d + g + g), 0, 0)]
     m = [[math.inf] * n for _ in grid]
     m[0][0] = d
     while q:
@@ -66,7 +66,9 @@ def connect_islands(grid: List[List[int]]) -> int:
     adjacency = ((-1, 0), (0, -1), (1, 0), (0, 1))
 
     def visit(x: int, y: int) -> int:
-        "Visit the island at `(x, y)` and mark it with the island with a counter. Return size."
+        # Visit the island at `(x, y)` and
+        # mark it with the island with a counter.
+        # Returns size.
         if g(x, y) != 1:
             return 0
         # Mark the grid with the index of the island.

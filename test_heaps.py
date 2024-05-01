@@ -1,6 +1,7 @@
 """Test module for the heap related puzzles."""
 
 import unittest
+
 import heaps as h
 
 

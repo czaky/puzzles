@@ -660,7 +660,7 @@ def out_ouf_there_number(a: List[int]) -> int:
     a.sort()
     # Looking for the lowest number between `a[i]...a[i+1]` that cannot be represented
     # by numbers `a[0] ... a[i]` in any way as a sum.
-    # For `a[i]` such number must be larger than `a[i]` and any other number added before.
+    # For `a[i]` such number must be larger than `a[i]` and others number added before.
     # Even if there were gaps in the array up to `a[i]`, those have been filled already
     # by another sum of previous numbers.
     # Thus we compare the array itself and the cumulative value starting at 1.
@@ -779,7 +779,7 @@ def max_profit(prices: List[int], k: int) -> int:
             #    sell = max(p[d] - p[buy] + profit[buy][t - 1] for buy in range(d))
             # where `sell` can be transformed to:
             #    sell  = p[d] + max(profit[buy][t - 1] - p[buy] for buy in range(d)))
-            # The second term is the max achievable balance so far from `t-1` transactions.
+            # The second term is the max achievable balance from `t-1` transactions.
             # The `balance` term can be computed as:
             #    balance[d][t] = max(balance[d-1][t], profit[d][t-1] - p[d])
             # If we abandon the day `d` in the memo tables:
@@ -791,7 +791,7 @@ def max_profit(prices: List[int], k: int) -> int:
 
 
 def count_changes_to_make_strict(a: list) -> int:
-    "How many numbers need to be changed in `a` to make the sequence strictly increasing."
+    "Count numbers to be changed in `a` to make the sequence strictly increasing."
     # The idea is to find the longest (non-continuous) increasing subsequence (LIS).
     # The remaining numbers in `a` will need to be changed.
     # In order to do this, we have to make sure that all the remaining numbers
@@ -808,13 +808,14 @@ def count_changes_to_make_strict(a: list) -> int:
     # with the interval long enough `(j - i)` to accommodate integer numbers in-between.
     increasing = lambda i, j: a[i] < a[j] and (j - i) <= (a[j] - a[i])
 
-    # Return the number of characters left after removing the longest increasing subsequence.
+    # Number of characters left after removing the longest increasing subsequence.
     return len(a) - max(map(lis, range(len(a))), default=0)
 
 
 def repeated_numbers(a: List[int]) -> tuple:
-    "Return repeated numbers from `a` which contains number in the range 1 .. `n` + repeats."
-    # The idea is to mark the numbers as repeated by flipping the sign at their index position.
+    "Return repeated numbers from `a`."
+    # The idea is to mark the numbers as repeated
+    # by flipping the sign at their index position.
     # Since the values may become negative, we need to use `abs`
 
     def repeated(e):

@@ -1,6 +1,7 @@
 """Test module for the brackets puzzles."""
 
 import unittest
+
 import brackets as b
 
 

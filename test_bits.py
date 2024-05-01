@@ -1,6 +1,7 @@
 """Test module for the bits based puzzles."""
 
 import unittest
+
 import bits as b
 
 

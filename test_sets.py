@@ -1,6 +1,7 @@
 """Test module for the graph based puzzles."""
 
 import unittest
+
 import sets as s
 
 

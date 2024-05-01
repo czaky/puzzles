@@ -1,12 +1,14 @@
 """Module for the dynamic programming related puzzles."""
 
-from typing import List, Tuple
 from functools import lru_cache
+from typing import List, Tuple
 
 
 def stack_boxes(dims: List[Tuple[int, int, int]]) -> int:
-    "Stack boxes of dimensions `dims` and return max-height. Box dimensions may repeat and rotate."
-    # The boxes can be rotated, so each of the dimensions can be used twice in the stack.
+    """Stack boxes of dimensions `dims` and return the max possible height.
+    Box dimensions may repeat and rotate."""
+    # The boxes can be rotated, so each of the dimensions
+    # can be used twice in the stack.
     # The idea is to first generate a list of all possible rotated dimensions
     # and then sort it in descending order based on the width x depth.
     # We then run through the stack and for each box, we try to stack

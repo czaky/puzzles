@@ -2,7 +2,7 @@
 
 from collections import deque
 from functools import reduce
-from typing import Iterable, List, Set
+from typing import Iterable, List, Set, Tuple
 
 from sequences import find_if
 from sets import powerset
@@ -97,7 +97,7 @@ def articulation_points(adj: List[List[int]]) -> List[int]:
     vt = [0] * len(adj)  # visited time for each node in DFS-tree order
     ct = vt[:]  # uplink min connection time
     t = 0  # Tarjan's DFS node index
-    s1 = [(int(-1), int(0))]  # root node with -1 as parent
+    s1: List[Tuple[int, int]] = [(-1, 0)]  # root node with -1 as parent
     s2 = []  # second stack for non root child nodes
 
     root_kids = -1  # used for the root only
@@ -410,7 +410,7 @@ def vertex_cover_optimal(edges: List[List[int]]) -> Set[int]:
 
 
 def word_distance(words: Iterable[str], start: str, end: str) -> int:
-    "Return the minimum distance from `start` to `end` when using `words` intermediate steps."
+    "Return the min distance from `start` to `end` using `words` as intermediate steps."
     # The idea is to use breadth first search BFS and keep track of the depth.
     # The first time we hit the target end word, we return the depth calculated so far.
     if start == end:
@@ -439,7 +439,7 @@ def word_distance(words: Iterable[str], start: str, end: str) -> int:
 
 
 def word_paths(words: Iterable[str], start: str, end: str) -> List[List[str]]:
-    "Return the minimum paths from `start` to `end` when using `words` intermediate steps."
+    "Return the min paths from `start` to `end` using `words` as intermediate steps."
     # The idea is to treat the words list as an adjacency list of a graph
     # While traversing the, the set of adjacent words is reduced to keep track of
     # visited nodes in breadth first search (BFS) and to remove any cycles.

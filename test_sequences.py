@@ -1,6 +1,7 @@
 "Test for utilities from 'sequences.py`."
 
 import unittest
+
 import sequences as s
 
 
