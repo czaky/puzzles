@@ -40,7 +40,7 @@ class ListNode(Sequence):
     def __getitem__(self, i) -> Sequence:
         n = self
         if isinstance(i, int):
-            while n and i > 0:
+            while n is not None and i > 0:
                 n = n.next
                 i -= 1
             if n is None:
@@ -48,12 +48,12 @@ class ListNode(Sequence):
             return n.data
         if isinstance(i, slice):
             start, stop, step = i.indices(len(self))
-            if step >= 0:
-                return list(islice(self, start, stop, step))
-            n = (start - 1 - stop) // -step
-            start, stop, step = start + n * step, start - step, -step
-            result = list(islice(self, start, stop, step))
-            result.reverse()
+            if step < 0:
+                ln = len(range(start, stop, step)) - 1
+                start, stop = start + ln * step, start - step
+            result = list(islice(self, start, stop, abs(step)))
+            if step < 0:
+                result.reverse()
             return result
         assert isinstance(i, slice | int)
         return []
