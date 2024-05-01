@@ -1,9 +1,11 @@
 """Puzzles around linked lists."""
 
+from collections.abc import Sequence
+from itertools import islice
 from typing import Any, Iterable, Optional
 
 
-class ListNode(Iterable):
+class ListNode(Sequence):
     "Linked List Node."
 
     def __init__(self, data):
@@ -12,20 +14,49 @@ class ListNode(Iterable):
 
     def __iter__(self):
         n = self
-        while n:
+        while n is not None:
             yield n.data
             n = n.next
 
+    def __bool__(self) -> bool:
+        return True
+
     def __len__(self) -> int:
+        n: Node = self.next
         c = 1
-        n = self.next
-        while n:
+        while n is not None:
             c += 1
             n = n.next
         return c
 
-    def __bool__(self) -> bool:
-        return True
+    def __contains__(self, x: object) -> bool:
+        n = self
+        while n is not None:
+            if n.data == x:
+                return True
+            n = n.next
+        return False
+
+    def __getitem__(self, i) -> Sequence:
+        n = self
+        if isinstance(i, int):
+            while n and i > 0:
+                n = n.next
+                i -= 1
+            if n is None:
+                raise IndexError("list index out of range")
+            return n.data
+        if isinstance(i, slice):
+            start, stop, step = i.indices(len(self))
+            if step >= 0:
+                return list(islice(self, start, stop, step))
+            n = (start - 1 - stop) // -step
+            start, stop, step = start + n * step, start - step, -step
+            result = list(islice(self, start, stop, step))
+            result.reverse()
+            return result
+        assert isinstance(i, slice | int)
+        return []
 
     def append(self, n: "Node"):
         "Append node `n` to this list."
@@ -359,3 +390,44 @@ def merge_sort(h: Node) -> Node:
         n.append(h2)
 
     return h
+
+
+def rearrange_alphabet_list(h: Node) -> Node:
+    """
+    Given a linked list containing letters of Latin alphabet,
+    rearrange the nodes so that all the vowels come first.
+    Otherwise, honor the order of the elements.
+
+    Parameters
+    ----------
+    h : Node
+        Linked list containing the Latin characters.
+
+    Returns
+    -------
+    Node
+        Same list just with all the vowels first.
+    """
+    vh = v = None
+    ch = c = None
+    n = h
+    while n:
+        if n.data in "aeiou":
+            if v:
+                v.next = n
+                v = n
+            else:
+                vh = v = n
+        else:
+            if c:
+                c.next = n
+                c = n
+            else:
+                ch = c = n
+        n = n.next
+    if c:
+        c.next = None
+    if vh:
+        v.next = ch
+        return vh
+    return ch
