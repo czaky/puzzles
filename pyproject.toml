@@ -6,7 +6,7 @@ target-version = "py38"
 select = ["E", "F", "UP", "B", "Q", "SIM", "I"]
 
 ignore = ["E741", "E731"]
-exclude = ["builtins.pyi"]
+exclude = ["builtins.pyi", "**/*.pyi"]
 
 [tool.mypy]
 disable_error_code = [
