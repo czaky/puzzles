@@ -17,3 +17,13 @@ class TestDP(unittest.TestCase):
         self.assertEqual(
             60, dp.stack_boxes([(4, 6, 7), (1, 2, 3), (4, 5, 6), (10, 12, 32)])
         )
+
+    def test_prime_product_subset_count(self):
+        "Test `prime_product_subset_count`."
+        self.assertEqual(0, dp.prime_product_subset_count([]))
+        self.assertEqual(0, dp.prime_product_subset_count([1]))
+        self.assertEqual(1, dp.prime_product_subset_count([2]))
+        self.assertEqual(2, dp.prime_product_subset_count([1, 2]))
+        self.assertEqual(4, dp.prime_product_subset_count([10, 4, 1, 4, 10]))
+        self.assertEqual(5, dp.prime_product_subset_count([2, 2, 3]))
+        self.assertEqual(6, dp.prime_product_subset_count([1, 2, 3, 4]))
