@@ -429,6 +429,38 @@ def make(s: str, order="level", none: str = "N") -> Node:
     return None
 
 
+def inorder_postorder_tangle(inorder: list, post: list) -> Node:
+    """
+    Reconstruct a binary tree from its inorder and postorder serialization.
+
+    Parameters
+    ----------
+    inorder : list
+        Elements serialized using in-order DFS.
+    post : list
+        Elements serialized using post-order DFS.
+
+    Returns
+    -------
+    Node
+        The root of the deserialized tree.
+    """
+    # Make the index lookup: O(1)
+    idx = {v: i for i, v in enumerate(inorder)}
+
+    def r(i: int, j: int):
+        if i < j:
+            # We can just eat the post-order array here.
+            n = TreeNode(post[-1])
+            m = idx[post.pop()]
+            # The right arm comes first in reversed post-order.
+            n.right = r(m + 1, j)
+            n.left = r(i, m)
+            return n
+
+    return r(0, len(inorder))
+
+
 def from_list(ln: lists.Node) -> Node:
     "Create a balanced tree from a linked list starting at `ln`."
 

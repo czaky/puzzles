@@ -38,6 +38,22 @@ class TestTrees(unittest.TestCase):
         self.assertEqual("1 2 3", str(r))
         self.assertEqual([1, 2, 3], seq(r))
 
+    def test_inorder_postorder_tangle(self):
+        "Test `inorder_postorder_tangle`."
+        r = t.inorder_postorder_tangle(
+            [4, 8, 2, 5, 1, 6, 3, 7], [8, 4, 5, 2, 6, 7, 3, 1]
+        )
+        #    _1_
+        #   /   \
+        #  _2   3
+        # /  \ / \
+        # 4  5 6 7
+        #  \
+        #  8
+        self.assertEqual("(((() 4 8) 2 5) 1 (6 3 7))", r.serialize("in"))
+        self.assertEqual([4, 8, 2, 5, 1, 6, 3, 7], seq(r.inorder()))
+        self.assertEqual([8, 4, 5, 2, 6, 7, 3, 1], seq(r.postorder()))
+
     def test_serialize(self):
         "Test `serialize`."
         r: t.Node = t.make("5 3 2 N N 4 N N 7 6", "pre")
