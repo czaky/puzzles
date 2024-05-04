@@ -38,7 +38,6 @@ def stack_boxes(dims: List[Tuple[int, int, int]]) -> int:
 
 
 PRIMES_10 = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
-PRIMES_10_BITS = 1 << len(PRIMES_10)
 PRIMES_10_MASKS = [
     (i % 4 and i % 9 and i % 25)
     and sum(1 << j for j, p in enumerate(PRIMES_10) if not i % p)
