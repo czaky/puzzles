@@ -53,7 +53,7 @@ def prime_product_subset_count(a: List[int], mod: int = 10**9 + 7) -> int:
     Parameters
     ----------
     a : List[int]
-        A list of numbers from 1 to 30 (inclusive)
+        A list of (repeated) numbers from 1 to 30 (inclusive)
     mod : int
         A modulo value. Defaults to: 10**9 + 7
 
