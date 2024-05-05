@@ -8,6 +8,7 @@ from functools import lru_cache
 
 def stack_boxes(dims: list[tuple[int, int, int]]) -> int:
     """Stack boxes of dimensions `dims` and return the max possible height.
+
     Box dimensions may repeat and rotate.
     """
     # The boxes can be rotated, so each of the dimensions
@@ -48,8 +49,10 @@ PRIMES_10_MASKS = [
 
 
 def prime_product_subset_count(a: list[int], mod: int = 10**9 + 7) -> int:
-    """Given array `a` count the number of subsets of `a`,
-    for which the product consist of distinct primes from 2 to 29.
+    """Count the number of subsets of `a` with distinct primes product.
+
+    Count the number of subsets for which the product can be represented
+    as product of distinct primes from 2 to 29.
 
     Parameters
     ----------

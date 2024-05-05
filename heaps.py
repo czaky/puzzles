@@ -7,6 +7,7 @@ from heapq import heapify, heappop, heappush, heappushpop
 
 def connect_ropes_cost(a: list[int]) -> int:
     """Connect ropes of lengths in `a` into single one reducing the cost.
+
     Cost of connecting two ropes is equal to the sum of their lengths.
     """
     heapify(a)

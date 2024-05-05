@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections import deque
 from functools import reduce
-from typing import Iterable
+from typing import Any, Iterable
 
 from sequences import find_if
 from sets import powerset
@@ -61,7 +61,7 @@ def topological_order(vertexes: Iterable, edges: dict) -> Iterable:
     s = []
     v = set()
 
-    def sort(n) -> None:
+    def sort(n: Any) -> None:
         if n not in v:
             v.add(n)
             any(map(sort, edges.get(n, [])))
@@ -72,7 +72,7 @@ def topological_order(vertexes: Iterable, edges: dict) -> Iterable:
 
 
 def circle_of_words(words: list[str]) -> bool:
-    """True if `words` can make a circle if connected by the same letter."""
+    """Return true if `words` can make a circle if connected by the same letter."""
     # Euler circle problem.
     #   Words are edges.
     #   Number of inbound and outbound edges need to be equal.
@@ -148,7 +148,7 @@ def articulation_points_recursive(adj: list[list[int]]) -> list[int]:
 
     # Depth first search to determine the parent of each node
     # and created the DFS-tree.
-    def dfs(p, n, t) -> None:
+    def dfs(p: int, n: int, t: int) -> None:
         vt[n] = ct[n] = t  # set the times
         # art - boolean indicating if `n` is an articulate point.
         # kids - number of kids reached from this node first.
@@ -201,7 +201,7 @@ def critical_connections(adj: list[list[int]]) -> list[list[int]]:
 
     # Depth first search to determine the parent of each node
     # and created the DFS-tree.
-    def visit(p, n, t):
+    def visit(p: int, n: int, t: int) -> int:
         # Skip visited nodes.
         if not ct[n]:
             ct[n] = t  # Initialize the ct time.
@@ -326,7 +326,7 @@ def strongly_connected_components_recursive(adj: list[list[int]]) -> list[list[i
     sccs = []  # result
 
     def visit(n: int) -> int:
-        """Returns the circle-time for nodes on the stack or index time otherwise."""
+        """Return the circle-time for nodes on the stack or index time otherwise."""
         # skip for visited nodes.
         if not ct[n]:
             nonlocal t
@@ -420,7 +420,7 @@ def vertex_cover_optimal(edges: list[list[int]]) -> set[int]:
 
 
 def word_distance(words: Iterable[str], start: str, end: str) -> int:
-    """Return the min distance from `start` to `end` using `words` as intermediate steps."""
+    """Return the min distance from `start` to `end` using `words` as steps."""
     # The idea is to use breadth first search BFS and keep track of the depth.
     # The first time we hit the target end word, we return the depth calculated so far.
     if start == end:
@@ -449,7 +449,7 @@ def word_distance(words: Iterable[str], start: str, end: str) -> int:
 
 
 def word_paths(words: Iterable[str], start: str, end: str) -> list[list[str]]:
-    """Return the min paths from `start` to `end` using `words` as intermediate steps."""
+    """Return the min paths from `start` to `end` using `words` as steps."""
     # The idea is to treat the words list as an adjacency list of a graph
     # While traversing the, the set of adjacent words is reduced to keep track of
     # visited nodes in breadth first search (BFS) and to remove any cycles.

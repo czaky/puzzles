@@ -19,7 +19,7 @@ def fib_by_rounding(n: int) -> int:
 
 
 def fib(n: int, m: int = 10**9 + 7) -> int:
-    """Fibonacci number: `(fib(n-1) + fib(n-2)) % m`."""
+    """Return fibonacci number: `(fib(n-1) + fib(n-2)) % m`."""  # noqa: D402
     # Runs in O(log N)
     mat = np.array([[1, 1], [1, 0]], dtype=int)
     res = np.array([1, 0], dtype=int)
@@ -47,7 +47,7 @@ def generic_fib(a: int, b: int, c: int, n: int, m: int = 10**9 + 7) -> int:
 
 
 def separated_ones(n: int, m: int = 10**9 + 7) -> int:
-    """Number of binary strings of length `n` with 1s separted by 0s.
+    """Return number of binary strings of length `n` with 1s separted by 0s.
 
     Args:
     ----

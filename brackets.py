@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Iterable, Iterator
+
 OPENING = {
     "(": ")",
     "[": "]",
@@ -31,12 +33,12 @@ def balanced(s: str) -> bool:
     return not stack
 
 
-def max_valid_len(s: str):
+def max_valid_len(s: str) -> int:
     """Maximum length of a valid parentheses sub-string."""
     # O(1) space; O(N) time
     n = len(s)
 
-    def scan(a):
+    def scan(a: Iterable) -> Iterator:
         ac = i = 0
         for j, e in enumerate(a):
             ac = max(ac, 0) + e

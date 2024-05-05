@@ -41,7 +41,7 @@ class BitTrie:
         self.root = [0, 0]
         self.bits = bits
 
-    def insert(self, num: int, data=0) -> None:
+    def insert(self, num: int, data: int = 0) -> None:
         """Insert `num` into the trie. Extra `data` can be stored with it."""
         n: list = self.root
         for i in reversed(range(self.bits)):
@@ -51,7 +51,7 @@ class BitTrie:
         # Store the `num` in the last node.
         n[:] = [num, data]
 
-    def nearest(self, num: int):
+    def nearest(self, num: int) -> list[int]:
         """Find the nearest number to `num`. Returns the number plus additional data."""
         n: list = self.root
         for i in reversed(range(self.bits)):

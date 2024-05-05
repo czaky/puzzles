@@ -141,7 +141,7 @@ def sudoku(grid: list[list[int]]) -> bool:
     rows, cols, boxes = [0] * 9, [0] * 9, [0] * 9
     left = []
 
-    def flip(n, i, j) -> None:
+    def flip(n: int, i: int, j: int) -> None:
         v = 1 << n
         rows[i] ^= v
         cols[j] ^= v
@@ -150,7 +150,7 @@ def sudoku(grid: list[list[int]]) -> bool:
     for i, j in product(range(9), repeat=2):
         flip(grid[i][j] or left.append((i, j)) or 0, i, j)
 
-    def solve(pos) -> bool:
+    def solve(pos: int) -> bool:
         if pos < 0:
             return True
         i, j = left[pos]
@@ -170,7 +170,7 @@ def sudoku(grid: list[list[int]]) -> bool:
 
 
 def grid_path_count(m: int, n: int, mod: int = 10**9 + 7) -> int:
-    """Return number of paths that can be taken from (m,n) down to (0,0) modulo `mod`."""
+    """Return number of paths from (m,n) down to (0,0) modulo `mod`."""
     # Runs in O(m+n) due to factorial.
     # This is a combinatorial problem.
     # We have `m+n` steps of left or down.
@@ -185,6 +185,7 @@ def grid_path_count(m: int, n: int, mod: int = 10**9 + 7) -> int:
 
 def min_points_traverse(grid: list[list[int]]) -> int:
     """Traverse a `grid` with positive and negative numbers representing returns.
+
     What is the necessary minimum of initial points if the sum of returns
     on the grid traversal path cannot fall below 1?
     The path on the grid can only move down and to the right.
@@ -218,12 +219,13 @@ def min_points_traverse(grid: list[list[int]]) -> int:
     return v[0]
 
 
-def grid_exit(g):
-    """Return the exit position from the grid following those rules:
+def grid_exit(g: list[list[int]]) -> tuple[int, int]:
+    """Following the rules, return the exit position from the grid.
 
-    1. You start at (0, 0) in the right direction.
-    2. If visiting a grid cell with 0, continue in the current direction.
-    3. If visiting cell with 1, rotate right, and reset the cell to 0.
+    Rules:
+        1. You start at (0, 0) in the right direction.
+        2. If visiting a grid cell with 0, continue in the current direction.
+        3. If visiting cell with 1, rotate right, and reset the cell to 0.
     """
     # The only trick used here are the complex numbers.
     n, m = len(g), len(g[0])

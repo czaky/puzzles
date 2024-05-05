@@ -6,8 +6,7 @@ from functools import lru_cache
 
 
 def fruit_pickup_min_time(locations: list[int], types: list[int]) -> int:
-    """Given an array of `locations` and fruit `types`, compute the shortest
-    path to pickup fruits starting at lowest type up to the hightest.
+    """Compute the shortest path to pickup fruits of increasing type from locations.
 
     `locations` and `types` have the same length.
 
@@ -49,14 +48,13 @@ def fruit_pickup_min_time(locations: list[int], types: list[int]) -> int:
 
 
 def fruit_pickup_min_time_recursive(locs: list[int], types: list[int]) -> int:
-    """Given an array of `locations` and fruit `types`, compute the shortest
-    path to pickup fruits starting at lowest type up to the hightest.
+    """Compute the shortest path to pickup fruits of increasing type from locations.
 
     `locations` and `types` have the same length.
 
     Args:
     ----
-        locations (List[int]): locations of the fruits
+        locs (List[int]): locations of the fruits
         types (List[int]): type of the fruit
 
     Returns:
@@ -73,7 +71,7 @@ def fruit_pickup_min_time_recursive(locs: list[int], types: list[int]) -> int:
     n = len(tsort)
 
     @lru_cache(None)
-    def pick(i: int, lr: int):
+    def pick(i: int, lr: int) -> int:
         if i == n:
             return 0
         pp = tsort[i - 1][lr]
