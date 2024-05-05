@@ -4,24 +4,32 @@ from __future__ import annotations
 
 from itertools import combinations
 from operator import itemgetter
-from typing import Sequence
+from typing import Iterable, Iterator, Sequence
 
 
 class Disjoint:
     """Create a disjoint set using find-union algorithms."""
 
     def __init__(self, size: int) -> None:
+        """Initialize the disjoint set to the `size` of nodes specified.
+
+        Parameters
+        ----------
+        size : int
+            the number of nodes in the set
+
+        """
         self.parent = list(range(size))
         self.rank = [0] * size
         self.size = [1] * size
 
-    def find(self, i) -> int:
+    def find(self, i: int) -> int:
         """Find the representative node for `i`."""
         while i != self.parent[i]:
             i, self.parent[i] = self.parent[i], self.parent[self.parent[i]]
         return i
 
-    def union(self, i, j) -> int:
+    def union(self, i: int, j: int) -> int:
         """Merge both subsets containing nodes `i` and `j`."""
         x = self.find(i)
         y = self.find(j)
@@ -99,8 +107,8 @@ def weighted_paths_in_tree(edges: list[Sequence[int]], queries: list[int]) -> li
     return results
 
 
-def powerset(iterable):
-    """powerset([1,2,3]) → () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)."""
+def powerset(iterable: Iterable) -> Iterator:
+    """powerset([1,2,3]) → () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)."""  # noqa: D402
     s = set(iterable)
     for size in range(len(s)):
         yield from map(set, combinations(s, size))
