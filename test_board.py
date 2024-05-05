@@ -9,9 +9,9 @@ class TestBoardGames(unittest.TestCase):
     """Test class for the board games puzzles."""
 
     def test_queens(self):
-        "Test the `queens` puzzle."
-        self.assertEqual([], b.queens(0))
-        self.assertEqual([[1]], b.queens(1))
-        self.assertEqual([], b.queens(2))
-        self.assertEqual([], b.queens(3))
-        self.assertEqual([[3, 1, 4, 2], [2, 4, 1, 3]], b.queens(4))
+        """Test the `queens` puzzle."""
+        assert [] == b.queens(0)
+        assert [[1]] == b.queens(1)
+        assert [] == b.queens(2)
+        assert [] == b.queens(3)
+        assert [[3, 1, 4, 2], [2, 4, 1, 3]] == b.queens(4)

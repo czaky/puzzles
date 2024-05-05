@@ -1,5 +1,7 @@
 """Puzzles related to brackets, parentheses, and braces."""
 
+from __future__ import annotations
+
 OPENING = {
     "(": ")",
     "[": "]",
@@ -17,7 +19,7 @@ OPENING = {
 
 
 def balanced(s: str) -> bool:
-    "Check if string `s` brackets are balanced in O(N) space."
+    """Check if string `s` brackets are balanced in O(N) space."""
     stack = []
     for c in s:
         if stack and c == stack[-1]:
@@ -30,7 +32,7 @@ def balanced(s: str) -> bool:
 
 
 def max_valid_len(s: str):
-    "Maximum length of a valid parentheses sub-string."
+    """Maximum length of a valid parentheses sub-string."""
     # O(1) space; O(N) time
     n = len(s)
 
@@ -44,6 +46,6 @@ def max_valid_len(s: str):
         yield 0
 
     return max(
-        max(scan(map(lambda c: 2 * int(c == "(") - 1, s))),
-        max(scan(map(lambda c: 2 * int(c == ")") - 1, reversed(s)))),
+        *scan(2 * int(c == "(") - 1 for c in s),
+        *scan(2 * int(c == ")") - 1 for c in reversed(s)),
     )

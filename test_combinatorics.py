@@ -9,16 +9,16 @@ class TestMatrixPuzzles(unittest.TestCase):
     """Test class for the matrix related puzzles."""
 
     def test_fib(self):
-        "Test `fib."
-        self.assertEqual(1, c.fib(0, 5))
-        self.assertEqual(1, c.fib(2, 5))
-        self.assertEqual(1, c.fib(1, 5))
-        self.assertEqual(2, c.fib(3, 5))
-        self.assertEqual(3, c.fib(4, 5))
-        self.assertEqual(0, c.fib(5, 5))
-        self.assertEqual(3, c.fib(6, 5))
-        self.assertEqual(687995182, c.fib(100))
+        """Test `fib."""
+        assert c.fib(0, 5) == 1
+        assert c.fib(2, 5) == 1
+        assert c.fib(1, 5) == 1
+        assert c.fib(3, 5) == 2
+        assert c.fib(4, 5) == 3
+        assert c.fib(5, 5) == 0
+        assert c.fib(6, 5) == 3
+        assert c.fib(100) == 687995182
 
     def test_generic_fib(self):
-        "Test `generic_fib."
-        self.assertEqual(4, c.generic_fib(3, 3, 3, 3, 5))
+        """Test `generic_fib."""
+        assert c.generic_fib(3, 3, 3, 3, 5) == 4

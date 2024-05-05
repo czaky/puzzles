@@ -1,25 +1,27 @@
 """Puzzles related to stacks."""
 
+from __future__ import annotations
+
 from collections import Counter
 from itertools import islice
-from typing import Any, Iterable, Iterator, List, Sequence, Set
+from typing import Any, Iterable, Iterator, Sequence, Set
 
 
 class IndexStack(Sequence, Set):
     """A set that is also a stack. Keeps track of elements' positions."""
 
-    def __init__(self, iterable=()):
+    def __init__(self, iterable=()) -> None:
         self.stack = list(iterable)
         self.pos = {e: i + 1 for i, e in enumerate(self.stack)}
 
-    def push(self, n):
-        "Push `n` onto the stack adding it to the set if not present yet."
+    def push(self, n) -> None:
+        """Push `n` onto the stack adding it to the set if not present yet."""
         if n not in self.pos:
             self.pos[n] = len(self.stack)
             self.stack.append(n)
 
     def pop(self, default=None) -> Any:
-        "Pop the last element from the stack and remove it from the set."
+        """Pop the last element from the stack and remove it from the set."""
         if self.stack:
             e = self.stack.pop()
             del self.pos[e]
@@ -27,11 +29,11 @@ class IndexStack(Sequence, Set):
         return default
 
     def top(self, default=None) -> Any:
-        "Return the top element of the stack."
+        """Return the top element of the stack."""
         return self.stack[-1] if self.stack else default
 
     def cut(self, size: int = 0) -> list:
-        "Cut the stack to size. Return removed elements."
+        """Cut the stack to size. Return removed elements."""
         if len(self.stack) >= size:
             removed = self.stack[size:]
             del self.stack[size:]
@@ -41,33 +43,33 @@ class IndexStack(Sequence, Set):
         return [][:]
 
     def cut_from(self, n) -> list:
-        "Cut off the stack down from element `n`. Return removed ones."
+        """Cut off the stack down from element `n`. Return removed ones."""
         i = self.pos.get(n)
         return [] if i is None else self.cut(i)
 
-    def clear(self):
-        "Remove and return all elements from the stack-set."
+    def clear(self) -> None:
+        """Remove and return all elements from the stack-set."""
         del self.stack[:]
         self.pos.clear()
 
-    def copy(self) -> "IndexStack":
-        "Return a shallow copy of the stack-set."
+    def copy(self) -> IndexStack:
+        """Return a shallow copy of the stack-set."""
         return IndexStack(self.stack)
 
     def count(self, value: object) -> int:
-        "Return the count of `value` on the stack."
+        """Return the count of `value` on the stack."""
         return 1 if value in self.pos else 0
 
-    def index(self, value: object, start: int = 0, stop=None) -> int:
-        "Index of the first occurence of `value` in the stack."
+    def index(self, value: object, start: int = 0, stop=None) -> int:  # noqa: ARG002
+        """Index of the first occurence of `value` in the stack."""
         return self.pos[value]
 
-    def reverse(self):
-        "Reverse the stack."
+    def reverse(self) -> None:
+        """Reverse the stack."""
         self.stack.reverse()
 
-    def extend(self, iterable: Iterable):
-        "Extend the stack with an `iterable`."
+    def extend(self, iterable: Iterable) -> None:
+        """Extend the stack with an `iterable`."""
         for e in iterable:
             self.push(e)
 
@@ -92,7 +94,7 @@ class IndexStack(Sequence, Set):
     def __getitem__(self, i: int | slice):
         return self.stack[i]
 
-    def __delitem__(self, i: int | slice):
+    def __delitem__(self, i: int | slice) -> None:
         if isinstance(i, slice):
             for e in self.stack[i]:
                 del self.pos[e]
@@ -107,17 +109,17 @@ class IndexStack(Sequence, Set):
 class CountedStack(Sequence):
     """Implementation of a stack, that counts its elements."""
 
-    def __init__(self, it: Iterable = ()):
+    def __init__(self, it: Iterable = ()) -> None:
         self.stack = list(it)
         self.counter = Counter(self.stack)
 
-    def push(self, e: Any):
-        "Push element `e` onto the stack."
+    def push(self, e: Any) -> None:
+        """Push element `e` onto the stack."""
         self.stack.append(e)
         self.counter[e] += 1
 
     def pop(self, default=None) -> Any:
-        "Pop element `e` from the stack."
+        """Pop element `e` from the stack."""
         if self.stack:
             e = self.stack.pop()
             self.counter[e] -= 1
@@ -127,11 +129,11 @@ class CountedStack(Sequence):
         return default
 
     def top(self, default=None) -> Any:
-        "Return the top element of the stack."
+        """Return the top element of the stack."""
         return self.stack[-1] if self.stack else default
 
-    def cut(self, size) -> List[Any]:
-        "Shrink the stack to `size`. Returns cut elements in FIFO order."
+    def cut(self, size) -> list[Any]:
+        """Shrink the stack to `size`. Returns cut elements in FIFO order."""
         if len(self.stack) > size:
             removed = self.stack[size:]
             del self.stack[size:]
@@ -142,31 +144,32 @@ class CountedStack(Sequence):
             return removed
         return [][:]
 
-    def clear(self):
-        "Remove and return all elements from the stack-set."
+    def clear(self) -> None:
+        """Remove and return all elements from the stack-set."""
         del self.stack[:]
         self.counter.clear()
 
-    def copy(self) -> "CountedStack":
-        "Return a shallow copy of the stack-set."
+    def copy(self) -> CountedStack:
+        """Return a shallow copy of the stack-set."""
         return CountedStack(self.stack)
 
     def count(self, value: object) -> int:
-        "Return the count of `value` on the stack."
+        """Return the count of `value` on the stack."""
         return self.counter[value]
 
     def index(self, value: object, start: int = 0, stop=None) -> int:
-        "Index of the first occurrence of `value` in the stack."
+        """Index of the first occurrence of `value` in the stack."""
         if self.counter[value] > 0:
             return self.stack.index(value, start, stop)
-        raise ValueError(f"Element '{value}' not found in CountedStack.")
+        msg = f"Element '{value}' not found in CountedStack."
+        raise ValueError(msg)
 
-    def reverse(self):
-        "Reverse the stack."
+    def reverse(self) -> None:
+        """Reverse the stack."""
         self.stack.reverse()
 
-    def extend(self, iterable: Iterable):
-        "Extend the stack with an `iterable`."
+    def extend(self, iterable: Iterable) -> None:
+        """Extend the stack with an `iterable`."""
         sl = len(self.stack)
         self.stack.extend(iterable)
         self.counter.update(islice(self.stack, sl, None))
@@ -189,7 +192,7 @@ class CountedStack(Sequence):
     def __getitem__(self, i: int | slice):
         return self.stack[i]
 
-    def __delitem__(self, i: int | slice):
+    def __delitem__(self, i: int | slice) -> None:
         if isinstance(i, slice):
             self.counter.subtract(self.stack[i])
             for e in self.stack[i]:

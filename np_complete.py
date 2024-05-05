@@ -1,11 +1,10 @@
 """NP-complete problems and puzzles."""
 
-from typing import List, Tuple
+from __future__ import annotations
 
 
-def min_diff_set_partition(a: List[int]) -> Tuple[int, int]:
-    """
-    Partition the array `a` into two (almost) equal sets.
+def min_diff_set_partition(a: list[int]) -> tuple[int, int]:
+    """Partition the array `a` into two (almost) equal sets.
 
     Return the two sums of the sets with the smallest difference between.
     The subsets need to differ in size by at most one element.
@@ -19,6 +18,7 @@ def min_diff_set_partition(a: List[int]) -> Tuple[int, int]:
     -------
     Tuple[int, int]
         The sums of the two subsets with the smallest difference between.
+
     """
 
     def f(i, j, x, y):

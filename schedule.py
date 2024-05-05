@@ -1,12 +1,12 @@
 """Test module for the schedule or interval based puzzles."""
 
+from __future__ import annotations
+
 from functools import reduce
-from typing import List
 
 
-def meetings(start: List[int], end: List[int]) -> int:
-    """
-    Returns maximum number of meetings that can be scheduled
+def meetings(start: list[int], end: list[int]) -> int:
+    """Returns maximum number of meetings that can be scheduled
     in one room based on the meetings' `start` and `end` times.
     """
     return reduce(

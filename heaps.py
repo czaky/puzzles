@@ -1,12 +1,12 @@
-"Module contains puzzles related to heaps."
+"""Module contains puzzles related to heaps."""
+
+from __future__ import annotations
 
 from heapq import heapify, heappop, heappush, heappushpop
-from typing import List, Tuple
 
 
-def connect_ropes_cost(a: List[int]) -> int:
-    """
-    Connect ropes of lengths in `a` into single one reducing the cost.
+def connect_ropes_cost(a: list[int]) -> int:
+    """Connect ropes of lengths in `a` into single one reducing the cost.
     Cost of connecting two ropes is equal to the sum of their lengths.
     """
     heapify(a)
@@ -18,8 +18,8 @@ def connect_ropes_cost(a: List[int]) -> int:
     return c
 
 
-def smallest_intersecting_range(arrays: List[List[int]]) -> Tuple[int, int]:
-    "Return the smallest range that intersects the sorted `arrays`."
+def smallest_intersecting_range(arrays: list[list[int]]) -> tuple[int, int]:
+    """Return the smallest range that intersects the sorted `arrays`."""
     # The idea is to keep track of numbers from the `arrays` on the heap,
     # always increasing the lowest number with the next on the same array.
     # This approach tries to minimize the span of numbers on the heap.
@@ -27,7 +27,7 @@ def smallest_intersecting_range(arrays: List[List[int]]) -> Tuple[int, int]:
     # allow us to determine the running smallest range.
 
     # Start with the lowest number in each array.
-    h: List[Tuple[int, list, int]] = [(a[0], a, 1) for a in arrays]
+    h: list[tuple[int, list, int]] = [(a[0], a, 1) for a in arrays]
     heapify(h)  # make a min-heap out of the values
 
     # The minimum is always h[0], but we need to track the heap max.

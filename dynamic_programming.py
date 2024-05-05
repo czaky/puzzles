@@ -1,13 +1,15 @@
 """Module for the dynamic programming related puzzles."""
 
+from __future__ import annotations
+
 from collections import Counter
 from functools import lru_cache
-from typing import List, Tuple
 
 
-def stack_boxes(dims: List[Tuple[int, int, int]]) -> int:
+def stack_boxes(dims: list[tuple[int, int, int]]) -> int:
     """Stack boxes of dimensions `dims` and return the max possible height.
-    Box dimensions may repeat and rotate."""
+    Box dimensions may repeat and rotate.
+    """
     # The boxes can be rotated, so each of the dimensions
     # can be used twice in the stack.
     # The idea is to first generate a list of all possible rotated dimensions
@@ -45,9 +47,8 @@ PRIMES_10_MASKS = [
 ]
 
 
-def prime_product_subset_count(a: List[int], mod: int = 10**9 + 7) -> int:
-    """
-    Given array `a` count the number of subsets of `a`,
+def prime_product_subset_count(a: list[int], mod: int = 10**9 + 7) -> int:
+    """Given array `a` count the number of subsets of `a`,
     for which the product consist of distinct primes from 2 to 29.
 
     Parameters
@@ -61,6 +62,7 @@ def prime_product_subset_count(a: List[int], mod: int = 10**9 + 7) -> int:
     -------
     int
         Number of subsets with product of only distinct primes.
+
     """
     # The idea is to use DP, computing the counts of subsets,
     # for each prime combination represented by a bit mask.

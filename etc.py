@@ -1,23 +1,27 @@
 """Module for algorithms and puzzles that do not fit to other categories."""
 
+from __future__ import annotations
+
 from functools import lru_cache
-from typing import Dict, List
 
 
-def fruit_pickup_min_time(locations: List[int], types: List[int]) -> int:
+def fruit_pickup_min_time(locations: list[int], types: list[int]) -> int:
     """Given an array of `locations` and fruit `types`, compute the shortest
     path to pickup fruits starting at lowest type up to the hightest.
 
     `locations` and `types` have the same length.
 
     Args:
+    ----
         locations (List[int]): locations of the fruits
         types (List[int]): type of the fruit
 
     Returns:
+    -------
         int: minimum number of steps to pickup the fruits.
+
     """
-    tl: Dict[int, List[int]] = {0: [0, 0], (max(types) + 1): [0, 0]}
+    tl: dict[int, list[int]] = {0: [0, 0], (max(types) + 1): [0, 0]}
     for t, loc in zip(types, locations):
         tnl, txl = tl.get(t) or tl.setdefault(t, [loc, loc])
         tl[t][:] = min(loc, tnl), max(loc, txl)
@@ -44,18 +48,21 @@ def fruit_pickup_min_time(locations: List[int], types: List[int]) -> int:
     return min(pick)
 
 
-def fruit_pickup_min_time_recursive(locs: List[int], types: List[int]) -> int:
+def fruit_pickup_min_time_recursive(locs: list[int], types: list[int]) -> int:
     """Given an array of `locations` and fruit `types`, compute the shortest
     path to pickup fruits starting at lowest type up to the hightest.
 
     `locations` and `types` have the same length.
 
     Args:
+    ----
         locations (List[int]): locations of the fruits
         types (List[int]): type of the fruit
 
     Returns:
+    -------
         int: minimum number of steps to pickup the fruits.
+
     """
     tl = {}
     for i, loc in enumerate(locs):
@@ -64,7 +71,6 @@ def fruit_pickup_min_time_recursive(locs: List[int], types: List[int]) -> int:
         tl[t] = (min(loc, tnl), max(loc, txl))
     tsort = [(0, 0)] + [tl[i] for i in sorted(tl)] + [(0, 0)]
     n = len(tsort)
-    print(tsort)
 
     @lru_cache(None)
     def pick(i: int, lr: int):

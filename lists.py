@@ -1,14 +1,16 @@
 """Puzzles around linked lists."""
 
+from __future__ import annotations
+
 from collections.abc import Sequence
 from itertools import islice
 from typing import Any, Iterable, Optional
 
 
 class ListNode(Sequence):
-    "Linked List Node."
+    """Linked List Node."""
 
-    def __init__(self, data):
+    def __init__(self, data) -> None:
         self.data = data
         self.next: Node = None
 
@@ -44,7 +46,8 @@ class ListNode(Sequence):
                 n = n.next
                 i -= 1
             if n is None:
-                raise IndexError("list index out of range")
+                msg = "list index out of range"
+                raise IndexError(msg)
             return n.data
         if isinstance(i, slice):
             start, stop, step = i.indices(len(self))
@@ -58,8 +61,8 @@ class ListNode(Sequence):
         assert isinstance(i, slice | int)
         return []
 
-    def append(self, n: "Node"):
-        "Append node `n` to this list."
+    def append(self, n: Node) -> None:
+        """Append node `n` to this list."""
         self.next = n
 
 
@@ -67,8 +70,7 @@ Node = Optional[ListNode]
 
 
 def make(l: Iterable[Any], loop: int = -1) -> Node:
-    """
-    Make a linked list out of normal Python list `l`.
+    """Make a linked list out of normal Python list `l`.
 
     If `loop` >= 0, add a loop at the end pointing to node `loop`.
     """
@@ -87,23 +89,23 @@ def make(l: Iterable[Any], loop: int = -1) -> Node:
     return h.next
 
 
-def pprint(head: Node):
-    "Pretty print the linked list starting at `head`."
+def pprint(head: Node) -> None:
+    """Pretty print the linked list starting at `head`."""
     if not head:
         return
     n = head
     v = set()
     while n:
         if n in v:
-            print(f"-> {n.data}")
+            print(f"-> {n.data}")  # noqa: T201
             break
         v.add(n)
-        print(n.data, end=" ")
+        print(n.data, end=" ")  # noqa: T201
         n = n.next
 
 
 def middle(head: Node) -> Node:
-    "Return the middle node of the list starting with `head`."
+    """Return the middle node of the list starting with `head`."""
     slow = fast = head
     while fast and fast.next:
         fast = fast.next.next
@@ -112,7 +114,7 @@ def middle(head: Node) -> Node:
 
 
 def delete_middle(head: Node) -> Node:
-    "Delete the middle from the list starting at `head`."
+    """Delete the middle from the list starting at `head`."""
     slow = fast = head
     prev = None
     while fast and fast.next:
@@ -126,8 +128,7 @@ def delete_middle(head: Node) -> Node:
 
 
 def nth(head: Node, n: int) -> Node:
-    """
-    Return nth node from the linked list starting at `head`.
+    """Return nth node from the linked list starting at `head`.
 
     If n is negative, returns the nth node from the end of the list.
     """
@@ -150,7 +151,7 @@ def nth(head: Node, n: int) -> Node:
 
 
 def insert_sorted(head: Node, value: int) -> Node:
-    "Insert `value` into list starting at `head`. Return new head."
+    """Insert `value` into list starting at `head`. Return new head."""
     nn = ListNode(value)
     if not head or head.data > value:
         nn.next = head
@@ -164,7 +165,7 @@ def insert_sorted(head: Node, value: int) -> Node:
 
 
 def reverse(head: Node) -> Node:
-    "Reverse a linked starting at `head`."
+    """Reverse a linked starting at `head`."""
     prev = None
     while head:
         prev, head.next, head = head, prev, head.next
@@ -172,7 +173,7 @@ def reverse(head: Node) -> Node:
 
 
 def dedup(head: Node) -> Node:
-    "Remove nodes with duplicate values in the linked list."
+    """Remove nodes with duplicate values in the linked list."""
     s = set()
     n = head
     while n:
@@ -183,15 +184,15 @@ def dedup(head: Node) -> Node:
     return head
 
 
-def delete_node(n: Node):
-    "Remove node without reference to `head`."
+def delete_node(n: Node) -> None:
+    """Remove node without reference to `head`."""
     assert n.next
     n.data = n.next.data
     n.next = n.next.next
 
 
 def remove_smaller_nodes_left(h: Node) -> Node:
-    "Remove all nodes from list `h` smaller than any node to the right."
+    """Remove all nodes from list `h` smaller than any node to the right."""
     # Runs in-place at O(N).
     rev = reverse(h)
     mx = 0
@@ -205,7 +206,7 @@ def remove_smaller_nodes_left(h: Node) -> Node:
 
 
 def sorted_intersection(a: Node, b: Node) -> Node:
-    "Intersection of two sorted lists `a` and `b`."
+    """Intersection of two sorted lists `a` and `b`."""
     nh = nn = ListNode(0)
     while a and b:
         diff = a.data - b.data
@@ -219,7 +220,7 @@ def sorted_intersection(a: Node, b: Node) -> Node:
 
 
 def loop_length(head: Node) -> int:
-    "Count nodes in a loop. Return 0 if none."
+    """Count nodes in a loop. Return 0 if none."""
     # detect loop
     slow = head
     fast = head
@@ -242,7 +243,7 @@ def loop_length(head: Node) -> int:
 
 
 def swap_pairs(h: Node) -> Node:
-    "Swap pairs of nodes in the `h` list."
+    """Swap pairs of nodes in the `h` list."""
     if not h or not h.next:
         return h
     n = h
@@ -269,7 +270,7 @@ def swap_pairs(h: Node) -> Node:
 
 
 def add_lists(l1: Node, l2: Node) -> Node:
-    "Add two numbers represented as linked lists."
+    """Add two numbers represented as linked lists."""
     n1 = reverse(l1)
     n2 = reverse(l2)
 
@@ -300,11 +301,11 @@ def add_lists(l1: Node, l2: Node) -> Node:
 
 
 def subtract_lists(l1: Node, l2: Node) -> Node:
-    "Subtract the smaller from the larger list representing numbers."
+    """Subtract the smaller from the larger list representing numbers."""
     # This exercise uses Node traversal instead of simple arithmetic.
 
     def compare(l1: Node, l2: Node) -> int:
-        "Determine longest/largest list."
+        """Determine longest/largest list."""
         h1, h2 = l1, l2
         while h1 and h2:
             h1, h2 = h1.next, h2.next
@@ -323,7 +324,7 @@ def subtract_lists(l1: Node, l2: Node) -> Node:
         return 0
 
     def trim(l: Node) -> Node:
-        "Skip leading zeros."
+        """Skip leading zeros."""
         while l and l.data == 0:
             l = l.next
         return l
@@ -353,7 +354,7 @@ def subtract_lists(l1: Node, l2: Node) -> Node:
 
 
 def merge_sort(h: Node) -> Node:
-    "Merge sort a linked list by editing the pointers."
+    """Merge sort a linked list by editing the pointers."""
     if h is None or h.next is None:
         return h
     # split
@@ -393,8 +394,7 @@ def merge_sort(h: Node) -> Node:
 
 
 def rearrange_alphabet_list(h: Node) -> Node:
-    """
-    Given a linked list containing letters of Latin alphabet,
+    """Given a linked list containing letters of Latin alphabet,
     rearrange the nodes so that all the vowels come first.
     Otherwise, honor the order of the elements.
 
@@ -407,6 +407,7 @@ def rearrange_alphabet_list(h: Node) -> Node:
     -------
     Node
         Same list just with all the vowels first.
+
     """
     vh = v = None
     ch = c = None
@@ -418,12 +419,11 @@ def rearrange_alphabet_list(h: Node) -> Node:
                 v = n
             else:
                 vh = v = n
+        elif c:
+            c.next = n
+            c = n
         else:
-            if c:
-                c.next = n
-                c = n
-            else:
-                ch = c = n
+            ch = c = n
         n = n.next
     if c:
         c.next = None

@@ -9,313 +9,309 @@ class TestStrings(unittest.TestCase):
     """Test class for the string puzzles."""
 
     def test_reverse_words(self):
-        "Test the `reverse_words` function."
-        self.assertEqual("", s.reverse_words(""))
-        self.assertEqual("jello", s.reverse_words("jello"))
-        self.assertEqual("world sunny hello", s.reverse_words("hello sunny world"))
-        self.assertEqual("fun-much-so", s.reverse_words("so-much-fun", "-"))
+        """Test the `reverse_words` function."""
+        assert s.reverse_words("") == ""
+        assert s.reverse_words("jello") == "jello"
+        assert s.reverse_words("hello sunny world") == "world sunny hello"
+        assert s.reverse_words("so-much-fun", "-") == "fun-much-so"
 
     def test_palindrome(self):
-        "Test the `palindrome` function."
-        self.assertTrue(s.palindrome("a"))
-        self.assertTrue(s.palindrome("aa"))
-        self.assertTrue(s.palindrome("aba"))
-        self.assertTrue(s.palindrome("abba"))
+        """Test the `palindrome` function."""
+        assert s.palindrome("a")
+        assert s.palindrome("aa")
+        assert s.palindrome("aba")
+        assert s.palindrome("abba")
 
-        self.assertFalse(s.palindrome("abc"))
-        self.assertFalse(s.palindrome("ab"))
+        assert not s.palindrome("abc")
+        assert not s.palindrome("ab")
 
     def test_isomorphic(self):
-        "Test the `isomorphic` function."
-        self.assertTrue(s.isomorphic("aba", "xyx"))
-        self.assertTrue(s.isomorphic("aa", "bb"))
+        """Test the `isomorphic` function."""
+        assert s.isomorphic("aba", "xyx")
+        assert s.isomorphic("aa", "bb")
 
-        self.assertFalse(s.isomorphic("abb", "xxy"))
-        self.assertFalse(s.isomorphic("aba", "xxy"))
+        assert not s.isomorphic("abb", "xxy")
+        assert not s.isomorphic("aba", "xxy")
 
     def test_common_prefix(self):
-        "Test the `common_prefix` function."
-        self.assertEqual("", s.common_prefix([]))
-        self.assertEqual("abc", s.common_prefix(["abc"]))
-        self.assertEqual("a", s.common_prefix(["a", "ab", "abc"]))
-        self.assertEqual("a", s.common_prefix(["abc", "ab", "a"]))
-        self.assertEqual("abc", s.common_prefix(["abc", "abc", "abc"]))
-        self.assertEqual("ab", s.common_prefix(["abd", "abc", "abc"]))
-        self.assertEqual("a", s.common_prefix(["abc", "abc", "aec"]))
+        """Test the `common_prefix` function."""
+        assert s.common_prefix([]) == ""
+        assert s.common_prefix(["abc"]) == "abc"
+        assert s.common_prefix(["a", "ab", "abc"]) == "a"
+        assert s.common_prefix(["abc", "ab", "a"]) == "a"
+        assert s.common_prefix(["abc", "abc", "abc"]) == "abc"
+        assert s.common_prefix(["abd", "abc", "abc"]) == "ab"
+        assert s.common_prefix(["abc", "abc", "aec"]) == "a"
 
     def test_equal_rotated(self):
-        "Test the `equal_rotated` function."
-        self.assertTrue(s.equal_rotated("a", "a", 0))
-        self.assertTrue(s.equal_rotated("a", "a", 1))
-        self.assertTrue(s.equal_rotated("a", "a", 2))
-        self.assertTrue(s.equal_rotated("ab", "ba", 1))
-        self.assertTrue(s.equal_rotated("aba", "aab", 2))
-        self.assertTrue(s.equal_rotated("abba", "baab", 2))
+        """Test the `equal_rotated` function."""
+        assert s.equal_rotated("a", "a", 0)
+        assert s.equal_rotated("a", "a", 1)
+        assert s.equal_rotated("a", "a", 2)
+        assert s.equal_rotated("ab", "ba", 1)
+        assert s.equal_rotated("aba", "aab", 2)
+        assert s.equal_rotated("abba", "baab", 2)
 
-        self.assertFalse(s.equal_rotated("abc", "abc", 1))
-        self.assertFalse(s.equal_rotated("ab", "ab", 1))
+        assert not s.equal_rotated("abc", "abc", 1)
+        assert not s.equal_rotated("ab", "ab", 1)
 
     def test_first_unique(self):
-        "Test the `first_unique` function."
-        self.assertEqual("h", s.first_unique("hallo"))
-        self.assertEqual("$", s.first_unique("abba"))
-        self.assertEqual("u", s.first_unique("babassus"))
+        """Test the `first_unique` function."""
+        assert s.first_unique("hallo") == "h"
+        assert s.first_unique("abba") == "$"
+        assert s.first_unique("babassus") == "u"
 
     def test_roman_to_decimal(self):
-        "Test the `roman_to_decimal` function."
-        self.assertEqual(5, s.roman_to_decimal("V"))
-        self.assertEqual(4, s.roman_to_decimal("IV"))
-        self.assertEqual(1519, s.roman_to_decimal("MDXIX"))
+        """Test the `roman_to_decimal` function."""
+        assert s.roman_to_decimal("V") == 5
+        assert s.roman_to_decimal("IV") == 4
+        assert s.roman_to_decimal("MDXIX") == 1519
 
     def test_max_distinct_char_substring(self):
-        "Test the `max_distinct_char_substring` function."
-        self.assertEqual(1, s.max_distinct_char_substring("aa"))
-        self.assertEqual(3, s.max_distinct_char_substring("hallo"))
-        self.assertEqual(2, s.max_distinct_char_substring("abba"))
-        self.assertEqual(
-            10,
+        """Test the `max_distinct_char_substring` function."""
+        assert s.max_distinct_char_substring("aa") == 1
+        assert s.max_distinct_char_substring("hallo") == 3
+        assert s.max_distinct_char_substring("abba") == 2
+        assert (
             s.max_distinct_char_substring(
-                "aldshflasghdfasgfkhgasdfasdgvfyweofyewyrtyefgv"
-            ),
+                "aldshflasghdfasgfkhgasdfasdgvfyweofyewyrtyefgv",
+            )
+            == 10
         )
 
     def test_edit_distance(self):
-        "Test the `edit_distance` function."
-        self.assertEqual(0, s.edit_distance("aa", "aa"))
-        self.assertEqual(4, s.edit_distance("hallo", "hey"))
-        self.assertEqual(2, s.edit_distance("abba", "baba"))
+        """Test the `edit_distance` function."""
+        assert s.edit_distance("aa", "aa") == 0
+        assert s.edit_distance("hallo", "hey") == 4
+        assert s.edit_distance("abba", "baba") == 2
 
     def test_longest_palindrome(self):
-        "Test the `longest_palindrome` function."
-        self.assertEqual("", s.longest_palindrome(""))
-        self.assertEqual("a", s.longest_palindrome("a"))
-        self.assertEqual("aa", s.longest_palindrome("aa"))
-        self.assertEqual("a", s.longest_palindrome("ab"))
-        self.assertEqual("a", s.longest_palindrome("abc"))
-        self.assertEqual("ll", s.longest_palindrome("hallo"))
-        self.assertEqual("aba", s.longest_palindrome("aba"))
-        self.assertEqual("abba", s.longest_palindrome("abba"))
-        self.assertEqual("bab", s.longest_palindrome("babassus"))
-        self.assertEqual("aba", s.longest_palindrome("12aba"))
-        self.assertEqual("abba", s.longest_palindrome("12abba"))
-        self.assertEqual("aba", s.longest_palindrome("aba12"))
-        self.assertEqual("abba", s.longest_palindrome("abba12"))
-        self.assertEqual("cd@dc", s.longest_palindrome("12abacd@dc"))
-        self.assertEqual("cd@@dc", s.longest_palindrome("12abbacd@@dc"))
-        self.assertEqual("cd@dc", s.longest_palindrome("cd@dcaba12"))
-        self.assertEqual("cd@@dc", s.longest_palindrome("cd@@dcabba12"))
-        self.assertEqual("baaaaab", s.longest_palindrome("abaaaaabba"))
+        """Test the `longest_palindrome` function."""
+        assert s.longest_palindrome("") == ""
+        assert s.longest_palindrome("a") == "a"
+        assert s.longest_palindrome("aa") == "aa"
+        assert s.longest_palindrome("ab") == "a"
+        assert s.longest_palindrome("abc") == "a"
+        assert s.longest_palindrome("hallo") == "ll"
+        assert s.longest_palindrome("aba") == "aba"
+        assert s.longest_palindrome("abba") == "abba"
+        assert s.longest_palindrome("babassus") == "bab"
+        assert s.longest_palindrome("12aba") == "aba"
+        assert s.longest_palindrome("12abba") == "abba"
+        assert s.longest_palindrome("aba12") == "aba"
+        assert s.longest_palindrome("abba12") == "abba"
+        assert s.longest_palindrome("12abacd@dc") == "cd@dc"
+        assert s.longest_palindrome("12abbacd@@dc") == "cd@@dc"
+        assert s.longest_palindrome("cd@dcaba12") == "cd@dc"
+        assert s.longest_palindrome("cd@@dcabba12") == "cd@@dc"
+        assert s.longest_palindrome("abaaaaabba") == "baaaaab"
 
     def test_distinct_palindrome_substrings(self):
-        "Test `distinct_palindrome_substrings`."
-        self.assertEqual(0, s.distinct_palindrome_substrings(""))
-        self.assertEqual(1, s.distinct_palindrome_substrings("a"))
-        self.assertEqual(2, s.distinct_palindrome_substrings("aa"))
-        self.assertEqual(2, s.distinct_palindrome_substrings("ab"))
-        self.assertEqual(3, s.distinct_palindrome_substrings("aba"))
-        self.assertEqual(3, s.distinct_palindrome_substrings("abc"))
-        self.assertEqual(4, s.distinct_palindrome_substrings("abba"))
-        self.assertEqual(4, s.distinct_palindrome_substrings("bbaa"))
-        self.assertEqual(4, s.distinct_palindrome_substrings("abaa"))
-        self.assertEqual(8, s.distinct_palindrome_substrings("cdgdcdgd"))
-        self.assertEqual(10, s.distinct_palindrome_substrings("abaaaaabba"))
-        self.assertEqual(10, s.distinct_palindrome_substrings("abcdabbabcdfdc"))
-        self.assertEqual(15, s.distinct_palindrome_substrings("abcdabbabcdfdccdgdc"))
-        self.assertEqual(
-            26,
+        """Test `distinct_palindrome_substrings`."""
+        assert s.distinct_palindrome_substrings("") == 0
+        assert s.distinct_palindrome_substrings("a") == 1
+        assert s.distinct_palindrome_substrings("aa") == 2
+        assert s.distinct_palindrome_substrings("ab") == 2
+        assert s.distinct_palindrome_substrings("aba") == 3
+        assert s.distinct_palindrome_substrings("abc") == 3
+        assert s.distinct_palindrome_substrings("abba") == 4
+        assert s.distinct_palindrome_substrings("bbaa") == 4
+        assert s.distinct_palindrome_substrings("abaa") == 4
+        assert s.distinct_palindrome_substrings("cdgdcdgd") == 8
+        assert s.distinct_palindrome_substrings("abaaaaabba") == 10
+        assert s.distinct_palindrome_substrings("abcdabbabcdfdc") == 10
+        assert s.distinct_palindrome_substrings("abcdabbabcdfdccdgdc") == 15
+        assert (
             s.distinct_palindrome_substrings(
-                "mdnvznwlylygvstwarpibrfgvdhkdcrlmfgqweveqyo"
-            ),
+                "mdnvznwlylygvstwarpibrfgvdhkdcrlmfgqweveqyo",
+            )
+            == 26
         )
 
     def test_palindromic_partitions(self):
-        "Test the `palindromic_partitions` function."
-        self.assertEqual(0, s.palindromic_partitions(""))
-        self.assertEqual(0, s.palindromic_partitions("a"))
-        self.assertEqual(0, s.palindromic_partitions("aa"))
-        self.assertEqual(1, s.palindromic_partitions("ab"))
-        self.assertEqual(2, s.palindromic_partitions("abc"))
-        self.assertEqual(3, s.palindromic_partitions("hallo"))
-        self.assertEqual(0, s.palindromic_partitions("aba"))
-        self.assertEqual(0, s.palindromic_partitions("abba"))
-        self.assertEqual(3, s.palindromic_partitions("babassus"))
-        self.assertEqual(2, s.palindromic_partitions("12aba"))
-        self.assertEqual(2, s.palindromic_partitions("12abba"))
-        self.assertEqual(2, s.palindromic_partitions("aba12"))
-        self.assertEqual(2, s.palindromic_partitions("abba12"))
-        self.assertEqual(3, s.palindromic_partitions("12abacd@dc"))
-        self.assertEqual(3, s.palindromic_partitions("12abbacd@@dc"))
-        self.assertEqual(3, s.palindromic_partitions("cd@dcaba12"))
-        self.assertEqual(3, s.palindromic_partitions("cd@@dcabba12"))
+        """Test the `palindromic_partitions` function."""
+        assert s.palindromic_partitions("") == 0
+        assert s.palindromic_partitions("a") == 0
+        assert s.palindromic_partitions("aa") == 0
+        assert s.palindromic_partitions("ab") == 1
+        assert s.palindromic_partitions("abc") == 2
+        assert s.palindromic_partitions("hallo") == 3
+        assert s.palindromic_partitions("aba") == 0
+        assert s.palindromic_partitions("abba") == 0
+        assert s.palindromic_partitions("babassus") == 3
+        assert s.palindromic_partitions("12aba") == 2
+        assert s.palindromic_partitions("12abba") == 2
+        assert s.palindromic_partitions("aba12") == 2
+        assert s.palindromic_partitions("abba12") == 2
+        assert s.palindromic_partitions("12abacd@dc") == 3
+        assert s.palindromic_partitions("12abbacd@@dc") == 3
+        assert s.palindromic_partitions("cd@dcaba12") == 3
+        assert s.palindromic_partitions("cd@@dcabba12") == 3
 
     def test_subsequence_count(self):
-        "Test the `subsequence_count` function."
-        self.assertEqual(1, s.subsequence_count("aa", ""))
-        self.assertEqual(0, s.subsequence_count("", "a"))
-        self.assertEqual(0, s.subsequence_count("b", "a"))
-        self.assertEqual(0, s.subsequence_count("bcd", "a"))
-        self.assertEqual(2, s.subsequence_count("aa", "a"))
-        self.assertEqual(2, s.subsequence_count("aa", "a"))
-        self.assertEqual(2, s.subsequence_count("aba", "a"))
-        self.assertEqual(2, s.subsequence_count("baba", "a"))
-        self.assertEqual(2, s.subsequence_count("abab", "a"))
-        self.assertEqual(2, s.subsequence_count("baba5", "a"))
-        self.assertEqual(1, s.subsequence_count("aa", "aa"))
-        self.assertEqual(1, s.subsequence_count("aba", "aa"))
-        self.assertEqual(1, s.subsequence_count("baba", "aa"))
-        self.assertEqual(1, s.subsequence_count("abab", "aa"))
-        self.assertEqual(1, s.subsequence_count("baba5", "aa"))
-        self.assertEqual(1, s.subsequence_count("abcdefg", "bdf"))
-        self.assertEqual(4, s.subsequence_count("abcdefg@abcdefg", "bdf"))
+        """Test the `subsequence_count` function."""
+        assert s.subsequence_count("aa", "") == 1
+        assert s.subsequence_count("", "a") == 0
+        assert s.subsequence_count("b", "a") == 0
+        assert s.subsequence_count("bcd", "a") == 0
+        assert s.subsequence_count("aa", "a") == 2
+        assert s.subsequence_count("aa", "a") == 2
+        assert s.subsequence_count("aba", "a") == 2
+        assert s.subsequence_count("baba", "a") == 2
+        assert s.subsequence_count("abab", "a") == 2
+        assert s.subsequence_count("baba5", "a") == 2
+        assert s.subsequence_count("aa", "aa") == 1
+        assert s.subsequence_count("aba", "aa") == 1
+        assert s.subsequence_count("baba", "aa") == 1
+        assert s.subsequence_count("abab", "aa") == 1
+        assert s.subsequence_count("baba5", "aa") == 1
+        assert s.subsequence_count("abcdefg", "bdf") == 1
+        assert s.subsequence_count("abcdefg@abcdefg", "bdf") == 4
 
     def test_smallest_window_with_all_characters(self):
-        "Test the `smallest_window_with_all_characters` function."
-        self.assertEqual("", s.smallest_window_with_all_characters("aa", ""))
-        self.assertEqual(None, s.smallest_window_with_all_characters("", "a"))
-        self.assertEqual(None, s.smallest_window_with_all_characters("b", "a"))
-        self.assertEqual(None, s.smallest_window_with_all_characters("bcd", "a"))
-        self.assertEqual("a", s.smallest_window_with_all_characters("aa", "a"))
-        self.assertEqual("aa", s.smallest_window_with_all_characters("aa", "aa"))
-        self.assertEqual("aba", s.smallest_window_with_all_characters("aba", "aa"))
-        self.assertEqual("aba", s.smallest_window_with_all_characters("baba", "aa"))
-        self.assertEqual("aba", s.smallest_window_with_all_characters("abab", "aa"))
-        self.assertEqual("aba", s.smallest_window_with_all_characters("baba5", "aa"))
-        self.assertEqual(
-            "bc@de4f", s.smallest_window_with_all_characters("abc@de4fg", "bdf")
-        )
-        self.assertEqual(
-            "bc@def",
-            s.smallest_window_with_all_characters("abc3de4fg@abc@def2g", "bdf"),
+        """Test the `smallest_window_with_all_characters` function."""
+        assert s.smallest_window_with_all_characters("aa", "") == ""
+        assert None is s.smallest_window_with_all_characters("", "a")
+        assert None is s.smallest_window_with_all_characters("b", "a")
+        assert None is s.smallest_window_with_all_characters("bcd", "a")
+        assert s.smallest_window_with_all_characters("aa", "a") == "a"
+        assert s.smallest_window_with_all_characters("aa", "aa") == "aa"
+        assert s.smallest_window_with_all_characters("aba", "aa") == "aba"
+        assert s.smallest_window_with_all_characters("baba", "aa") == "aba"
+        assert s.smallest_window_with_all_characters("abab", "aa") == "aba"
+        assert s.smallest_window_with_all_characters("baba5", "aa") == "aba"
+        assert s.smallest_window_with_all_characters("abc@de4fg", "bdf") == "bc@de4f"
+        assert (
+            s.smallest_window_with_all_characters("abc3de4fg@abc@def2g", "bdf")
+            == "bc@def"
         )
 
     def test_boolean_parentheses(self):
-        "Test the `boolean_parentheses` function."
-        self.assertEqual(1, s.boolean_parentheses("T|F"))
-        self.assertEqual(5, s.boolean_parentheses("T|F^F&T"))
-        self.assertEqual(
-            99632640, s.boolean_parentheses("T|F^F&T|F^F^F^T|T&T^T|F^T^F&F^T|T^F")
-        )
+        """Test the `boolean_parentheses` function."""
+        assert s.boolean_parentheses("T|F") == 1
+        assert s.boolean_parentheses("T|F^F&T") == 5
+        assert s.boolean_parentheses("T|F^F&T|F^F^F^T|T&T^T|F^T^F&F^T|T^F") == 99632640
 
     def test_artistic_photo_count(self):
-        "Test the `artistic_photo_count` function."
-        self.assertEqual(1, s.artistic_photo_count("APABA", 1, 2))
-        self.assertEqual(0, s.artistic_photo_count("APABA", 2, 3))
-        self.assertEqual(3, s.artistic_photo_count("PBAAP.B", 1, 3))
-        self.assertEqual(3, s.artistic_photo_count(".PBAAP.B", 1, 3))
+        """Test the `artistic_photo_count` function."""
+        assert s.artistic_photo_count("APABA", 1, 2) == 1
+        assert s.artistic_photo_count("APABA", 2, 3) == 0
+        assert s.artistic_photo_count("PBAAP.B", 1, 3) == 3
+        assert s.artistic_photo_count(".PBAAP.B", 1, 3) == 3
 
     def test_distinct_subsequence_count(self):
-        "Test the `distinct_subsequence_count` function."
-        self.assertEqual(1, s.distinct_subsequence_count(""))
-        self.assertEqual(2, s.distinct_subsequence_count("a"))
-        self.assertEqual(4, s.distinct_subsequence_count("ab"))
-        self.assertEqual(3, s.distinct_subsequence_count("aa"))
-        self.assertEqual(7, s.distinct_subsequence_count("aba"))
+        """Test the `distinct_subsequence_count` function."""
+        assert s.distinct_subsequence_count("") == 1
+        assert s.distinct_subsequence_count("a") == 2
+        assert s.distinct_subsequence_count("ab") == 4
+        assert s.distinct_subsequence_count("aa") == 3
+        assert s.distinct_subsequence_count("aba") == 7
 
     def test_permutations(self):
-        "Test the `permutations` function."
-        self.assertEqual([""], s.permutations(""))
-        self.assertEqual(["a"], s.permutations("a"))
-        self.assertEqual(["ab", "ba"], s.permutations("ab"))
-        self.assertEqual(
-            ["abc", "acb", "bac", "bca", "cab", "cba"], s.permutations("abc")
-        )
-        self.assertEqual(24, len(s.permutations("abcd")))
+        """Test the `permutations` function."""
+        assert [""] == s.permutations("")
+        assert ["a"] == s.permutations("a")
+        assert ["ab", "ba"] == s.permutations("ab")
+        assert ["abc", "acb", "bac", "bca", "cab", "cba"] == s.permutations("abc")
+        assert len(s.permutations("abcd")) == 24
 
     def test_pattern_match(self):
-        "Test `pattern_match`."
-        self.assertTrue(s.pattern_match("*", ""))
-        self.assertTrue(s.pattern_match("*", "a"))
-        self.assertTrue(s.pattern_match("*", "aa"))
-        self.assertTrue(s.pattern_match("?", "a"))
-        self.assertFalse(s.pattern_match("?", ""))
-        self.assertFalse(s.pattern_match("?", "ab"))
-        self.assertTrue(s.pattern_match("??", "aa"))
-        self.assertFalse(s.pattern_match("??", "a"))
-        self.assertFalse(s.pattern_match("??", "abc"))
-        self.assertTrue(s.pattern_match("?*a*", "cab"))
-        self.assertTrue(s.pattern_match("?*a*", "cart"))
-        self.assertTrue(s.pattern_match("?*a*", "ca"))
-        self.assertFalse(s.pattern_match("?*a*", "ab"))
+        """Test `pattern_match`."""
+        assert s.pattern_match("*", "")
+        assert s.pattern_match("*", "a")
+        assert s.pattern_match("*", "aa")
+        assert s.pattern_match("?", "a")
+        assert not s.pattern_match("?", "")
+        assert not s.pattern_match("?", "ab")
+        assert s.pattern_match("??", "aa")
+        assert not s.pattern_match("??", "a")
+        assert not s.pattern_match("??", "abc")
+        assert s.pattern_match("?*a*", "cab")
+        assert s.pattern_match("?*a*", "cart")
+        assert s.pattern_match("?*a*", "ca")
+        assert not s.pattern_match("?*a*", "ab")
 
     def test_longest_repeating_substring(self):
-        "Test `longest_repeating_substring`."
-        self.assertEqual("a", s.longest_repeating_substring("ab123acb"))
-        self.assertEqual("d", s.longest_repeating_substring("dedb123baaacead"))
-        self.assertEqual("teeth", s.longest_repeating_substring("teeth_for_teeth"))
+        """Test `longest_repeating_substring`."""
+        assert s.longest_repeating_substring("ab123acb") == "a"
+        assert s.longest_repeating_substring("dedb123baaacead") == "d"
+        assert s.longest_repeating_substring("teeth_for_teeth") == "teeth"
 
     def test_longest_prefix_suffix_length(self):
-        "Test `longest_prefix_suffix_length`."
-        self.assertEqual(0, s.longest_prefix_suffix_length("abcd"))
-        self.assertEqual(4, s.longest_prefix_suffix_length("aaaaa"))
-        self.assertEqual(2, s.longest_prefix_suffix_length("acccbaa3acccbaac"))
+        """Test `longest_prefix_suffix_length`."""
+        assert s.longest_prefix_suffix_length("abcd") == 0
+        assert s.longest_prefix_suffix_length("aaaaa") == 4
+        assert s.longest_prefix_suffix_length("acccbaa3acccbaac") == 2
 
     def test_extra_palindrome_chars(self):
-        "Test (upfront) `extra_palindrome_chars`."
-        self.assertEqual(0, s.extra_palindrome_chars(""))
-        self.assertEqual(0, s.extra_palindrome_chars("a"))
-        self.assertEqual(0, s.extra_palindrome_chars("aa"))
-        self.assertEqual(0, s.extra_palindrome_chars("aba"))
-        self.assertEqual(1, s.extra_palindrome_chars("ab"))
-        self.assertEqual(3, s.extra_palindrome_chars("abcd"))
-        self.assertEqual(0, s.extra_palindrome_chars("aaaaa"))
-        self.assertEqual(1, s.extra_palindrome_chars("aa3a3aaa"))
+        """Test (upfront) `extra_palindrome_chars`."""
+        assert s.extra_palindrome_chars("") == 0
+        assert s.extra_palindrome_chars("a") == 0
+        assert s.extra_palindrome_chars("aa") == 0
+        assert s.extra_palindrome_chars("aba") == 0
+        assert s.extra_palindrome_chars("ab") == 1
+        assert s.extra_palindrome_chars("abcd") == 3
+        assert s.extra_palindrome_chars("aaaaa") == 0
+        assert s.extra_palindrome_chars("aa3a3aaa") == 1
 
     def test_word_wrap(self):
-        "Test `word_wrap` ."
-        self.assertEqual(0, s.word_wrap([], 6))
-        self.assertEqual(0, s.word_wrap([3], 6))
-        self.assertEqual(0, s.word_wrap([3, 2], 6))
-        self.assertEqual(0, s.word_wrap([3, 2, 2], 6))
-        self.assertEqual(10, s.word_wrap([3, 2, 2, 5], 6))
+        """Test `word_wrap` ."""
+        assert s.word_wrap([], 6) == 0
+        assert s.word_wrap([3], 6) == 0
+        assert s.word_wrap([3, 2], 6) == 0
+        assert s.word_wrap([3, 2, 2], 6) == 0
+        assert s.word_wrap([3, 2, 2, 5], 6) == 10
 
-        self.assertEqual(0, s.word_wrap([], 4))
-        self.assertEqual(0, s.word_wrap([3], 4))
-        self.assertEqual(1, s.word_wrap([3, 2], 4))
-        self.assertEqual(5, s.word_wrap([3, 2, 2], 4))
-        self.assertEqual(9, s.word_wrap([3, 2, 2, 4], 4))
+        assert s.word_wrap([], 4) == 0
+        assert s.word_wrap([3], 4) == 0
+        assert s.word_wrap([3, 2], 4) == 1
+        assert s.word_wrap([3, 2, 2], 4) == 5
+        assert s.word_wrap([3, 2, 2, 4], 4) == 9
 
     def test_sum_string(self):
-        "Test `sum_string`."
-        self.assertFalse(s.sum_string(""))
-        self.assertFalse(s.sum_string("0"))
-        self.assertFalse(s.sum_string("00"))
-        self.assertTrue(s.sum_string("123"))
-        self.assertFalse(s.sum_string("124"))
-        self.assertTrue(s.sum_string("0123"))
-        self.assertFalse(s.sum_string("0124"))
-        self.assertTrue(s.sum_string("1023"))
-        self.assertFalse(s.sum_string("1024"))
-        self.assertTrue(s.sum_string("1203"))
-        self.assertFalse(s.sum_string("1204"))
-        self.assertFalse(s.sum_string("1230"))
-        self.assertTrue(s.sum_string("12243660"))
-        self.assertFalse(s.sum_string("12243661"))
-        self.assertTrue(s.sum_string("11111122233355588931451"))
-        self.assertFalse(s.sum_string("11111122233355588931450"))
+        """Test `sum_string`."""
+        assert not s.sum_string("")
+        assert not s.sum_string("0")
+        assert not s.sum_string("00")
+        assert s.sum_string("123")
+        assert not s.sum_string("124")
+        assert s.sum_string("0123")
+        assert not s.sum_string("0124")
+        assert s.sum_string("1023")
+        assert not s.sum_string("1024")
+        assert s.sum_string("1203")
+        assert not s.sum_string("1204")
+        assert not s.sum_string("1230")
+        assert s.sum_string("12243660")
+        assert not s.sum_string("12243661")
+        assert s.sum_string("11111122233355588931451")
+        assert not s.sum_string("11111122233355588931450")
 
     def test_word_parts(self):
-        "Test `word_parts`."
-        self.assertEqual(
-            ["cat"], s.word_parts(["rat", "cats", "cat", "and", "sand", "dog"], "cat")
+        """Test `word_parts`."""
+        assert ["cat"] == s.word_parts(
+            ["rat", "cats", "cat", "and", "sand", "dog"],
+            "cat",
         )
-        self.assertEqual(
-            [], s.word_parts(["rat", "cats", "cat", "and", "sand", "dog"], "catsandog")
+        assert [] == s.word_parts(
+            ["rat", "cats", "cat", "and", "sand", "dog"],
+            "catsandog",
         )
-        self.assertEqual(
-            ["cats and dog", "cat sand dog"],
-            s.word_parts(["rat", "cats", "cat", "and", "sand", "dog"], "catsanddog"),
+        assert ["cats and dog", "cat sand dog"] == s.word_parts(
+            ["rat", "cats", "cat", "and", "sand", "dog"],
+            "catsanddog",
         )
-        self.assertEqual(
-            ["rat cats and dog", "rat cat sand dog"],
-            s.word_parts(["rat", "cats", "cat", "and", "sand", "dog"], "ratcatsanddog"),
+        assert ["rat cats and dog", "rat cat sand dog"] == s.word_parts(
+            ["rat", "cats", "cat", "and", "sand", "dog"],
+            "ratcatsanddog",
         )
 
     def test_k_alphabet_string_with_all_substrings(self):
-        "Test `k_alphabet_string_with_all_substrings`."
-        self.assertEqual("", s.k_alphabet_string_with_all_substrings(0, 5))
-        self.assertEqual("", s.k_alphabet_string_with_all_substrings(5, 0))
-        self.assertEqual("00000", s.k_alphabet_string_with_all_substrings(5, 1))
-        self.assertEqual("00110", s.k_alphabet_string_with_all_substrings(2, 2))
-        self.assertEqual("0001110100", s.k_alphabet_string_with_all_substrings(3, 2))
-        self.assertEqual("0011210220", s.k_alphabet_string_with_all_substrings(2, 3))
-        self.assertEqual("1234567890", s.k_alphabet_string_with_all_substrings(1, 10))
+        """Test `k_alphabet_string_with_all_substrings`."""
+        assert s.k_alphabet_string_with_all_substrings(0, 5) == ""
+        assert s.k_alphabet_string_with_all_substrings(5, 0) == ""
+        assert s.k_alphabet_string_with_all_substrings(5, 1) == "00000"
+        assert s.k_alphabet_string_with_all_substrings(2, 2) == "00110"
+        assert s.k_alphabet_string_with_all_substrings(3, 2) == "0001110100"
+        assert s.k_alphabet_string_with_all_substrings(2, 3) == "0011210220"
+        assert s.k_alphabet_string_with_all_substrings(1, 10) == "1234567890"

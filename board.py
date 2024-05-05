@@ -1,12 +1,14 @@
-"Puzzles related to board games."
+"""Puzzles related to board games."""
+
+from __future__ import annotations
 
 
 def queens(n: int) -> list:
-    "Return a list of queen combinations for an `NxN` board."
+    """Return a list of queen combinations for an `NxN` board."""
     sols = []
     s = [0] * n
 
-    def rec(r: int, invalid: int):
+    def rec(r: int, invalid: int) -> None:
         place = 1 | 1 << (n + r) | 1 << (n * 4 - r)
         for s[r] in range(1, n + 1):
             invalid & place or (

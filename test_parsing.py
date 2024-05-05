@@ -13,184 +13,184 @@ class TestParsing(unittest.TestCase):
     """Test class for the parsing puzzles."""
 
     def test_parse_binop_expression(self):
-        "Test the `parse_binop_expression` parser."
-        self.assertEqual("a", parse_binop_expression("a"))
-        self.assertEqual(("+", "a", "b"), parse_binop_expression("a+b"))
+        """Test the `parse_binop_expression` parser."""
+        assert parse_binop_expression("a") == "a"
+        assert parse_binop_expression("a+b") == ("+", "a", "b")
 
-        self.assertEqual(("+", ("+", "a", "b"), "c"), parse_binop_expression("a+b+c"))
-        self.assertEqual(("+", ("+", "a", "b"), "c"), parse_binop_expression("(a+b)+c"))
-        self.assertEqual(("+", "a", ("+", "b", "c")), parse_binop_expression("a+(b+c)"))
+        assert parse_binop_expression("a+b+c") == ("+", ("+", "a", "b"), "c")
+        assert parse_binop_expression("(a+b)+c") == ("+", ("+", "a", "b"), "c")
+        assert parse_binop_expression("a+(b+c)") == ("+", "a", ("+", "b", "c"))
 
-        self.assertEqual(("-", ("-", "a", "b"), "c"), parse_binop_expression("a-b-c"))
-        self.assertEqual(("-", ("-", "a", "b"), "c"), parse_binop_expression("(a-b)-c"))
-        self.assertEqual(("-", "a", ("-", "b", "c")), parse_binop_expression("a-(b-c)"))
+        assert parse_binop_expression("a-b-c") == ("-", ("-", "a", "b"), "c")
+        assert parse_binop_expression("(a-b)-c") == ("-", ("-", "a", "b"), "c")
+        assert parse_binop_expression("a-(b-c)") == ("-", "a", ("-", "b", "c"))
 
-        self.assertEqual(("+", ("-", "a", "b"), "c"), parse_binop_expression("a-b+c"))
-        self.assertEqual(("+", ("-", "a", "b"), "c"), parse_binop_expression("(a-b)+c"))
-        self.assertEqual(("-", "a", ("+", "b", "c")), parse_binop_expression("a-(b+c)"))
+        assert parse_binop_expression("a-b+c") == ("+", ("-", "a", "b"), "c")
+        assert parse_binop_expression("(a-b)+c") == ("+", ("-", "a", "b"), "c")
+        assert parse_binop_expression("a-(b+c)") == ("-", "a", ("+", "b", "c"))
 
-        self.assertEqual(("-", ("+", "a", "b"), "c"), parse_binop_expression("a+b-c"))
-        self.assertEqual(("-", ("+", "a", "b"), "c"), parse_binop_expression("(a+b)-c"))
-        self.assertEqual(("+", "a", ("-", "b", "c")), parse_binop_expression("a+(b-c)"))
+        assert parse_binop_expression("a+b-c") == ("-", ("+", "a", "b"), "c")
+        assert parse_binop_expression("(a+b)-c") == ("-", ("+", "a", "b"), "c")
+        assert parse_binop_expression("a+(b-c)") == ("+", "a", ("-", "b", "c"))
 
-        self.assertEqual(("*", ("*", "a", "b"), "c"), parse_binop_expression("a*b*c"))
-        self.assertEqual(("*", ("*", "a", "b"), "c"), parse_binop_expression("(a*b)*c"))
-        self.assertEqual(("*", "a", ("*", "b", "c")), parse_binop_expression("a*(b*c)"))
+        assert parse_binop_expression("a*b*c") == ("*", ("*", "a", "b"), "c")
+        assert parse_binop_expression("(a*b)*c") == ("*", ("*", "a", "b"), "c")
+        assert parse_binop_expression("a*(b*c)") == ("*", "a", ("*", "b", "c"))
 
-        self.assertEqual(("+", "a", ("*", "b", "c")), parse_binop_expression("a+(b*c)"))
-        self.assertEqual(("*", ("+", "a", "b"), "c"), parse_binop_expression("(a+b)*c"))
-        self.assertEqual(("+", "a", ("*", "b", "c")), parse_binop_expression("a+(b*c)"))
+        assert parse_binop_expression("a+(b*c)") == ("+", "a", ("*", "b", "c"))
+        assert parse_binop_expression("(a+b)*c") == ("*", ("+", "a", "b"), "c")
+        assert parse_binop_expression("a+(b*c)") == ("+", "a", ("*", "b", "c"))
 
-        self.assertEqual(("+", ("*", "a", "b"), "c"), parse_binop_expression("a*b+c"))
-        self.assertEqual(("+", ("*", "a", "b"), "c"), parse_binop_expression("(a*b)+c"))
-        self.assertEqual(("*", "a", ("+", "b", "c")), parse_binop_expression("a*(b+c)"))
+        assert parse_binop_expression("a*b+c") == ("+", ("*", "a", "b"), "c")
+        assert parse_binop_expression("(a*b)+c") == ("+", ("*", "a", "b"), "c")
+        assert parse_binop_expression("a*(b+c)") == ("*", "a", ("+", "b", "c"))
 
-        self.assertEqual(("/", ("/", "a", "b"), "c"), parse_binop_expression("a/b/c"))
-        self.assertEqual(("/", ("/", "a", "b"), "c"), parse_binop_expression("(a/b)/c"))
-        self.assertEqual(("/", "a", ("/", "b", "c")), parse_binop_expression("a/(b/c)"))
+        assert parse_binop_expression("a/b/c") == ("/", ("/", "a", "b"), "c")
+        assert parse_binop_expression("(a/b)/c") == ("/", ("/", "a", "b"), "c")
+        assert parse_binop_expression("a/(b/c)") == ("/", "a", ("/", "b", "c"))
 
-        self.assertEqual(("/", ("*", "a", "b"), "c"), parse_binop_expression("a*b/c"))
-        self.assertEqual(("/", ("*", "a", "b"), "c"), parse_binop_expression("(a*b)/c"))
-        self.assertEqual(("*", "a", ("/", "b", "c")), parse_binop_expression("a*(b/c)"))
+        assert parse_binop_expression("a*b/c") == ("/", ("*", "a", "b"), "c")
+        assert parse_binop_expression("(a*b)/c") == ("/", ("*", "a", "b"), "c")
+        assert parse_binop_expression("a*(b/c)") == ("*", "a", ("/", "b", "c"))
 
-        self.assertEqual(("*", ("/", "a", "b"), "c"), parse_binop_expression("a/b*c"))
-        self.assertEqual(("*", ("/", "a", "b"), "c"), parse_binop_expression("(a/b)*c"))
-        self.assertEqual(("/", "a", ("*", "b", "c")), parse_binop_expression("a/(b*c)"))
+        assert parse_binop_expression("a/b*c") == ("*", ("/", "a", "b"), "c")
+        assert parse_binop_expression("(a/b)*c") == ("*", ("/", "a", "b"), "c")
+        assert parse_binop_expression("a/(b*c)") == ("/", "a", ("*", "b", "c"))
 
-    def test_simplify_binops_brackets(self):
-        "Test the `simplify_binops_brackets` parser."
-        self.assertEqual("a", simplify_binops_brackets("a"))
-        self.assertEqual("a+b", simplify_binops_brackets("a+b"))
+    def test_simplify_binops_brackets(self):  # noqa: PLR0915
+        """Test the `simplify_binops_brackets` parser."""
+        assert simplify_binops_brackets("a") == "a"
+        assert simplify_binops_brackets("a+b") == "a+b"
 
-        self.assertEqual("a+b+c", simplify_binops_brackets("a+b+c"))
-        self.assertEqual("a+b+c", simplify_binops_brackets("(a+b)+c"))
-        self.assertEqual("a+b+c", simplify_binops_brackets("a+(b+c)"))
+        assert simplify_binops_brackets("a+b+c") == "a+b+c"
+        assert simplify_binops_brackets("(a+b)+c") == "a+b+c"
+        assert simplify_binops_brackets("a+(b+c)") == "a+b+c"
 
-        self.assertEqual("a-b-c", simplify_binops_brackets("a-b-c"))
-        self.assertEqual("a-b-c", simplify_binops_brackets("(a-b)-c"))
-        self.assertEqual("a-(b-c)", simplify_binops_brackets("a-(b-c)"))
+        assert simplify_binops_brackets("a-b-c") == "a-b-c"
+        assert simplify_binops_brackets("(a-b)-c") == "a-b-c"
+        assert simplify_binops_brackets("a-(b-c)") == "a-(b-c)"
 
-        self.assertEqual("a-b+c", simplify_binops_brackets("a-b+c"))
-        self.assertEqual("a-b+c", simplify_binops_brackets("(a-b)+c"))
-        self.assertEqual("a-(b+c)", simplify_binops_brackets("a-(b+c)"))
+        assert simplify_binops_brackets("a-b+c") == "a-b+c"
+        assert simplify_binops_brackets("(a-b)+c") == "a-b+c"
+        assert simplify_binops_brackets("a-(b+c)") == "a-(b+c)"
 
-        self.assertEqual("a+b-c", simplify_binops_brackets("a+b-c"))
-        self.assertEqual("a+b-c", simplify_binops_brackets("(a+b)-c"))
-        self.assertEqual("a+b-c", simplify_binops_brackets("a+(b-c)"))
+        assert simplify_binops_brackets("a+b-c") == "a+b-c"
+        assert simplify_binops_brackets("(a+b)-c") == "a+b-c"
+        assert simplify_binops_brackets("a+(b-c)") == "a+b-c"
 
-        self.assertEqual("a*b*c", simplify_binops_brackets("a*b*c"))
-        self.assertEqual("a*b*c", simplify_binops_brackets("(a*b)*c"))
-        self.assertEqual("a*b*c", simplify_binops_brackets("a*(b*c)"))
+        assert simplify_binops_brackets("a*b*c") == "a*b*c"
+        assert simplify_binops_brackets("(a*b)*c") == "a*b*c"
+        assert simplify_binops_brackets("a*(b*c)") == "a*b*c"
 
-        self.assertEqual("a+b*c", simplify_binops_brackets("a+(b*c)"))
-        self.assertEqual("(a+b)*c", simplify_binops_brackets("(a+b)*c"))
-        self.assertEqual("a+b*c", simplify_binops_brackets("a+(b*c)"))
+        assert simplify_binops_brackets("a+(b*c)") == "a+b*c"
+        assert simplify_binops_brackets("(a+b)*c") == "(a+b)*c"
+        assert simplify_binops_brackets("a+(b*c)") == "a+b*c"
 
-        self.assertEqual("a*b+c", simplify_binops_brackets("a*b+c"))
-        self.assertEqual("a*b+c", simplify_binops_brackets("(a*b)+c"))
-        self.assertEqual("a*(b+c)", simplify_binops_brackets("a*(b+c)"))
+        assert simplify_binops_brackets("a*b+c") == "a*b+c"
+        assert simplify_binops_brackets("(a*b)+c") == "a*b+c"
+        assert simplify_binops_brackets("a*(b+c)") == "a*(b+c)"
 
-        self.assertEqual("a/b/c", simplify_binops_brackets("a/b/c"))
-        self.assertEqual("a/b/c", simplify_binops_brackets("(a/b)/c"))
-        self.assertEqual("a/(b/c)", simplify_binops_brackets("a/(b/c)"))
+        assert simplify_binops_brackets("a/b/c") == "a/b/c"
+        assert simplify_binops_brackets("(a/b)/c") == "a/b/c"
+        assert simplify_binops_brackets("a/(b/c)") == "a/(b/c)"
 
-        self.assertEqual("a*b/c", simplify_binops_brackets("a*b/c"))
-        self.assertEqual("a*b/c", simplify_binops_brackets("(a*b)/c"))
-        self.assertEqual("a*b/c", simplify_binops_brackets("a*(b/c)"))
+        assert simplify_binops_brackets("a*b/c") == "a*b/c"
+        assert simplify_binops_brackets("(a*b)/c") == "a*b/c"
+        assert simplify_binops_brackets("a*(b/c)") == "a*b/c"
 
-        self.assertEqual("a/b*c", simplify_binops_brackets("a/b*c"))
-        self.assertEqual("a/b*c", simplify_binops_brackets("(a/b)*c"))
-        self.assertEqual("a/(b*c)", simplify_binops_brackets("a/(b*c)"))
+        assert simplify_binops_brackets("a/b*c") == "a/b*c"
+        assert simplify_binops_brackets("(a/b)*c") == "a/b*c"
+        assert simplify_binops_brackets("a/(b*c)") == "a/(b*c)"
 
-        self.assertEqual("a+b/c", simplify_binops_brackets("a+(b/c)"))
-        self.assertEqual("(a+b)/c", simplify_binops_brackets("(a+b)/c"))
-        self.assertEqual("a+b/c", simplify_binops_brackets("a+(b/c)"))
+        assert simplify_binops_brackets("a+(b/c)") == "a+b/c"
+        assert simplify_binops_brackets("(a+b)/c") == "(a+b)/c"
+        assert simplify_binops_brackets("a+(b/c)") == "a+b/c"
 
-        self.assertEqual("a/b+c", simplify_binops_brackets("a/b+c"))
-        self.assertEqual("a/b+c", simplify_binops_brackets("(a/b)+c"))
-        self.assertEqual("a/(b+c)", simplify_binops_brackets("a/(b+c)"))
+        assert simplify_binops_brackets("a/b+c") == "a/b+c"
+        assert simplify_binops_brackets("(a/b)+c") == "a/b+c"
+        assert simplify_binops_brackets("a/(b+c)") == "a/(b+c)"
 
-        self.assertEqual("a-b/c", simplify_binops_brackets("a-b/c"))
-        self.assertEqual("(a-b)/c", simplify_binops_brackets("(a-b)/c"))
-        self.assertEqual("a-b/c", simplify_binops_brackets("a-(b/c)"))
+        assert simplify_binops_brackets("a-b/c") == "a-b/c"
+        assert simplify_binops_brackets("(a-b)/c") == "(a-b)/c"
+        assert simplify_binops_brackets("a-(b/c)") == "a-b/c"
 
-        self.assertEqual("a-b*c", simplify_binops_brackets("a-b*c"))
-        self.assertEqual("(a-b)*c", simplify_binops_brackets("(a-b)*c"))
-        self.assertEqual("a-b*c", simplify_binops_brackets("a-(b*c)"))
+        assert simplify_binops_brackets("a-b*c") == "a-b*c"
+        assert simplify_binops_brackets("(a-b)*c") == "(a-b)*c"
+        assert simplify_binops_brackets("a-(b*c)") == "a-b*c"
 
-        self.assertEqual("a/b-c", simplify_binops_brackets("a/b-c"))
-        self.assertEqual("a/b-c", simplify_binops_brackets("(a/b)-c"))
-        self.assertEqual("a/(b-c)", simplify_binops_brackets("a/(b-c)"))
+        assert simplify_binops_brackets("a/b-c") == "a/b-c"
+        assert simplify_binops_brackets("(a/b)-c") == "a/b-c"
+        assert simplify_binops_brackets("a/(b-c)") == "a/(b-c)"
 
-        self.assertEqual("a*b-c", simplify_binops_brackets("a*b-c"))
-        self.assertEqual("a*b-c", simplify_binops_brackets("(a*b)-c"))
-        self.assertEqual("a*(b-c)", simplify_binops_brackets("a*(b-c)"))
+        assert simplify_binops_brackets("a*b-c") == "a*b-c"
+        assert simplify_binops_brackets("(a*b)-c") == "a*b-c"
+        assert simplify_binops_brackets("a*(b-c)") == "a*(b-c)"
 
-    def test_simplify_binops_brackets_one_pass(self):
-        "Test the `simplify_binops_brackets_one_pass` parser."
-        self.assertEqual("a", simplify_binops_brackets_one_pass("a"))
-        self.assertEqual("a+b", simplify_binops_brackets_one_pass("a+b"))
+    def test_simplify_binops_brackets_one_pass(self):  # noqa: PLR0915
+        """Test the `simplify_binops_brackets_one_pass` parser."""
+        assert simplify_binops_brackets_one_pass("a") == "a"
+        assert simplify_binops_brackets_one_pass("a+b") == "a+b"
 
-        self.assertEqual("a+b+c", simplify_binops_brackets_one_pass("a+b+c"))
-        self.assertEqual("a+b+c", simplify_binops_brackets_one_pass("(a+b)+c"))
-        self.assertEqual("a+b+c", simplify_binops_brackets_one_pass("a+(b+c)"))
+        assert simplify_binops_brackets_one_pass("a+b+c") == "a+b+c"
+        assert simplify_binops_brackets_one_pass("(a+b)+c") == "a+b+c"
+        assert simplify_binops_brackets_one_pass("a+(b+c)") == "a+b+c"
 
-        self.assertEqual("a-b-c", simplify_binops_brackets_one_pass("a-b-c"))
-        self.assertEqual("a-b-c", simplify_binops_brackets_one_pass("(a-b)-c"))
-        self.assertEqual("a-(b-c)", simplify_binops_brackets_one_pass("a-(b-c)"))
+        assert simplify_binops_brackets_one_pass("a-b-c") == "a-b-c"
+        assert simplify_binops_brackets_one_pass("(a-b)-c") == "a-b-c"
+        assert simplify_binops_brackets_one_pass("a-(b-c)") == "a-(b-c)"
 
-        self.assertEqual("a-b+c", simplify_binops_brackets_one_pass("a-b+c"))
-        self.assertEqual("a-b+c", simplify_binops_brackets_one_pass("(a-b)+c"))
-        self.assertEqual("a-(b+c)", simplify_binops_brackets_one_pass("a-(b+c)"))
+        assert simplify_binops_brackets_one_pass("a-b+c") == "a-b+c"
+        assert simplify_binops_brackets_one_pass("(a-b)+c") == "a-b+c"
+        assert simplify_binops_brackets_one_pass("a-(b+c)") == "a-(b+c)"
 
-        self.assertEqual("a+b-c", simplify_binops_brackets_one_pass("a+b-c"))
-        self.assertEqual("a+b-c", simplify_binops_brackets_one_pass("(a+b)-c"))
-        self.assertEqual("a+b-c", simplify_binops_brackets_one_pass("a+(b-c)"))
+        assert simplify_binops_brackets_one_pass("a+b-c") == "a+b-c"
+        assert simplify_binops_brackets_one_pass("(a+b)-c") == "a+b-c"
+        assert simplify_binops_brackets_one_pass("a+(b-c)") == "a+b-c"
 
-        self.assertEqual("a*b*c", simplify_binops_brackets_one_pass("a*b*c"))
-        self.assertEqual("a*b*c", simplify_binops_brackets_one_pass("(a*b)*c"))
-        self.assertEqual("a*b*c", simplify_binops_brackets_one_pass("a*(b*c)"))
+        assert simplify_binops_brackets_one_pass("a*b*c") == "a*b*c"
+        assert simplify_binops_brackets_one_pass("(a*b)*c") == "a*b*c"
+        assert simplify_binops_brackets_one_pass("a*(b*c)") == "a*b*c"
 
-        self.assertEqual("a+b*c", simplify_binops_brackets_one_pass("a+(b*c)"))
-        self.assertEqual("(a+b)*c", simplify_binops_brackets_one_pass("(a+b)*c"))
-        self.assertEqual("a+b*c", simplify_binops_brackets_one_pass("a+(b*c)"))
+        assert simplify_binops_brackets_one_pass("a+(b*c)") == "a+b*c"
+        assert simplify_binops_brackets_one_pass("(a+b)*c") == "(a+b)*c"
+        assert simplify_binops_brackets_one_pass("a+(b*c)") == "a+b*c"
 
-        self.assertEqual("a*b+c", simplify_binops_brackets_one_pass("a*b+c"))
-        self.assertEqual("a*b+c", simplify_binops_brackets_one_pass("(a*b)+c"))
-        self.assertEqual("a*(b+c)", simplify_binops_brackets_one_pass("a*(b+c)"))
+        assert simplify_binops_brackets_one_pass("a*b+c") == "a*b+c"
+        assert simplify_binops_brackets_one_pass("(a*b)+c") == "a*b+c"
+        assert simplify_binops_brackets_one_pass("a*(b+c)") == "a*(b+c)"
 
-        self.assertEqual("a/b/c", simplify_binops_brackets_one_pass("a/b/c"))
-        self.assertEqual("a/b/c", simplify_binops_brackets_one_pass("(a/b)/c"))
-        self.assertEqual("a/(b/c)", simplify_binops_brackets_one_pass("a/(b/c)"))
+        assert simplify_binops_brackets_one_pass("a/b/c") == "a/b/c"
+        assert simplify_binops_brackets_one_pass("(a/b)/c") == "a/b/c"
+        assert simplify_binops_brackets_one_pass("a/(b/c)") == "a/(b/c)"
 
-        self.assertEqual("a*b/c", simplify_binops_brackets_one_pass("a*b/c"))
-        self.assertEqual("a*b/c", simplify_binops_brackets_one_pass("(a*b)/c"))
-        self.assertEqual("a*b/c", simplify_binops_brackets_one_pass("a*(b/c)"))
+        assert simplify_binops_brackets_one_pass("a*b/c") == "a*b/c"
+        assert simplify_binops_brackets_one_pass("(a*b)/c") == "a*b/c"
+        assert simplify_binops_brackets_one_pass("a*(b/c)") == "a*b/c"
 
-        self.assertEqual("a/b*c", simplify_binops_brackets_one_pass("a/b*c"))
-        self.assertEqual("a/b*c", simplify_binops_brackets_one_pass("(a/b)*c"))
-        self.assertEqual("a/(b*c)", simplify_binops_brackets_one_pass("a/(b*c)"))
+        assert simplify_binops_brackets_one_pass("a/b*c") == "a/b*c"
+        assert simplify_binops_brackets_one_pass("(a/b)*c") == "a/b*c"
+        assert simplify_binops_brackets_one_pass("a/(b*c)") == "a/(b*c)"
 
-        self.assertEqual("a+b/c", simplify_binops_brackets_one_pass("a+(b/c)"))
-        self.assertEqual("(a+b)/c", simplify_binops_brackets_one_pass("(a+b)/c"))
-        self.assertEqual("a+b/c", simplify_binops_brackets_one_pass("a+(b/c)"))
+        assert simplify_binops_brackets_one_pass("a+(b/c)") == "a+b/c"
+        assert simplify_binops_brackets_one_pass("(a+b)/c") == "(a+b)/c"
+        assert simplify_binops_brackets_one_pass("a+(b/c)") == "a+b/c"
 
-        self.assertEqual("a/b+c", simplify_binops_brackets_one_pass("a/b+c"))
-        self.assertEqual("a/b+c", simplify_binops_brackets_one_pass("(a/b)+c"))
-        self.assertEqual("a/(b+c)", simplify_binops_brackets_one_pass("a/(b+c)"))
+        assert simplify_binops_brackets_one_pass("a/b+c") == "a/b+c"
+        assert simplify_binops_brackets_one_pass("(a/b)+c") == "a/b+c"
+        assert simplify_binops_brackets_one_pass("a/(b+c)") == "a/(b+c)"
 
-        self.assertEqual("a-b/c", simplify_binops_brackets_one_pass("a-b/c"))
-        self.assertEqual("(a-b)/c", simplify_binops_brackets_one_pass("(a-b)/c"))
-        self.assertEqual("a-b/c", simplify_binops_brackets_one_pass("a-(b/c)"))
+        assert simplify_binops_brackets_one_pass("a-b/c") == "a-b/c"
+        assert simplify_binops_brackets_one_pass("(a-b)/c") == "(a-b)/c"
+        assert simplify_binops_brackets_one_pass("a-(b/c)") == "a-b/c"
 
-        self.assertEqual("a-b*c", simplify_binops_brackets_one_pass("a-b*c"))
-        self.assertEqual("(a-b)*c", simplify_binops_brackets_one_pass("(a-b)*c"))
-        self.assertEqual("a-b*c", simplify_binops_brackets_one_pass("a-(b*c)"))
+        assert simplify_binops_brackets_one_pass("a-b*c") == "a-b*c"
+        assert simplify_binops_brackets_one_pass("(a-b)*c") == "(a-b)*c"
+        assert simplify_binops_brackets_one_pass("a-(b*c)") == "a-b*c"
 
-        self.assertEqual("a/b-c", simplify_binops_brackets_one_pass("a/b-c"))
-        self.assertEqual("a/b-c", simplify_binops_brackets_one_pass("(a/b)-c"))
-        self.assertEqual("a/(b-c)", simplify_binops_brackets_one_pass("a/(b-c)"))
+        assert simplify_binops_brackets_one_pass("a/b-c") == "a/b-c"
+        assert simplify_binops_brackets_one_pass("(a/b)-c") == "a/b-c"
+        assert simplify_binops_brackets_one_pass("a/(b-c)") == "a/(b-c)"
 
-        self.assertEqual("a*b-c", simplify_binops_brackets_one_pass("a*b-c"))
-        self.assertEqual("a*b-c", simplify_binops_brackets_one_pass("(a*b)-c"))
-        self.assertEqual("a*(b-c)", simplify_binops_brackets_one_pass("a*(b-c)"))
+        assert simplify_binops_brackets_one_pass("a*b-c") == "a*b-c"
+        assert simplify_binops_brackets_one_pass("(a*b)-c") == "a*b-c"
+        assert simplify_binops_brackets_one_pass("a*(b-c)") == "a*(b-c)"

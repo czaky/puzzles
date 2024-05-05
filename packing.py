@@ -1,20 +1,24 @@
-"Algorithms relating to knapsack and bin-packing problems."
+"""Algorithms relating to knapsack and bin-packing problems."""
+
+from __future__ import annotations
 
 from heapq import nsmallest
-from typing import List
 
 
-def walls_coloring(cost: List[List[int]]) -> int:
+def walls_coloring(cost: list[list[int]]) -> int:
     """Given N walls, paint those using K colors, reducing cost from the `cost` matrix.
 
     The restriction here is that two walls next to each other
     have to be painted differently.
 
     Args:
+    ----
         cost (List[List[int]]): NxK cost matrix
 
     Returns:
+    -------
         int: the minium cost to paint the walls.
+
     """
     # Shortcuts:
     if len(cost) == 0 or len(cost[0]) == 0:

@@ -1,27 +1,29 @@
 """Module for the array related puzzles."""
 
+from __future__ import annotations
+
 from collections import Counter, deque
 from functools import lru_cache, reduce
 from itertools import accumulate, chain, islice, starmap
 from math import inf
 from operator import add, mul, neg
-from typing import Iterable, List, Optional, Tuple
+from typing import Iterable
 
 import search
 
 
 def skip(it, n: int = 1):
-    "Skip `n` elements in iterator `it`."
+    """Skip `n` elements in iterator `it`."""
     return islice(it, n, None)
 
 
 def minmax(t):
-    "Return the min and max values of `t`."
+    """Return the min and max values of `t`."""
     return min(t), max(t)
 
 
-def subrev(a: list, s: int = 0, e: int = -1):
-    "Reverse a subsequence of `a` from `s` to `e` (inclusive)."
+def subrev(a: list, s: int = 0, e: int = -1) -> None:
+    """Reverse a subsequence of `a` from `s` to `e` (inclusive)."""
     if s < 0:
         s += len(a)
     if e < 0:
@@ -30,18 +32,18 @@ def subrev(a: list, s: int = 0, e: int = -1):
         a[s + i], a[e - i] = a[e - i], a[s + i]
 
 
-def find_rotation(a: List[int]) -> int:
-    "A sorted list `a` was rotated. Find the rotation index in O(log N)."
+def find_rotation(a: list[int]) -> int:
+    """A sorted list `a` was rotated. Find the rotation index in O(log N)."""
     return (search.binary(lambda m: a[m] <= a[-1], 0, len(a) - 1, -1) or 0) + 1
 
 
 def rotated_minimum(a: list) -> int:
-    "A sorted list `a` was rotated. Find the minimum element in O(log N)."
+    """A sorted list `a` was rotated. Find the minimum element in O(log N)."""
     return a[find_rotation(a)]
 
 
 def equilibrium_point(a: list) -> int:
-    "Index in `a` where sums of elements before and after are equal."
+    """Index in `a` where sums of elements before and after are equal."""
     l = 0
     h = len(a) - 1
     l_sum = 0
@@ -58,25 +60,25 @@ def equilibrium_point(a: list) -> int:
     return -1
 
 
-def bitonic_point(a: List[int]) -> int:
-    "Maximum of strictly increasing array then maybe strictly decreasing."
+def bitonic_point(a: list[int]) -> int:
+    """Maximum of strictly increasing array then maybe strictly decreasing."""
     # Runs in O(log N)
     return a[search.binary(lambda m: a[m - 1] > a[m], 1, len(a) - 1, len(a) - 1) or 0]
 
 
 def duplicates(a: list) -> list:
-    "Return elements of the list `a` occurring more than once."
+    """Return elements of the list `a` occurring more than once."""
     return sorted((Counter(a) - Counter(set(a))).keys())
 
 
 def pairs_count(l: list, k: int) -> int:
-    "Return the number of pairs of elements from `l` with sum of `k`."
+    """Return the number of pairs of elements from `l` with sum of `k`."""
     c = Counter(l)
     return sum(c[a] * (c[k - a] - int(a + a == k)) for a in c) // 2
 
 
-def rotate(a: list, left: int = 1):
-    "Rotate `a` inplace to the left."
+def rotate(a: list, left: int = 1) -> None:
+    """Rotate `a` inplace to the left."""
     n = len(a)
     left %= n
     if left == 0:
@@ -87,12 +89,12 @@ def rotate(a: list, left: int = 1):
 
 
 def transition_point(a: list) -> int:
-    "Transition index in sorted list `a` of '0's and '1's."
+    """Transition index in sorted list `a` of '0's and '1's."""
     return search.binary(lambda m: a[m] == 1, 0, len(a) - 1, -1) or 0
 
 
 def min_distance(a: list, x: int, y: int) -> int:
-    "Minimum index based distance between `x` and `y` in `a`."
+    """Minimum index based distance between `x` and `y` in `a`."""
     xi = yi = -1
     mn = len(a)
     for i, e in enumerate(a):
@@ -109,13 +111,13 @@ def min_distance(a: list, x: int, y: int) -> int:
 
 
 def first_repeating_index(a: list):
-    "Return index of the first repeating element in `a` else -1."
+    """Return index of the first repeating element in `a` else -1."""
     c = Counter(a)
     return next((i for i, e in enumerate(a) if c[e] > 1), -1)
 
 
 def dedup_sorted(a: list) -> int:
-    "Remove duplicates in-place from a sorted list. Return end index."
+    """Remove duplicates in-place from a sorted list. Return end index."""
     i = 1
     for j in range(1, len(a)):
         if a[j - 1] != a[j]:
@@ -124,11 +126,10 @@ def dedup_sorted(a: list) -> int:
     return i
 
 
-def meta_cafeteria(n: int, d: int, s: List[int]) -> int:
-    """
-    Return number of new diners to be seated at distance `d` from
+def meta_cafeteria(n: int, d: int, s: list[int]) -> int:
+    """Return number of new diners to be seated at distance `d` from
     each other at a row of `n` seats. `s` is a list of taken seats.
-    Seats are counted as [1 .. N] inclusive
+    Seats are counted as [1 .. N] inclusive.
     """
     s.sort()
     return (
@@ -142,14 +143,13 @@ def meta_cafeteria(n: int, d: int, s: List[int]) -> int:
     )
 
 
-def floor_element(a: List[int], x: int) -> int:
-    "Return the largest element smaller or equal to `x` from sorted `a`."
+def floor_element(a: list[int], x: int) -> int:
+    """Return the largest element smaller or equal to `x` from sorted `a`."""
     return search.binary(lambda m: a[m] > x, 0, len(a) - 1, -1) or 0
 
 
-def product_except_self(nums: List[int]) -> List[int]:
-    """
-    Return an array where each element is the product of nums
+def product_except_self(nums: list[int]) -> list[int]:
+    """Return an array where each element is the product of nums
     except for the element at the given index.
     """
     pr = reduce(mul, nums)
@@ -161,35 +161,35 @@ def product_except_self(nums: List[int]) -> List[int]:
     return p
 
 
-def count_triplets(a: List[int]) -> int:
-    "Count distinct triplets on numbers in an array of distinct numbers."
+def count_triplets(a: list[int]) -> int:
+    """Count distinct triplets on numbers in an array of distinct numbers."""
     s = set(a)
     return sum(x < y and x + y in s for x in a for y in a)
 
 
-def find_difference(a: List[int], d: int) -> bool:
-    "True if there is an `e` from `a` where `d` - `e` is also in `a`."
+def find_difference(a: list[int], d: int) -> bool:
+    """True if there is an `e` from `a` where `d` - `e` is also in `a`."""
     c = Counter(a)
     if 0 in c:
         return d in c
     return any(filter(lambda e: c[e + d] > int(d == 0), a))  # pyright: ignore
 
 
-def pairs_equal_sum(a: List[int], b: List[int], s: int) -> list:
-    "Return (sorted) pairs of elements from `a` and `b` with sum = `s`."
+def pairs_equal_sum(a: list[int], b: list[int], s: int) -> list:
+    """Return (sorted) pairs of elements from `a` and `b` with sum = `s`."""
     sa = set(a)
     return sorted((s - y, y) for y in b if s - y in sa)
 
 
-def greater_smaller(a: List[int]) -> Optional[int]:
-    "Return element greater than all previous and smaller than all following."
+def greater_smaller(a: list[int]) -> int | None:
+    """Return element greater than all previous and smaller than all following."""
     mn = skip(accumulate(reversed(a), min))
     it = skip(zip(reversed(list(mn)), accumulate(a, max)))
     return next((n for n, x in it if n == x), None)
 
 
-def smallest_sub_with_greater_sum(a: List[int], k: int) -> int:
-    "Returns smallest sublist length with sum above `k`."
+def smallest_sub_with_greater_sum(a: list[int], k: int) -> int:
+    """Returns smallest sublist length with sum above `k`."""
     i = 0
     s = 0
     n = len(a)
@@ -203,8 +203,8 @@ def smallest_sub_with_greater_sum(a: List[int], k: int) -> int:
     return ln if ln < n + 1 else 0
 
 
-def window_distinct_count(a: List[int], k: int) -> List[int]:
-    "Returns count of distinct elements for every `k` window in `a`."
+def window_distinct_count(a: list[int], k: int) -> list[int]:
+    """Returns count of distinct elements for every `k` window in `a`."""
     if k > len(a):
         return []
     d = {}
@@ -228,16 +228,16 @@ def window_distinct_count(a: List[int], k: int) -> List[int]:
     return cnt
 
 
-def find_extra_element(a: List[int], b: List[int]) -> int:
-    "Return index of an extra element in sorted arrays `a` and `b`."
+def find_extra_element(a: list[int], b: list[int]) -> int:
+    """Return index of an extra element in sorted arrays `a` and `b`."""
     # Runs in O(log N)
     if len(a) < len(b):
         a, b = b, a
     return search.binary(lambda m: a[m] < b[m], 0, len(b) - 1, -1) + 1
 
 
-def pascal_triangle_row(n: int) -> List[int]:
-    "Return the nth row of pascal triangle."
+def pascal_triangle_row(n: int) -> list[int]:
+    """Return the nth row of pascal triangle."""
     pr = [1] * n
     cr = [1] * n
     for i in range(2, n):
@@ -247,24 +247,26 @@ def pascal_triangle_row(n: int) -> List[int]:
     return cr
 
 
-def min_diff(a: List[int], k: int) -> int:
-    "Smallest difference in a sublist of `a` of `k` elements."
+def min_diff(a: list[int], k: int) -> int:
+    """Smallest difference in a sublist of `a` of `k` elements."""
     a.sort()
     return reduce(
-        min, (a[i + k - 1] - a[i] for i in range(len(a) + 1 - k)), a[-1] - a[0]
+        min,
+        (a[i + k - 1] - a[i] for i in range(len(a) + 1 - k)),
+        a[-1] - a[0],
     )
 
 
-def selection_sort(a: List[int]):
-    "Sort array `a` using selection sort."
+def selection_sort(a: list[int]) -> None:
+    """Sort array `a` using selection sort."""
     n = len(a)
     for i in range(n - 1):
         j = min(range(i, n), key=lambda j: a[j])
         a[i], a[j] = a[j], a[i]
 
 
-def bubble_sort(a: List[int]):
-    "Sort array `a` using bubble sort."
+def bubble_sort(a: list[int]) -> None:
+    """Sort array `a` using bubble sort."""
     n = len(a)
     for i in range(1, n):
         swapped = False
@@ -276,8 +278,8 @@ def bubble_sort(a: List[int]):
             break
 
 
-def duplicated_sorted_find_unique(a: List[int]) -> int:
-    "In a sorted array find the unique one with every other duplicated."
+def duplicated_sorted_find_unique(a: list[int]) -> int:
+    """In a sorted array find the unique one with every other duplicated."""
     # 1 1 2 2 3 4 4 5 5
     # 1=1 2=2 3<4 4<5 5
     return a[
@@ -285,41 +287,41 @@ def duplicated_sorted_find_unique(a: List[int]) -> int:
     ]
 
 
-def max_equal_zero_and_one_length(a: List[int]) -> int:
-    "Return the max length of a sublist containing equal number of 0 and 1."
+def max_equal_zero_and_one_length(a: list[int]) -> int:
+    """Return the max length of a sublist containing equal number of 0 and 1."""
     d = {0: -1}
     return reduce(
         max,
         (
             j - d.setdefault(cs, j)
-            for j, cs in enumerate(accumulate(map(lambda x: 2 * x - 1, a)))
+            for j, cs in enumerate(accumulate(2 * x - 1 for x in a))
         ),
         0,
     )
 
 
-def toys_with_budget(a: List[int], b: int) -> int:
-    "Returns number of toys from `a` that can be bought with budget `b`."
+def toys_with_budget(a: list[int], b: int) -> int:
+    """Returns number of toys from `a` that can be bought with budget `b`."""
     return next((i for i, c in enumerate(accumulate(sorted(a))) if c > b), len(a))
 
 
-def first_last(a: List[int], x: int) -> Tuple[int, int]:
-    "Return the first and last index of `x` in a sorted array `a`."
+def first_last(a: list[int], x: int) -> tuple[int, int]:
+    """Return the first and last index of `x` in a sorted array `a`."""
     l: int = search.binary(lambda m: a[m] >= x, 0, len(a) - 1, -1) + 1
     h: int = search.binary(lambda m: a[m] > x, l, len(a) - 1, -1) + 0
     return (l, h) if l <= h else (-1, -1)
 
 
-def merge_sorted(a: List[int], b: List[int]):
-    "Merge two sorted lists in place. `a` gets the lower elements."
+def merge_sorted(a: list[int], b: list[int]) -> None:
+    """Merge two sorted lists in place. `a` gets the lower elements."""
     l = min(len(a), len(b))
     a[: -l - 1 : -1], b[:l] = zip(*map(minmax, zip(reversed(a), b)))
     a.sort()
     b.sort()
 
 
-def meta_frog_jumps(frogs: List[int], pads: int) -> int:
-    "Return min hops for `frogs` traversing `pads`, jumping over each other."
+def meta_frog_jumps(frogs: list[int], pads: int) -> int:
+    """Return min hops for `frogs` traversing `pads`, jumping over each other."""
     frogs.sort()
     jumps = pads - frogs[-1]
     for fi in range(1, len(frogs)):
@@ -327,8 +329,8 @@ def meta_frog_jumps(frogs: List[int], pads: int) -> int:
     return jumps
 
 
-def min_partition_diff(a: List[int]) -> int:
-    "Minimum difference between two partitions of `a`."
+def min_partition_diff(a: list[int]) -> int:
+    """Minimum difference between two partitions of `a`."""
     s = sum(a)
 
     @lru_cache(None)
@@ -341,7 +343,7 @@ def min_partition_diff(a: List[int]) -> int:
 
 
 def max_histogram_rectangle(h: list) -> int:
-    "Return the max rectangular area under the histogram `h`."
+    """Return the max rectangular area under the histogram `h`."""
     s = []
 
     def it(j, v=0):
@@ -353,8 +355,8 @@ def max_histogram_rectangle(h: list) -> int:
     return max(chain(map(max, starmap(it, enumerate(h))), it(len(h))))
 
 
-def max_matrix_area(m: List[List[int]]) -> int:
-    "Matrix `m` contains 1 and 0. Find the largest rectangle."
+def max_matrix_area(m: list[list[int]]) -> int:
+    """Matrix `m` contains 1 and 0. Find the largest rectangle."""
 
     def hist(h, r):
         h[:] = ((x + 1) * y for x, y in zip(h, r))
@@ -363,8 +365,8 @@ def max_matrix_area(m: List[List[int]]) -> int:
     return max(map(max_histogram_rectangle, accumulate(m, hist, initial=m[0][:])))
 
 
-def median2(a: List[int], b: List[int]) -> float:
-    "Return median of two lists `a` and `b` in O(log N)."
+def median2(a: list[int], b: list[int]) -> float:
+    """Return median of two lists `a` and `b` in O(log N)."""
     if len(a) > len(b):
         a, b = b, a
     n = len(a) + len(b)
@@ -397,19 +399,19 @@ def median2(a: List[int], b: List[int]) -> float:
 
 
 def max_sub_sum(a: Iterable[int]) -> int:
-    "Return the max sum of a sub-array from `a`."
-    # Kadane’s Algorithm
+    """Return the max sum of a sub-array from `a`."""
+    # Kadane`s Algorithm
     return max(accumulate(a, lambda x, y: max(0, x + y), initial=0))
 
 
-def max_circular_sub_sum(a: List[int]) -> int:
-    "Return the max sum of a circular sub-array from `a`."
+def max_circular_sub_sum(a: list[int]) -> int:
+    """Return the max sum of a circular sub-array from `a`."""
     return max(max_sub_sum(a), max_sub_sum(map(neg, a)) + sum(a)) or max(a)
 
 
 def max_sum_substring(s: str, d: dict) -> str:
-    "Return the substring of `s` with max sum, where some character values from `d`."
-    # Kadane’s Algorithm
+    """Return the substring of `s` with max sum, where some character values from `d`."""
+    # Kadane`s Algorithm
     # Transform `s` into a numeric array
     num = lambda c: d.get(c, ord(c))
     # Calculate the cumulative Kadane's value.
@@ -427,8 +429,8 @@ def max_sum_substring(s: str, d: dict) -> str:
     return s[mi:mj] if mi < mj else max(s, key=num)
 
 
-def zero_sum_sub_max_len(a: List[int]) -> int:
-    "Return the max length of a sub-array of `a` which sums to zero."
+def zero_sum_sub_max_len(a: list[int]) -> int:
+    """Return the max length of a sub-array of `a` which sums to zero."""
     # The idea is to compute an array of the accumulated values.
     # If any accumulated value shows up in the array again, there is a zero sub-array.
     # Store the accumulated values to prevent recomputation below.
@@ -442,8 +444,8 @@ def zero_sum_sub_max_len(a: List[int]) -> int:
     return max(starmap(lambda i, e: i - occ[e], enumerate(acc)))
 
 
-def zero_sum_sub_max_interval(a: List[int]) -> Tuple[int, int]:
-    "Return the indexes of the longest sub-array of `a` which sums to zero."
+def zero_sum_sub_max_interval(a: list[int]) -> tuple[int, int]:
+    """Return the indexes of the longest sub-array of `a` which sums to zero."""
     # The idea is to compute an array of the accumulated values.
     # If any accumulated value shows up in the array again, there is a zero sub-array.
     # Store the accumulated values to prevent recomputation below.
@@ -459,8 +461,8 @@ def zero_sum_sub_max_interval(a: List[int]) -> Tuple[int, int]:
     return j + 1 + length, j + 1
 
 
-def kaiten_sushi(belt: List[int], distance: int) -> int:
-    "Count dishes on the `belt` which are unique within the `distance`."
+def kaiten_sushi(belt: list[int], distance: int) -> int:
+    """Count dishes on the `belt` which are unique within the `distance`."""
     dishes = set()
     order = deque()
     count = 0
@@ -475,9 +477,8 @@ def kaiten_sushi(belt: List[int], distance: int) -> int:
     return count
 
 
-def mail_room_theft(arrivals: List[int], cost: int, theft: float) -> float:
-    """
-    Retrieve arriving packages from mail room at `cost` of entering
+def mail_room_theft(arrivals: list[int], cost: int, theft: float) -> float:
+    """Retrieve arriving packages from mail room at `cost` of entering
     and in face of `theft` factor.
 
     Each time the packages are retrieved from the mail room a `cost` needs
@@ -498,8 +499,7 @@ def mail_room_theft(arrivals: List[int], cost: int, theft: float) -> float:
 
 
 def next_smallest_palindrome_number(num: list) -> list:
-    """
-    Return the next smallest palindrome number from `num`.
+    """Return the next smallest palindrome number from `num`.
 
     Num is a sequence of digits [0-9].
     """
@@ -535,7 +535,7 @@ def next_smallest_palindrome_number(num: list) -> list:
 
 
 def aggressive_cows(stalls: list, cows: int) -> int:
-    "Return maximum possible distance between `cows` when placed into the `stalls`."
+    """Return maximum possible distance between `cows` when placed into the `stalls`."""
     stalls.sort()
     ac = lambda d: lambda a, s: s - a[1] >= d and (a[0] + 1, s) or a
     gt = lambda d: cows > reduce(ac(d), stalls, (1, stalls[0]))[0]
@@ -543,7 +543,7 @@ def aggressive_cows(stalls: list, cows: int) -> int:
 
 
 def smaller_on_right_counts(arr: list) -> list:
-    "Return a list counting elements smaller that each element in `arr`."
+    """Return a list counting elements smaller that each element in `arr`."""
     # This uses merge-sort count-inversion to count the unsorted elements.
     n = len(arr)
     # Output array
@@ -553,7 +553,7 @@ def smaller_on_right_counts(arr: list) -> list:
     x = list(range(n))
     t = x[:]
 
-    def merge(l, m, h):
+    def merge(l, m, h) -> None:
         # k - number of sorted entries.
         # i - index into the first half.
         # j - index into the second half (m + 1).
@@ -584,7 +584,7 @@ def smaller_on_right_counts(arr: list) -> list:
         # Copy over this part into the temporary array.
         t[l : h + 1] = x[l : h + 1]
 
-    def split(i, j):
+    def split(i, j) -> None:
         if i < j:
             m = (i + j) // 2
             split(i, m)
@@ -596,7 +596,7 @@ def smaller_on_right_counts(arr: list) -> list:
 
 
 def unsorted_pairs_count(a: list) -> int:
-    "Return a count of unsorted element pairs in `a`."
+    """Return a count of unsorted element pairs in `a`."""
     # This uses merge-sort count inversion to count the unsorted elements.
     # See `smaller_on_the_right` count above for the same function returning an array.
 
@@ -645,7 +645,7 @@ def unsorted_pairs_count(a: list) -> int:
 
 
 def min_sum_split(a: list, k: int) -> int:
-    "Split `a` in `k` sub-lists. Minimize the maximum sum of every one."
+    """Split `a` in `k` sub-lists. Minimize the maximum sum of every one."""
     # Search through possible splits of `a` given the maximum `mx` sum of each sub-list.
     # Calculate the number of splits given the `mx` maximum sum of elements.
     acc = lambda mx: lambda a, e: (e, a[1] + 1) if a[0] + e > mx else (a[0] + e, a[1])
@@ -655,8 +655,8 @@ def min_sum_split(a: list, k: int) -> int:
     return search.binary_lt(fit, max(a), sum(a)) + 0
 
 
-def out_ouf_there_number(a: List[int]) -> int:
-    "Smallest positive number not in the array `a` or not a sum of elements from `a`."
+def out_ouf_there_number(a: list[int]) -> int:
+    """Smallest positive number not in the array `a` or not a sum of elements from `a`."""
     a.sort()
     # Looking for the lowest number between `a[i]...a[i+1]` that cannot be represented
     # by numbers `a[0] ... a[i]` in any way as a sum.
@@ -667,8 +667,8 @@ def out_ouf_there_number(a: List[int]) -> int:
     return next((s for e, s in zip(a, accumulate(a, initial=1)) if s < e), sum(a) + 1)
 
 
-def max_min_window(a: List[int]) -> List[int]:
-    "For every window size return the maximum of the minimums."
+def max_min_window(a: list[int]) -> list[int]:
+    """For every window size return the maximum of the minimums."""
     # The idea is to find a window size for each element, where the
     # element is the minimum. Larger elements have smaller window size.
     # This is done by finding the index for the left and right element
@@ -676,8 +676,8 @@ def max_min_window(a: List[int]) -> List[int]:
     #
     # Using: [10, 20, 30, 50, 10, 70, 30] as example.
 
-    def bracket(b: List[int], it: Iterable[int]) -> List[int]:
-        "Computes the left and right index of a smaller element."
+    def bracket(b: list[int], it: Iterable[int]) -> list[int]:
+        """Computes the left and right index of a smaller element."""
         s = []  # Contains indexes of elements smaller and the previous one.
         for i in it:
             # Remove all elements larger or equal to this one.
@@ -717,8 +717,8 @@ def max_min_window(a: List[int]) -> List[int]:
     return wnd
 
 
-def partition_equal_sum(a: List[int], k: int) -> bool:
-    "Partition `a` into `k` subset with equal sum value."
+def partition_equal_sum(a: list[int], k: int) -> bool:
+    """Partition `a` into `k` subset with equal sum value."""
     # The idea is to compute the sum of numbers recursively
     # for each state denoted by '2**len(a)' bits.
     # Each bit indicates that a number is in the state or not.
@@ -743,7 +743,7 @@ def partition_equal_sum(a: List[int], k: int) -> bool:
     return not r and value((1 << len(a)) - 1) < target
 
 
-def candy(r: List[int]) -> int:
+def candy(r: list[int]) -> int:
     """Given ratings `r` reward each kid with candies.
     If a child is better than its neighbor it get more candies.
     Each child gets at least 1 candy.
@@ -760,8 +760,8 @@ def candy(r: List[int]) -> int:
     return sum(max(x, y) for x, y in zip(c, reversed(list(d)))) + n
 
 
-def max_profit(prices: List[int], k: int) -> int:
-    "Return a max-profit to be made for at most `k` sells using `prices` for each day."
+def max_profit(prices: list[int], k: int) -> int:
+    """Return a max-profit to be made for at most `k` sells using `prices` for each day."""
     # Each transaction needs a buy and a sell
     k = min(k, len(prices) // 2)
     # For each transaction count `t`:
@@ -775,15 +775,15 @@ def max_profit(prices: List[int], k: int) -> int:
         for t in range(min(1 + d // 2, k)):
             # The idea follows this chain of transformations.
             # Each day we have the choice of two actions:
-            #    noop = profit[d - 1][t]
-            #    sell = max(p[d] - p[buy] + profit[buy][t - 1] for buy in range(d))
+            #    `noop = profit[d - 1][t]`
+            #    `sell = max(p[d] - p[buy] + profit[buy][t - 1] for buy in range(d))`
             # where `sell` can be transformed to:
-            #    sell  = p[d] + max(profit[buy][t - 1] - p[buy] for buy in range(d)))
+            #    `sell  = p[d] + max(profit[buy][t - 1] - p[buy] for buy in range(d)))`
             # The second term is the max achievable balance from `t-1` transactions.
             # The `balance` term can be computed as:
-            #    balance[d][t] = max(balance[d-1][t], profit[d][t-1] - p[d])
+            #    `balance[d][t] = max(balance[d-1][t], profit[d][t-1] - p[d])`
             # If we abandon the day `d` in the memo tables:
-            #    balance[t] = max(balance[t], profit[t-1] - p)
+            #    `balance[t] = max(balance[t], profit[t-1] - p)`
             balance[t] = max(balance[t], (t and profit[t - 1]) - p)
             profit[t] = max(profit[t], p + balance[t])
 
@@ -791,7 +791,7 @@ def max_profit(prices: List[int], k: int) -> int:
 
 
 def count_changes_to_make_strict(a: list) -> int:
-    "Count numbers to be changed in `a` to make the sequence strictly increasing."
+    """Count numbers to be changed in `a` to make the sequence strictly increasing."""
     # The idea is to find the longest (non-continuous) increasing subsequence (LIS).
     # The remaining numbers in `a` will need to be changed.
     # In order to do this, we have to make sure that all the remaining numbers
@@ -812,8 +812,8 @@ def count_changes_to_make_strict(a: list) -> int:
     return len(a) - max(map(lis, range(len(a))), default=0)
 
 
-def repeated_numbers(a: List[int]) -> tuple:
-    "Return repeated numbers from `a`."
+def repeated_numbers(a: list[int]) -> tuple:
+    """Return repeated numbers from `a`."""
     # The idea is to mark the numbers as repeated
     # by flipping the sign at their index position.
     # Since the values may become negative, we need to use `abs`
@@ -825,24 +825,27 @@ def repeated_numbers(a: List[int]) -> tuple:
     return tuple(filter(None, map(repeated, a)))
 
 
-def compress_geek_road(r: List[int], sections: set) -> List[tuple]:
+def compress_geek_road(r: list[int], sections: set) -> list[tuple]:
     """Compress the road `r` into a following representation:
-        (<baggage>, <intersection-value>, <intersection-length>)
+        (<baggage>, <intersection-value>, <intersection-length>).
 
     where:
         - baggage is the sum of all values since the last intersection.
         - intersection-value is the number of balls shared between roads.
         - intersection-length is the count of the intersection buckets
             repeating with the same intersection-value.
+
     Args:
+    ----
         r (List[int]): road consisting of counts of balls
         sections (set): counts of balls that mark intersections
 
     Returns:
+    -------
         List(tuple): list of tuples describing intersections
             and values in-between.
-    """
 
+    """
     c = []
     i = 0
     while i < len(r):
@@ -861,7 +864,7 @@ def compress_geek_road(r: List[int], sections: set) -> List[tuple]:
     return c
 
 
-def geek_roads(a: List[int], b: List[int]) -> int:
+def geek_roads(a: list[int], b: list[int]) -> int:
     """Two roads `a` and `b` are given. On each road there are buckets
     with balls, which can be collected when Geek is on that road.
 
@@ -929,10 +932,11 @@ def geek_roads(a: List[int], b: List[int]) -> int:
 
 
 def partition_by_sum(
-    a: List[int], start: int = 0, stop: int | None = None
-) -> Tuple[int, int]:
-    """
-    Partition the array a so the sums left and right are closest.
+    a: list[int],
+    start: int = 0,
+    stop: int | None = None,
+) -> tuple[int, int]:
+    """Partition the array a so the sums left and right are closest.
 
     Parameters
     ----------
@@ -947,6 +951,7 @@ def partition_by_sum(
     -------
     Tuple[int, int]
         The left and right sum, sorted.
+
     """
     if stop is None:
         stop = len(a)
@@ -969,9 +974,8 @@ def partition_by_sum(
     return mn[1], sum(mn)
 
 
-def four_partitions_min_sum_difference(a: List[int]) -> int:
-    """
-    Partition `a` into four sub-lists.
+def four_partitions_min_sum_difference(a: list[int]) -> int:
+    """Partition `a` into four sub-lists.
     Return sub-lists' minimum sum difference.
     Sub-lists need to be non-empty and continuous.
 
@@ -984,11 +988,12 @@ def four_partitions_min_sum_difference(a: List[int]) -> int:
     -------
     int
         Minimum difference of sums in the partition.
+
     """
     n = len(a)
-    csum = [0] + list(accumulate(a))
+    csum = [0, *accumulate(a)]
 
-    def partition(start: int, stop: int) -> Tuple[int, int]:
+    def partition(start: int, stop: int) -> tuple[int, int]:
         # Using cumulative array above,
         # calculate a partition with the two sums being minimal.
         # Start search at second element, stop at second to last.

@@ -1,21 +1,22 @@
 """Module for puzzles woring on an MxN grid."""
 
+from __future__ import annotations
+
 import math
 from heapq import heappop, heappush
 from itertools import product
-from typing import List, Set, Tuple
 
 import mathematics
 
 
-def dijkstra(grid: List[List[int]]) -> int:
-    "Search a path in an NxN grid of costs per cell. Return overall cost."
+def dijkstra(grid: list[list[int]]) -> int:
+    """Search a path in an NxN grid of costs per cell. Return overall cost."""
     n = len(grid)
     goal = (n - 1, n - 1)
     start = (0, 0)
-    v: Set[Tuple[int, int]] = set([start])
+    v: set[tuple[int, int]] = {start}
     dc = grid[0][0]
-    q: List[Tuple[int, Tuple[int, int]]] = [(dc, start)]
+    q: list[tuple[int, tuple[int, int]]] = [(dc, start)]
     while q:
         d, p = heappop(q)
         if p == goal:
@@ -30,12 +31,12 @@ def dijkstra(grid: List[List[int]]) -> int:
     return -1
 
 
-def a_star(grid: List[List[int]]) -> int:
-    "Search a path in an NxN grid of costs per cell. Return overall cost."
+def a_star(grid: list[list[int]]) -> int:
+    """Search a path in an NxN grid of costs per cell. Return overall cost."""
     n = len(grid)
     g = n - 1
     d: float = grid[0][0]
-    q: List[Tuple[float, int, int]] = [(float(d + g + g), 0, 0)]
+    q: list[tuple[float, int, int]] = [(float(d + g + g), 0, 0)]
     m = [[math.inf] * n for _ in grid]
     m[0][0] = d
     while q:
@@ -56,8 +57,8 @@ def a_star(grid: List[List[int]]) -> int:
     return -1
 
 
-def connect_islands(grid: List[List[int]]) -> int:
-    "Return the size of the largest island that can be made with just one flip."
+def connect_islands(grid: list[list[int]]) -> int:
+    """Return the size of the largest island that can be made with just one flip."""
     n = len(grid)
     islands = [0, 0]  # index == 0 (empty), index == 1 (unexplored)
     # safe grid access shortcut.
@@ -88,7 +89,7 @@ def connect_islands(grid: List[List[int]]) -> int:
     for x, y in product(range(n), repeat=2):
         if grid[x][y] == 0:
             # Determine (the set of) adjacent islands.
-            adjacent = set(g(x + dx, y + dy) for dx, dy in adjacency)
+            adjacent = {g(x + dx, y + dy) for dx, dy in adjacency}
             # Compute the size of a joined island. Draw maximum.
             ms = max(ms, sum(islands[i] for i in adjacent) + 1)
 
@@ -96,16 +97,19 @@ def connect_islands(grid: List[List[int]]) -> int:
     return ms or n * n
 
 
-def enclosed_islands_count(grid: List[List[int]]) -> int:
+def enclosed_islands_count(grid: list[list[int]]) -> int:
     """Return the count of islands of 1s fully enclosed by 0s.
 
     If an island touches the edge it is not considered fully enclosed.
 
     Args:
+    ----
         grid (List[List[int]]): a grid of 1s and 0s.
 
     Returns:
+    -------
         int: count of fully enclosed islands.
+
     """
     n, m = len(grid), len(grid[0])
 
@@ -132,12 +136,12 @@ def enclosed_islands_count(grid: List[List[int]]) -> int:
     return sum(v(x, y) == 1 for x, y in product(range(n), range(m)))
 
 
-def sudoku(grid: List[List[int]]) -> bool:
-    "Fill in the grid and return True if solved."
+def sudoku(grid: list[list[int]]) -> bool:
+    """Fill in the grid and return True if solved."""
     rows, cols, boxes = [0] * 9, [0] * 9, [0] * 9
     left = []
 
-    def flip(n, i, j):
+    def flip(n, i, j) -> None:
         v = 1 << n
         rows[i] ^= v
         cols[j] ^= v
@@ -146,7 +150,7 @@ def sudoku(grid: List[List[int]]) -> bool:
     for i, j in product(range(9), repeat=2):
         flip(grid[i][j] or left.append((i, j)) or 0, i, j)
 
-    def solve(pos):
+    def solve(pos) -> bool:
         if pos < 0:
             return True
         i, j = left[pos]
@@ -166,7 +170,7 @@ def sudoku(grid: List[List[int]]) -> bool:
 
 
 def grid_path_count(m: int, n: int, mod: int = 10**9 + 7) -> int:
-    "Return number of paths that can be taken from (m,n) down to (0,0) modulo `mod`."
+    """Return number of paths that can be taken from (m,n) down to (0,0) modulo `mod`."""
     # Runs in O(m+n) due to factorial.
     # This is a combinatorial problem.
     # We have `m+n` steps of left or down.
@@ -179,7 +183,7 @@ def grid_path_count(m: int, n: int, mod: int = 10**9 + 7) -> int:
     return mathematics.combmod(m + n, m, mod)
 
 
-def min_points_traverse(grid: List[List[int]]) -> int:
+def min_points_traverse(grid: list[list[int]]) -> int:
     """Traverse a `grid` with positive and negative numbers representing returns.
     What is the necessary minimum of initial points if the sum of returns
     on the grid traversal path cannot fall below 1?

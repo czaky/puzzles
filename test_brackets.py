@@ -10,8 +10,8 @@ class TestBrackets(unittest.TestCase):
 
     def test_balanced(self):
         """Tests `balanced` function."""
-        self.assertTrue(b.balanced("({[()[]]})"))
-        self.assertTrue(b.balanced("{}[]()"))
-        self.assertFalse(b.balanced("{}[]()["))
-        self.assertFalse(b.balanced("){}[]()"))
-        self.assertFalse(b.balanced("{)[]()"))
+        assert b.balanced("({[()[]]})")
+        assert b.balanced("{}[]()")
+        assert not b.balanced("{}[]()[")
+        assert not b.balanced("){}[]()")
+        assert not b.balanced("{)[]()")

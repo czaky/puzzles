@@ -1,12 +1,14 @@
-"Code related to sets and puzzels on sets."
+"""Code related to sets and puzzels on sets."""
+
+from __future__ import annotations
 
 from itertools import combinations
 from operator import itemgetter
-from typing import List, Sequence
+from typing import Sequence
 
 
 class Disjoint:
-    "Create a disjoint set using find-union algorithms."
+    """Create a disjoint set using find-union algorithms."""
 
     def __init__(self, size: int) -> None:
         self.parent = list(range(size))
@@ -14,13 +16,13 @@ class Disjoint:
         self.size = [1] * size
 
     def find(self, i) -> int:
-        "Find the representative node for `i`."
+        """Find the representative node for `i`."""
         while i != self.parent[i]:
             i, self.parent[i] = self.parent[i], self.parent[self.parent[i]]
         return i
 
     def union(self, i, j) -> int:
-        "Merge both subsets containing nodes `i` and `j`."
+        """Merge both subsets containing nodes `i` and `j`."""
         x = self.find(i)
         y = self.find(j)
 
@@ -45,7 +47,7 @@ class Disjoint:
         return x
 
 
-def weighted_paths_in_tree(edges: List[Sequence[int]], queries: List[int]) -> List[int]:
+def weighted_paths_in_tree(edges: list[Sequence[int]], queries: list[int]) -> list[int]:
     """Given a list of weighted edges and a list of queries, return counts of paths.
 
     Each query specifies the maximum weight of edges that can count in paths.
@@ -58,14 +60,14 @@ def weighted_paths_in_tree(edges: List[Sequence[int]], queries: List[int]) -> Li
     sizes = [1] * (n + 1)
 
     def parent(n: int) -> int:
-        "Find the parent of n. Compress the path."
+        """Find the parent of n. Compress the path."""
         while n != parents[n]:
             # Compress the set by halving.
             n, parents[n] = parents[n], parents[parents[n]]
         return n
 
     def union(x: int, y: int) -> int:
-        "Connect `x` and `y` into one set. Return number of new paths."
+        """Connect `x` and `y` into one set. Return number of new paths."""
         x, y = parent(x), parent(y)
         if x == y:
             return 0
@@ -98,7 +100,7 @@ def weighted_paths_in_tree(edges: List[Sequence[int]], queries: List[int]) -> Li
 
 
 def powerset(iterable):
-    "powerset([1,2,3]) → () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
+    """powerset([1,2,3]) → () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)."""
     s = set(iterable)
     for size in range(len(s)):
         yield from map(set, combinations(s, size))

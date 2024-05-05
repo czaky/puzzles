@@ -1,53 +1,76 @@
 """Puzzles related to binary (search) trees."""
 
+from __future__ import annotations
+
 from collections import deque
 from functools import reduce
 from itertools import islice
 from math import inf
-from typing import Deque, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Iterator, Optional
 
-import lists
+if TYPE_CHECKING:
+    import lists
 
 
 class TreeNode:
-    "Node of a binary tree."
+    """Node of a binary tree."""
 
-    def __init__(self, data):
+    def __init__(self, data: Any) -> None:  # noqa: ANN401
+        """Return a TreeNode.
+
+        Parameters
+        ----------
+        data : Any
+            Value of the node
+
+        """
         self.data = data
-        self.left: Optional[TreeNode] = None
-        self.right: Optional[TreeNode] = None
+        self.left: TreeNode | None = None
+        self.right: TreeNode | None = None
         self.height: int = 1
 
     # Iterators
 
-    def level_order(self, nodes=False):
+    def level_order(self, *, nodes: bool = False) -> Iterator:
         """Breadth First Search (level order) iterator.
 
         Args:
+        ----
             nodes (bool, optional): If true, yield nodes instead of values.
+
         """
         # Iterative implementation using a queue.
-        q: Deque[Node] = deque([self])
+        q: deque[Node] = deque([self])
         while q:
             n = q.popleft()
             yield (n if nodes else n.data)
             n.left and q.append(n.left)
             n.right and q.append(n.right)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator:
+        """Return a level order iterator.
+
+        Yields
+        ------
+        Iterator
+            tree values in level order
+
+        """
         # BFS (breadth first search) or level order.
         return self.level_order()
 
     # Depth first traversals.
 
-    def preorder(self, nodes=False):
+    def preorder(self, *, nodes: bool = False) -> Iterator:
         """Pre-order, depth first (DFS) traversal of the binary tree.
 
         Useful to create a copy of the tree and generate prefix expressions.
         Nodes are enumerated top-down.
 
         Args:
+        ----
             nodes (bool, optional): It true, yield nodes instead of value.
+
         """
         r: TreeNode = self
         s = [r]
@@ -57,13 +80,15 @@ class TreeNode:
             n.right and s.append(n.right)
             n.left and s.append(n.left)
 
-    def inorder(self, nodes=False):
+    def inorder(self, *, nodes: bool = False) -> Iterator:
         """In-order, depth first (DFS) traversal of the binary tree.
 
         Useful to sequence a binary search tree (BST) in sorted order.
 
         Args:
+        ----
             nodes (bool, optional): It true, yield nodes instead of value.
+
         """
         # Iterative implementation using a stack.
         s = []
@@ -76,14 +101,16 @@ class TreeNode:
             yield (n if nodes else n.data)
             n = n.right
 
-    def postorder(self, nodes=False):
+    def postorder(self, *, nodes: bool = False) -> Iterator:
         """Post-order, depth first (DFS) traversal of the binary tree.
 
         Useful to delete a tree and to generate a postfix expression.
         Nodes are enumerated bottom-up.
 
         Args:
+        ----
             nodes (bool, optional): It true, yield nodes instead of value.
+
         """
         s = []
         p = None  # previous
@@ -101,31 +128,34 @@ class TreeNode:
                 p = s.pop()
                 yield (p if nodes else p.data)
 
-    def iter(self, order="level", nodes=False):
+    def iter(self, order: str = "level", *, nodes: bool = False) -> Iterator:
         """Return an iterator for a tree traversal in the specific `order`.
 
         Args:
+        ----
             order (str, optional): One of: "level" (default), "pre", "in", "post"
             nodes (bool, optional): If true, yields nodes instead of values.
+
         """
         if order == "level":
-            yield from self.level_order(nodes)
+            yield from self.level_order(nodes=nodes)
         elif order == "pre":
-            yield from self.preorder(nodes)
+            yield from self.preorder(nodes=nodes)
         elif order == "in":
-            yield from self.inorder(nodes)
+            yield from self.inorder(nodes=nodes)
         elif order == "post":
-            yield from self.postorder(nodes)
-
-        assert order in ("level", "pre", "in", "post")
+            yield from self.postorder(nodes=nodes)
+        else:
+            msg = "`order` shoul be one of: level, pre, in, or post."
+            raise ValueError(msg)
 
     # Presentation
 
-    def display(self, v=False):
-        "Display the tree in a visual 2D manner."
+    def display(self, *, v: bool = False) -> None:
+        """Display the tree in a visual 2D manner."""
 
-        def aux(node):
-            "-> lines, width, height, middle"
+        def aux(node: Node) -> tuple[list, int, int, int]:
+            """-> lines, width, height, middle."""
             s = str(node.data) if not v else f"{node.data}({node.height})"
             u = len(s)
 
@@ -138,7 +168,7 @@ class TreeNode:
                 first = (x + 1) * " " + (n - x - 1) * "_" + s
                 second = x * " " + "/" + (n - x - 1 + u) * " "
                 shifted = [line + u * " " for line in lines]
-                return [first, second] + shifted, n + u, p + 2, n + u // 2
+                return [first, second, *shifted], n + u, p + 2, n + u // 2
 
             # Only right child.
             if not node.left:
@@ -146,7 +176,7 @@ class TreeNode:
                 first = s + x * "_" + (n - x) * " "
                 second = (u + x) * " " + "\\" + (n - x - 1) * " "
                 shifted = [u * " " + line for line in lines]
-                return [first, second] + shifted, n + u, p + 2, u // 2
+                return [first, second, *shifted], n + u, p + 2, u // 2
 
             # Two children.
             left, n, p, x = aux(node.left)
@@ -165,19 +195,15 @@ class TreeNode:
         mxl = 0
         for line in aux(self)[0]:
             mxl = max(mxl, len(line))
-            print(line)
 
         if v:
-            print("-" * mxl)
-            print(self)
-            print("-" * mxl)
+            pass
 
     def serialize_level_order(self, none: str = "N") -> str:
-        "Return a BFS, level-order string representation using none ('N') for None."
-
+        """Return a BFS, level-order string representation using none ('N') for None."""
         # Iterative implementation using DFS and a queue.
         o = []
-        q: Deque[Node] = deque([self])
+        q: deque[Node] = deque([self])
         while q:
             n = q.popleft()
             o.append(str(n.data) if n else none)
@@ -189,11 +215,10 @@ class TreeNode:
         return " ".join(o)
 
     def serialize_pre_order(self, none: str = "N") -> str:
-        "Return a DFS, pre-order string representation using none ('N') for None."
-
+        """Return a DFS, pre-order string representation using none ('N') for None."""
         # Iterative implementation using DFS and a stack.
         o = []
-        s: List[Node] = [self]
+        s: list[Node] = [self]
         while s:
             n = s.pop()
             o.append(str(n.data) if n else none)
@@ -205,11 +230,11 @@ class TreeNode:
         return " ".join(o)
 
     def serialize_in_order(self, lr: str = "()") -> str:
-        "Return a DFS, in-order string representation using brackets."
+        """Return a DFS, in-order string representation using brackets."""
         lb, rb = lr
         # Iterative implementation using a stack.
-        s: List[Node] = []
-        v: List[str] = []
+        s: list[Node] = []
+        v: list[str] = []
         n: Node = self
         while s or n:
             # Descend left from node.
@@ -237,24 +262,27 @@ class TreeNode:
         return v[0]
 
     def serialize_post_order(self, none: str = "N") -> str:
-        "Return a DFS, post-order string representation using none ('N') for None."
+        """Return a DFS, post-order string representation using none ('N') for None."""
 
         # Recursive implementation using DFS.
-        def dfs(n: Node):
-            return f"{dfs(n.left)} {dfs(n.right)} {str(n.data)}" if n else none
+        def dfs(n: Node) -> str:
+            return f"{dfs(n.left)} {dfs(n.right)} {n.data!s}" if n else none
 
         return dfs(self)
 
-    def serialize(self, order="level", none: str = "N", lr: str = "()") -> str:
+    def serialize(self, order: str = "level", none: str = "N", lr: str = "()") -> str:
         """Return string representation of `order` using `none` ('N') for `None`.
 
         Args:
+        ----
             none (str): representation for missing node. Defaults to "N".
             order (str): one-of: "level" (default), "pre", "post", "in".
             lr (str): brackets used for in-order representation. Default "()".
 
         Returns:
+        -------
             str: a representation of the tree with 'N' for missing nodes.
+
         """
         if order == "level":
             return self.serialize_level_order(none)
@@ -265,26 +293,34 @@ class TreeNode:
         if order == "post":
             return self.serialize_post_order(none)
 
-        assert order in ("level", "pre", "post", "in")
-        return ""
+        msg = "`order` needs to be one of: level, pre, post, or in."
+        raise ValueError(msg)
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """Serialize to level order.
+
+        Returns
+        -------
+        str
+            A string representation of the tree in level order.
+
+        """
         return self.serialize_level_order()
 
     # Balancing
 
-    def update_height(self):
-        "Update the height of this node based on its children."
+    def update_height(self) -> None:
+        """Update the height of this node based on its children."""
         self.height = 1 + max(height(self.left), height(self.right))
 
-    def left_rotate(self) -> "TreeNode":
-        "Rotate the tree at this node to the left."
+    def left_rotate(self) -> TreeNode:
+        """Rotate the tree at this node to the left."""
         #  2_         _4
         # /  \       /  \
         # 1  4   =>  2  5
         #   / \     / \
         #   3 5     1 3
-        assert self.right
+        assert self.right  # noqa: S101
         y = self.right
         self.right = y.left
         y.left = self
@@ -293,14 +329,14 @@ class TreeNode:
         y.update_height()
         return y
 
-    def right_rotate(self) -> "TreeNode":
-        "Rotate the tree at this node to the right."
+    def right_rotate(self) -> TreeNode:
+        """Rotate the tree at this node to the right."""
         #   _4         2_
         #  /  \       /  \
         #  2  5   =>  1  4
         # / \           / \
         # 1 3           3 5
-        assert self.left
+        assert self.left  # noqa: S101
         y = self.left
         self.left = y.right
         y.right = self
@@ -310,13 +346,12 @@ class TreeNode:
         return y
 
     def left_skew(self) -> int:
-        "Return how far to the left the node is skewed."
+        """Return how far to the left the node is skewed."""
         l, r = self.left, self.right
         return (l and l.height or 0) - (r and r.height or 0)
 
-    def balance_node(self) -> "TreeNode":
-        "Balance this node. May return one of its descendants."
-
+    def balance_node(self) -> TreeNode:
+        """Balance this node. May return one of its descendants."""
         skew = self.left_skew()
         if skew > 1:
             if self.left.left_skew() < 0:
@@ -330,8 +365,8 @@ class TreeNode:
         self.update_height()
         return self
 
-    def insert_balanced(self, value: int):
-        "Insert a node with `value`"
+    def insert_balanced(self, value: int) -> TreeNode:
+        """Insert a node with `value`."""
         if value < self.data:
             self.left = insert_balanced(self.left, value)
         elif value > self.data:
@@ -341,8 +376,8 @@ class TreeNode:
 
         return self.balance_node()
 
-    def delete_balanced(self, value: int):
-        "Delete the `value` from a self-balancing AVL tree."
+    def delete_balanced(self, value: int) -> Node:
+        """Delete the `value` from a self-balancing AVL tree."""
         if value == self.data:
             if not (self.right and self.left):
                 return self.left or self.right
@@ -365,12 +400,12 @@ Node = Optional[TreeNode]
 
 
 def height(n: Node) -> int:
-    "Return the height of a Node `n` or 0 for NONE."
+    """Return the height of a Node `n` or 0 for NONE."""
     return n and n.height or 0
 
 
 def make_level_order(s: str, none: str = "N") -> Node:
-    "Make a binary tree from a string `s` in breadth first, level order."
+    """Make a binary tree from a string `s` in breadth first, level order."""
     it = iter(s.split())
     v: None | str = next(it, none)
     if v == none:
@@ -382,11 +417,11 @@ def make_level_order(s: str, none: str = "N") -> Node:
         if v != none:
             n.left = TreeNode(int(v))
             q.append(n.left)
-        v = next(it, None)
-        if v is None:
+        u = next(it, None)
+        if u is None:
             break
-        if v != none:
-            n.right = TreeNode(int(v))
+        if u != none:
+            n.right = TreeNode(int(u))
             q.append(n.right)
     for n in root.inorder(nodes=True):
         n.update_height()
@@ -394,9 +429,9 @@ def make_level_order(s: str, none: str = "N") -> Node:
 
 
 def make_pre_order(s: str, none: str = "N") -> Node:
-    "Make a binary tree from a string `s` in depth first, pre-order."
+    """Make a binary tree from a string `s` in depth first, pre-order."""
 
-    def des(it):
+    def des(it: Iterator[str]) -> Node:
         v = next(it, none)
         if v == none:
             return None
@@ -413,12 +448,15 @@ def make(s: str, order="level", none: str = "N") -> Node:
     """Make a binary tree from string `s` using terminating token `none`.
 
     Args:
+    ----
         s (str): String with values and terminating tokens.
         none (str, optional): Terminating token indicating None. Defaults to "N".
         order (str, optional): One of: 'level', 'pre'. Defaults to "level".
 
     Returns:
+    -------
         Node: A root TreeNode or None.
+
     """
     if order == "level":
         return make_level_order(s, none)
@@ -430,8 +468,7 @@ def make(s: str, order="level", none: str = "N") -> Node:
 
 
 def inorder_postorder_tangle(inorder: list, post: list) -> Node:
-    """
-    Reconstruct a binary tree from its inorder and postorder serialization.
+    """Reconstruct a binary tree from its inorder and postorder serialization.
 
     Parameters
     ----------
@@ -444,6 +481,7 @@ def inorder_postorder_tangle(inorder: list, post: list) -> Node:
     -------
     Node
         The root of the deserialized tree.
+
     """
     # Make the index lookup: O(1)
     idx = {v: i for i, v in enumerate(inorder)}
@@ -457,12 +495,13 @@ def inorder_postorder_tangle(inorder: list, post: list) -> Node:
             n.right = r(m + 1, j)
             n.left = r(i, m)
             return n
+        return None
 
     return r(0, len(inorder))
 
 
 def from_list(ln: lists.Node) -> Node:
-    "Create a balanced tree from a linked list starting at `ln`."
+    """Create a balanced tree from a linked list starting at `ln`."""
 
     def tree(stop: int) -> Node:
         if stop > 0:
@@ -479,22 +518,22 @@ def from_list(ln: lists.Node) -> Node:
 
 
 def lvo(n: Node, nodes=False):
-    "Yield nodes or values in breadth first, level order."
+    """Yield nodes or values in breadth first, level order."""
     if n:
-        yield from n.level_order(nodes)
+        yield from n.level_order(nodes=nodes)
 
 
 def ino(n: Node, nodes=False):
-    "Yield nodes or values in in-order traversal."
+    """Yield nodes or values in in-order traversal."""
     if n:
-        yield from n.inorder(nodes)
+        yield from n.inorder(nodes=nodes)
 
 
 def left_view(root: Node) -> list:
-    "Return the projected left view of the binary tree from `root`."
+    """Return the projected left view of the binary tree from `root`."""
     view = []
 
-    def enum(n: Node, level: int):
+    def enum(n: Node, level: int) -> None:
         if not n:
             return
         if level > len(view):
@@ -507,10 +546,10 @@ def left_view(root: Node) -> list:
 
 
 def right_view(root: Node) -> list:
-    "Return the projected right view of the binary tree from `root`."
+    """Return the projected right view of the binary tree from `root`."""
     view = []
 
-    def enum(n: Node, level: int):
+    def enum(n: Node, level: int) -> None:
         if not n:
             return
         if level > len(view):
@@ -523,7 +562,7 @@ def right_view(root: Node) -> list:
 
 
 def reversed_level_order(t: Node) -> list:
-    "Return reversed breadth first (level order) enumeration."
+    """Return reversed breadth first (level order) enumeration."""
     q = deque([t])
     r = []
     while q:
@@ -538,8 +577,7 @@ def reversed_level_order(t: Node) -> list:
 
 
 def spiral_order(t: Node) -> list:
-    """
-    Return the node values in spiral.
+    """Return the node values in spiral.
     Spiral order is alternating from left to right on each level.
     """
     q = deque([t])
@@ -560,13 +598,12 @@ def spiral_order(t: Node) -> list:
 
 
 def insert_balanced(n: Node, value: int):
-    "Insert a node with `value`"
+    """Insert a node with `value`."""
     return n.insert_balanced(value) if n else TreeNode(value)
 
 
-def is_bst(n: "Node", mn: float = -inf, mx: float = inf) -> bool:
-    """
-    Determine if the binary tree starting at `n` is a BST.
+def is_bst(n: Node, mn: float = -inf, mx: float = inf) -> bool:
+    """Determine if the binary tree starting at `n` is a BST.
 
     Parameters
     ----------
@@ -581,6 +618,7 @@ def is_bst(n: "Node", mn: float = -inf, mx: float = inf) -> bool:
     -------
     bool
         True for a BST with values between `mn` and `mx` (inclusive).
+
     """
     return not n or (
         (mn <= n.data <= mx)
@@ -589,8 +627,8 @@ def is_bst(n: "Node", mn: float = -inf, mx: float = inf) -> bool:
     )
 
 
-def successor(t: Node, x: int) -> Optional[Node]:
-    "Return the successor Node in `t` for value `x` in order enumeration."
+def successor(t: Node, x: int) -> Node | None:
+    """Return the successor Node in `t` for value `x` in order enumeration."""
     s = []
     n = t
     found = False
@@ -607,7 +645,7 @@ def successor(t: Node, x: int) -> Optional[Node]:
 
 
 def largest(r: Node, k: int = 1, default: int = -1) -> int:
-    "Return k-largest element from a BST at `r`."
+    """Return k-largest element from a BST at `r`."""
     # Reverse-order search on the right side.
     s = []
     c = r
@@ -624,9 +662,9 @@ def largest(r: Node, k: int = 1, default: int = -1) -> int:
 
 
 def balanced(root: Node) -> bool:
-    "True if tree at `root` is balanced in height."
+    """True if tree at `root` is balanced in height."""
 
-    def rank_balance(n: Node) -> Tuple[int, bool]:
+    def rank_balance(n: Node) -> tuple[int, bool]:
         if not n:
             return 0, True
         lr, lb = rank_balance(n.left)
@@ -639,18 +677,18 @@ def balanced(root: Node) -> bool:
 
 
 def identical(a: Node, b: Node) -> bool:
-    "True if `a` and `b` have identical structure and data."
+    """True if `a` and `b` have identical structure and data."""
     return a == b or bool(
         a
         and b
         and a.data == b.data
         and identical(a.left, b.left)
-        and identical(a.right, b.right)
+        and identical(a.right, b.right),
     )
 
 
-def mirror(r: Node):
-    "Mirror the tree at `r` in place."
+def mirror(r: Node) -> None:
+    """Mirror the tree at `r` in place."""
     if r:
         r.left, r.right = r.right, r.left
         mirror(r.left)
@@ -658,7 +696,7 @@ def mirror(r: Node):
 
 
 def symmetric(r: Node) -> bool:
-    "True if tree starting at `r` is symmetric."
+    """True if tree starting at `r` is symmetric."""
 
     def sym(a, b):
         return a == b or (
@@ -673,7 +711,7 @@ def symmetric(r: Node) -> bool:
 
 
 def flat(r: Node) -> bool:
-    "True if all leaves are at the same level."
+    """True if all leaves are at the same level."""
     lvl = [-1]
 
     def eql(n, cl):
@@ -689,7 +727,7 @@ def flat(r: Node) -> bool:
 
 
 def insert(r: Node, value: int) -> Node:
-    "Insert `value` into a BST starting at `r`."
+    """Insert `value` into a BST starting at `r`."""
     if not r:
         return TreeNode(value)
     if value < r.data:
@@ -699,8 +737,8 @@ def insert(r: Node, value: int) -> Node:
     return r
 
 
-def find_ancestor(r: Node, a: int, b: int) -> Optional[Node]:
-    "Find lowest common ancestor of `a` and `b` valued nodes."
+def find_ancestor(r: Node, a: int, b: int) -> Node | None:
+    """Find lowest common ancestor of `a` and `b` valued nodes."""
     mn = min(a, b)
     mx = max(a, b)
     while r:
@@ -714,10 +752,10 @@ def find_ancestor(r: Node, a: int, b: int) -> Optional[Node]:
 
 
 def no_siblings_nodes(t: Node) -> list:
-    "Return nodes' values which have no sibling node from tree `t`."
+    """Return nodes' values which have no sibling node from tree `t`."""
     singles = []
 
-    def enum(l, r):
+    def enum(l, r) -> None:
         l and (enum(l.left, l.right), r or singles.append(l.data))
         r and (enum(r.left, r.right), l or singles.append(r.data))
 
@@ -726,7 +764,7 @@ def no_siblings_nodes(t: Node) -> list:
 
 
 def has_path_sum(n: Node, s: int) -> bool:
-    "True if there is a path from root `n` to a leaf with sum = `s`."
+    """True if there is a path from root `n` to a leaf with sum = `s`."""
     s -= n.data
     return (
         s > 0
@@ -736,7 +774,7 @@ def has_path_sum(n: Node, s: int) -> bool:
 
 
 def count_in_range(n: Node, l: int, h: int) -> int:
-    "Count number of nodes form `n` in range (`l`...`h`)."
+    """Count number of nodes form `n` in range (`l`...`h`)."""
     return (
         (
             int(l <= n.data <= h)
@@ -749,14 +787,14 @@ def count_in_range(n: Node, l: int, h: int) -> int:
 
 
 def median(t: Node) -> float:
-    "Return median value for tree starting at `t`."
+    """Return median value for tree starting at `t`."""
     n = sum(1 for _ in ino(t))
     it = islice(ino(t), (n - 1) // 2, None)
     return next(it) if n % 2 else (next(it) + next(it)) / 2
 
 
 def max_width(t: Node) -> int:
-    "Max width at any level in tree `t`."
+    """Max width at any level in tree `t`."""
 
     def level_width():
         q = deque([t])
@@ -771,7 +809,7 @@ def max_width(t: Node) -> int:
 
 
 def max_path_sum(t: Node) -> int:
-    "Return max path sum between nodes of rank 1."
+    """Return max path sum between nodes of rank 1."""
     mx = [-inf]
 
     def rec(n):
@@ -789,7 +827,7 @@ def max_path_sum(t: Node) -> int:
 
 
 def to_linked_list(r: Node) -> Node:
-    "Transform tree `r` into a double linked list in order."
+    """Transform tree `r` into a double linked list in order."""
     h = t = None
     for n in ino(r, nodes=True):
         h = h or n
@@ -801,11 +839,11 @@ def to_linked_list(r: Node) -> Node:
     return h
 
 
-def nodes_at_distance(r: Node, target: int, k: int) -> List[int]:
-    "Return nodes from tree `r` at distance `k` from `target` node."
+def nodes_at_distance(r: Node, target: int, k: int) -> list[int]:
+    """Return nodes from tree `r` at distance `k` from `target` node."""
     result = []
 
-    def descend(r: Node, kn: int):
+    def descend(r: Node, kn: int) -> None:
         if not r or kn < 0:
             return
         if kn == 0:
@@ -837,7 +875,7 @@ def nodes_at_distance(r: Node, target: int, k: int) -> List[int]:
 
 
 def merge_sorted(r1: Node, r2: Node) -> list:
-    "Return a list of sorted values from BST `r1` and `r2`."
+    """Return a list of sorted values from BST `r1` and `r2`."""
     # Runs in O(M+N) time complexity.
     # Auxiliary space (necessary for the DFO stack):
     #    O(max(|r1|, |r2|)) < O(M+N)
@@ -863,7 +901,7 @@ def merge_sorted(r1: Node, r2: Node) -> list:
 
 
 def tree_distance(root: Node, target) -> int:
-    "Return max distance to all nodes from the one with the `target` value."
+    """Return max distance to all nodes from the one with the `target` value."""
     # This puzzle is also known as `burning tree` puzzle.
 
     def search(r):
@@ -885,8 +923,8 @@ def tree_distance(root: Node, target) -> int:
     return search(root)[1] - 1
 
 
-def fix_two_nodes(root: Node):
-    "Given a BST with two nodes swapped fix the tree at `root`."
+def fix_two_nodes(root: Node) -> None:
+    """Given a BST with two nodes swapped fix the tree at `root`."""
     # Swap the two node values in the in-order sequence.
     # E.g.
     #     __10                _10_
@@ -922,7 +960,7 @@ def fix_two_nodes(root: Node):
 
 
 def candy_tree_equality(r: Node) -> int:
-    "Equalize values in the tree to one. Count minimum number of moves."
+    """Equalize values in the tree to one. Count minimum number of moves."""
     # Idea is to do it bottom-up.
     # Candy is moved from parent to child if child's candy count is 0.
     # Candy is moved up to the parent if child's candy count is more than 1.
@@ -938,13 +976,13 @@ def candy_tree_equality(r: Node) -> int:
         # Return candy balance for this node.
         return n.data + l + r
 
-    assert r and dfs(r) == 1
+    assert r
+    assert dfs(r) == 1
     return moves
 
 
 def min_bst_with_a_sum(r: Node, target: int) -> int:
-    """
-    Find a subtree under `r` that has a sum of nodes equal to `target`.
+    """Find a subtree under `r` that has a sum of nodes equal to `target`.
 
     Return the count of nodes for a smallest tree like that.
 
@@ -959,6 +997,7 @@ def min_bst_with_a_sum(r: Node, target: int) -> int:
     -------
     int
         Count of nodes in the subtree.
+
     """
 
     # This solutions bubbles up the node count and
@@ -988,8 +1027,7 @@ def min_bst_with_a_sum(r: Node, target: int) -> int:
 
 
 def min_bst_with_a_sum_single_pass(r: Node, target: int) -> int:
-    """
-    Find a subtree under `r` that has a sum of nodes equal to `target`.
+    """Find a subtree under `r` that has a sum of nodes equal to `target`.
 
     Return the count of nodes for a smallest tree like that.
 
@@ -1004,6 +1042,7 @@ def min_bst_with_a_sum_single_pass(r: Node, target: int) -> int:
     -------
     int
         Count of nodes in the subtree.
+
     """
 
     def dfs(n: Node):

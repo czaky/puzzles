@@ -1,21 +1,25 @@
 """Binary Index Tree - used to calculate and update cumulative values in log(N)."""
 
+from __future__ import annotations
+
 import operator as op
 from itertools import accumulate, islice, repeat
-from typing import Callable, Iterable, List
+from typing import Callable, Iterable
 
 
 class BinIndexTree:
-    "Binary Index Tree."
+    """Binary Index Tree."""
 
     # This is a 0-indexed implementation.
 
-    def __init__(self, arg: Iterable | int, operator: Callable = op.add):
+    def __init__(self, arg: Iterable | int, operator: Callable = op.add) -> None:
         """Initialize the binary index tree.
 
         Args:
+        ----
             arg (Iterable | int): an iterable with values or size of the tree.
             operator (Callable, optional): Cumulative operator. Defaults to `+`.
+
         """
         self.op = operator
         if isinstance(arg, Iterable):
@@ -30,14 +34,14 @@ class BinIndexTree:
         else:
             assert isinstance(arg, Iterable | int)
 
-    def add(self, i: int, value):
-        "Add `value` to the tree at index `i`"
+    def add(self, i: int, value) -> None:
+        """Add `value` to the tree at index `i`."""
         while i < len(self.array):
             self.array[i] = self.op(self.array[i], value)
             i |= i + 1
 
     def sum(self, i: int):
-        "Return cumulative sum at index `i`."
+        """Return cumulative sum at index `i`."""
         s = 0
         while i >= 0:
             s = self.op(s, self.array[i])
@@ -45,9 +49,8 @@ class BinIndexTree:
         return s
 
 
-def maximum_broken_toys_queries(toys: List[int], queries: List[List[int]]) -> List[int]:
-    """
-    For each query return the maximum number of toys you can buy.
+def maximum_broken_toys_queries(toys: list[int], queries: list[list[int]]) -> list[int]:
+    """For each query return the maximum number of toys you can buy.
     The queries contain broken toy indices in addition to the cost-target.
 
     Parameters
@@ -61,8 +64,9 @@ def maximum_broken_toys_queries(toys: List[int], queries: List[List[int]]) -> Li
     -------
     List[int]
         Sums of the non-broken toys that can fit the cost-target.
+
     """
-    # O((N+Q*K)*logN + Q*logN*logN)
+    # Complexity: `O((N+Q*K)*logN + Q*logN*logN)`
     # The idea is to use a binary index tree (BIT) to reduce the operation cost
     # of summing and updating to O(logN).
     # Another BIT is used to mark the broken trees.
@@ -81,7 +85,7 @@ def maximum_broken_toys_queries(toys: List[int], queries: List[List[int]]) -> Li
     for q in queries:
         cost = q[0]
         # Translate the broken indexes to the sorted index.
-        sbroken = list(rix[i - 1] for i in islice(q, 2, None))
+        sbroken = [rix[i - 1] for i in islice(q, 2, None)]
         # Knock out broken toys.
         for i in sbroken:
             bit.add(i, -toys[i])

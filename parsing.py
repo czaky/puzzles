@@ -1,10 +1,12 @@
-"Algorithms used to parse and process formal languages."
+"""Algorithms used to parse and process formal languages."""
 
-from typing import Callable, List, Sequence, Tuple
+from __future__ import annotations
+
+from typing import Callable, Sequence
 
 
 def expression_tuple(*args):
-    "Return args as a tuple."
+    """Return args as a tuple."""
     return args
 
 
@@ -18,12 +20,15 @@ def parse_binop_expression(tokens: Sequence, make: Callable = expression_tuple):
         (<operator>, <arg1>, <arg2>)
     Alternatively, a `make` function can be passed in for alternative representation.
 
-    Parameters:
+    Parameters
+    ----------
         tokens (Sequence): tokenized expression.
         make (Callable): generates binary expression objects out of arguments.
 
-    Returns:
+    Returns
+    -------
         any: the root of the parsed expression (as returned by the `make` function).
+
     """
     # The implementation here avoids recursion and uses two stacks
     # similar to the  Dijkstra's Shunting Yard algorithm.
@@ -75,8 +80,8 @@ def parse_binop_expression(tokens: Sequence, make: Callable = expression_tuple):
     return close_bracket()
 
 
-def simplified_binop_expression_factory() -> Tuple[Callable, Callable]:
-    "Returns an expression formatter and a string extractor."
+def simplified_binop_expression_factory() -> tuple[Callable, Callable]:
+    """Returns an expression formatter and a string extractor."""
     # Define the grammar:
     # Precedence rank of the operators.
     rank = {"*": 1, "/": 1, "+": 2, "-": 2}
@@ -91,7 +96,7 @@ def simplified_binop_expression_factory() -> Tuple[Callable, Callable]:
     form = lambda v, flt: flat(v) if flt else "(" + flat(v) + ")"
 
     def fop(op: str, a: str | tuple, b: str | tuple) -> tuple:
-        "Format an operation adding parentheses to the arguments if needed."
+        """Format an operation adding parentheses to the arguments if needed."""
         l = form(a, leaf(a) or rank[a[0]] <= rank[op])
         r = form(b, leaf(b) or rank[b[0]] < rank[op] + (op in commutative_operators))
         # Returns the operator and the string representation.
@@ -102,7 +107,7 @@ def simplified_binop_expression_factory() -> Tuple[Callable, Callable]:
 
 
 def simplify_binops_brackets_one_pass(tokens: Sequence) -> str:
-    "Remove redundant brackets from the expression in one pass."
+    """Remove redundant brackets from the expression in one pass."""
     # Provides an expression constructor, and
     # an `extract` function to extract the string representation
     # from the final expression.
@@ -112,14 +117,15 @@ def simplify_binops_brackets_one_pass(tokens: Sequence) -> str:
 
 
 def format_binop_expression(
-    e: str | tuple, factory=simplified_binop_expression_factory
+    e: str | tuple,
+    factory=simplified_binop_expression_factory,
 ) -> str:
-    "Format expressions consisting of (<operator>, <arg1>, <arg2>)."
+    """Format expressions consisting of (<operator>, <arg1>, <arg2>)."""
     if isinstance(e, str):
         return e
     # This is a depth first, iterative algorithm using two stacks.
-    s: List[tuple] = []
-    v: List[str | tuple] = []
+    s: list[tuple] = []
+    v: list[str | tuple] = []
     n: tuple | str | None = e
 
     # Provides an expression `factory`, and
@@ -152,5 +158,5 @@ def format_binop_expression(
 
 
 def simplify_binops_brackets(tokens: Sequence) -> str:
-    "Remove redundant brackets from the expression."
+    """Remove redundant brackets from the expression."""
     return format_binop_expression(parse_binop_expression(tokens))

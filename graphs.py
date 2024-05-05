@@ -1,18 +1,20 @@
 """Puzzles related to graphs."""
 
+from __future__ import annotations
+
 from collections import deque
 from functools import reduce
-from typing import Iterable, List, Set, Tuple
+from typing import Iterable
 
 from sequences import find_if
 from sets import powerset
 from stack import IndexStack
 
 
-def breadth_first(adj: List[List[int]], start: int = 0) -> List[int]:
-    "Traverse the graph breadth first. Return list of nodes."
+def breadth_first(adj: list[list[int]], start: int = 0) -> list[int]:
+    """Traverse the graph breadth first. Return list of nodes."""
     q = deque([start])
-    v = set([start])
+    v = {start}
     o = []
     while q:
         n = q.popleft()
@@ -24,8 +26,8 @@ def breadth_first(adj: List[List[int]], start: int = 0) -> List[int]:
     return o
 
 
-def depth_first(adj: List[List[int]], start: int = 0) -> List[int]:
-    "Traverse the graph depth first using stack. Return list of nodes."
+def depth_first(adj: list[list[int]], start: int = 0) -> list[int]:
+    """Traverse the graph depth first using stack. Return list of nodes."""
     o = []
     v = set()
     s = [start]
@@ -38,12 +40,12 @@ def depth_first(adj: List[List[int]], start: int = 0) -> List[int]:
     return o
 
 
-def depth_first_r(adj: List[List[int]], start: int = 0) -> List[int]:
-    "Traverse the graph recursively depth first. Return list of nodes."
+def depth_first_r(adj: list[list[int]], start: int = 0) -> list[int]:
+    """Traverse the graph recursively depth first. Return list of nodes."""
     o = []
     v = set()
 
-    def dfs(n: int):
+    def dfs(n: int) -> None:
         v.add(n)
         o.append(n)
         for a in adj[n]:
@@ -55,11 +57,11 @@ def depth_first_r(adj: List[List[int]], start: int = 0) -> List[int]:
 
 
 def topological_order(vertexes: Iterable, edges: dict) -> Iterable:
-    "Return `vertexes` in topological order based on `edges` relation."
+    """Return `vertexes` in topological order based on `edges` relation."""
     s = []
     v = set()
 
-    def sort(n):
+    def sort(n) -> None:
         if n not in v:
             v.add(n)
             any(map(sort, edges.get(n, [])))
@@ -69,8 +71,8 @@ def topological_order(vertexes: Iterable, edges: dict) -> Iterable:
     return reversed(s)
 
 
-def circle_of_words(words: List[str]) -> bool:
-    "True if `words` can make a circle if connected by the same letter."
+def circle_of_words(words: list[str]) -> bool:
+    """True if `words` can make a circle if connected by the same letter."""
     # Euler circle problem.
     #   Words are edges.
     #   Number of inbound and outbound edges need to be equal.
@@ -89,15 +91,15 @@ def circle_of_words(words: List[str]) -> bool:
     return len(gr) == len(vis) and all(len(c[0]) == c[1] for c in gr.values())
 
 
-def articulation_points(adj: List[List[int]]) -> List[int]:
-    "Return graph articulation points."
+def articulation_points(adj: list[list[int]]) -> list[int]:
+    """Return graph articulation points."""
     # This is an iterative (non-recursive) version using two stacks.
     # For the recursive version see below.
     # Expects a strongly connected graph. `adj` contains symmetric edges.
     vt = [0] * len(adj)  # visited time for each node in DFS-tree order
     ct = vt[:]  # uplink min connection time
     t = 0  # Tarjan's DFS node index
-    s1: List[Tuple[int, int]] = [(-1, 0)]  # root node with -1 as parent
+    s1: list[tuple[int, int]] = [(-1, 0)]  # root node with -1 as parent
     s2 = []  # second stack for non root child nodes
 
     root_kids = -1  # used for the root only
@@ -137,8 +139,8 @@ def articulation_points(adj: List[List[int]]) -> List[int]:
     return sorted(aps)
 
 
-def articulation_points_recursive(adj: List[List[int]]) -> List[int]:
-    "Return the articulation points for a graph defined by the `adj` list."
+def articulation_points_recursive(adj: list[list[int]]) -> list[int]:
+    """Return the articulation points for a graph defined by the `adj` list."""
     # This uses single pass Tarjan's recursive algorithm.
     vt = [0] * len(adj)  # visited time for each node in DFS-tree order
     ct = vt[:]  # circle time for the parent/root of the whole circle
@@ -146,7 +148,7 @@ def articulation_points_recursive(adj: List[List[int]]) -> List[int]:
 
     # Depth first search to determine the parent of each node
     # and created the DFS-tree.
-    def dfs(p, n, t):
+    def dfs(p, n, t) -> None:
         vt[n] = ct[n] = t  # set the times
         # art - boolean indicating if `n` is an articulate point.
         # kids - number of kids reached from this node first.
@@ -182,8 +184,8 @@ def articulation_points_recursive(adj: List[List[int]]) -> List[int]:
     return sorted(o)
 
 
-def critical_connections(adj: List[List[int]]) -> List[List[int]]:
-    "Return a list of critical bridges in an undirected graph."
+def critical_connections(adj: list[list[int]]) -> list[list[int]]:
+    """Return a list of critical bridges in an undirected graph."""
     # This uses single pass Tarjan's Algorithm.
     # It expects a strongly connected undirected graph
     # with (directed) edges specified in `adj` one for each way.
@@ -218,15 +220,19 @@ def critical_connections(adj: List[List[int]]) -> List[List[int]]:
     return ccs
 
 
-def strongly_connected_components(adj: List[List[int]]) -> List[List[int]]:
+def strongly_connected_components(adj: list[list[int]]) -> list[list[int]]:
     """Return strongly connected components (SSCs) as a list of vertices.
 
     Note that this algorithm only applies to directed graphs.
+
     Args:
+    ----
         adj (List[List[int]]): Array of adjacent nodes `adj[i]` for node `i`.
 
     Returns:
+    -------
         List[List[int]]: List of lists containing nodes of SSCs.
+
     """
     # This is an iterative implementation using two stacks and
     # stack doubling approach to emulate recursive DFS descend.
@@ -287,15 +293,19 @@ def strongly_connected_components(adj: List[List[int]]) -> List[List[int]]:
     return sccs
 
 
-def strongly_connected_components_recursive(adj: List[List[int]]) -> List[List[int]]:
+def strongly_connected_components_recursive(adj: list[list[int]]) -> list[list[int]]:
     """Return strongly connected components (SSCs) as a list of vertices.
 
     Note that this algorithm only applies to directed graphs.
+
     Args:
+    ----
         adj (List[List[int]]): Array of adjacent nodes `adj[i]` for node `i`.
 
     Returns:
+    -------
         List[List[int]]: List of lists containing nodes of SSCs.
+
     """
     # The Tarjan's idea is to do DFS on the graph noting the visit time
     # (or index) of each node visited. This time is stored in `vt`.
@@ -316,7 +326,7 @@ def strongly_connected_components_recursive(adj: List[List[int]]) -> List[List[i
     sccs = []  # result
 
     def visit(n: int) -> int:
-        "Returns the circle-time for nodes on the stack or index time otherwise."
+        """Returns the circle-time for nodes on the stack or index time otherwise."""
         # skip for visited nodes.
         if not ct[n]:
             nonlocal t
@@ -348,15 +358,15 @@ def strongly_connected_components_recursive(adj: List[List[int]]) -> List[List[i
     sccs.sort()
     return sccs
     # Example:
-    # adj = [[], [3], [1], [9, 0, 8], [5], [4, 3], [6], [3], [5, 6], [5, 9]]
+    # [[], [3], [1], [9, 0, 8], [5], [4, 3], [6], [3], [5, 6], [5, 9]]
     #
     # The algorithm starts at node 0 which is only pointed from 3.
     # 0
     # > 0: vt: 1, ct: 1, s: []
     # < 0: vt: 1, ct: 1, s: [0]
     # + cc: [0]
-    # vt: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    # ct: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    # vt [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    # ct [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     # ----------------------------------------
     # Node 1 connects to the largest SCC.
     # In this trace one can observe how the stack is being
@@ -401,8 +411,8 @@ def strongly_connected_components_recursive(adj: List[List[int]]) -> List[List[i
     # ct: [1, 2, 9, 3, 5, 3, 8, 10, 5, 3]
 
 
-def vertex_cover_optimal(edges: List[List[int]]) -> Set[int]:
-    "Return the vertices of a minimal vertex cover."
+def vertex_cover_optimal(edges: list[list[int]]) -> set[int]:
+    """Return the vertices of a minimal vertex cover."""
     edges_ = list(map(set, edges))  # Make edges undirected and easy to intersect.
     vertexes = set.union(*edges_)  # Limit to interesting vertexes.
     covers_all_edges = lambda s: all(e & s for e in edges_)
@@ -410,7 +420,7 @@ def vertex_cover_optimal(edges: List[List[int]]) -> Set[int]:
 
 
 def word_distance(words: Iterable[str], start: str, end: str) -> int:
-    "Return the min distance from `start` to `end` using `words` as intermediate steps."
+    """Return the min distance from `start` to `end` using `words` as intermediate steps."""
     # The idea is to use breadth first search BFS and keep track of the depth.
     # The first time we hit the target end word, we return the depth calculated so far.
     if start == end:
@@ -438,8 +448,8 @@ def word_distance(words: Iterable[str], start: str, end: str) -> int:
     return 0
 
 
-def word_paths(words: Iterable[str], start: str, end: str) -> List[List[str]]:
-    "Return the min paths from `start` to `end` using `words` as intermediate steps."
+def word_paths(words: Iterable[str], start: str, end: str) -> list[list[str]]:
+    """Return the min paths from `start` to `end` using `words` as intermediate steps."""
     # The idea is to treat the words list as an adjacency list of a graph
     # While traversing the, the set of adjacent words is reduced to keep track of
     # visited nodes in breadth first search (BFS) and to remove any cycles.
@@ -470,7 +480,7 @@ def word_paths(words: Iterable[str], start: str, end: str) -> List[List[str]]:
                         # Keeping track of "used" words as set is faster.
                         used.add(nw)
                         # Extending the path is faster than any other manipulations.
-                        q.append(path + [nw])
+                        q.append([*path, nw])
                     # Terminate if found.
                     found |= nw == end
         # We can remove the used words after a level of BFS.

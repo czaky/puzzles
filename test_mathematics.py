@@ -10,104 +10,104 @@ class TestNumbers(unittest.TestCase):
     """Test class for the numbers puzzles."""
 
     def test_floor_sqrt(self):
-        "Test the `floor_sqrt` function."
-        self.assertEqual(0, m.floor_sqrt(0))
-        self.assertEqual(1, m.floor_sqrt(1))
-        self.assertEqual(1, m.floor_sqrt(2))
-        self.assertEqual(1, m.floor_sqrt(3))
-        self.assertEqual(2, m.floor_sqrt(4))
-        self.assertEqual(2, m.floor_sqrt(5))
-        self.assertEqual(2, m.floor_sqrt(6))
+        """Test the `floor_sqrt` function."""
+        assert m.floor_sqrt(0) == 0
+        assert m.floor_sqrt(1) == 1
+        assert m.floor_sqrt(2) == 1
+        assert m.floor_sqrt(3) == 1
+        assert m.floor_sqrt(4) == 2
+        assert m.floor_sqrt(5) == 2
+        assert m.floor_sqrt(6) == 2
 
     def test_frog_hops(self):
-        "Test the `frog_hops` function."
-        self.assertEqual(0, m.frog_hops(0))
-        self.assertEqual(1, m.frog_hops(1))
-        self.assertEqual(2, m.frog_hops(2))
-        self.assertEqual(4, m.frog_hops(3))
-        self.assertEqual(7, m.frog_hops(4))
-        self.assertEqual(13, m.frog_hops(5))
-        self.assertEqual(24, m.frog_hops(6))
+        """Test the `frog_hops` function."""
+        assert m.frog_hops(0) == 0
+        assert m.frog_hops(1) == 1
+        assert m.frog_hops(2) == 2
+        assert m.frog_hops(3) == 4
+        assert m.frog_hops(4) == 7
+        assert m.frog_hops(5) == 13
+        assert m.frog_hops(6) == 24
 
     def test_josephus(self):
-        "Validated solution to `josephus` problem."
-        self.assertEqual(0, m.josephus(0, 10))
-        self.assertEqual(6, m.josephus(7, 2))
+        """Validated solution to `josephus` problem."""
+        assert m.josephus(0, 10) == 0
+        assert m.josephus(7, 2) == 6
 
     def test_factorial_trailing_zeros(self):
-        "Validated solution to `factorial_trailing_zeros` problem."
-        self.assertEqual(0, m.factorial_trailing_zeros(3))
-        self.assertEqual(1, m.factorial_trailing_zeros(5))
-        self.assertEqual(6, m.factorial_trailing_zeros(25))
+        """Validated solution to `factorial_trailing_zeros` problem."""
+        assert m.factorial_trailing_zeros(3) == 0
+        assert m.factorial_trailing_zeros(5) == 1
+        assert m.factorial_trailing_zeros(25) == 6
 
     def test_paths_in_matrix(self):
-        "Validated solution to `paths_in_matrix` problem."
-        self.assertEqual(1, m.paths_in_matrix(1, 1))
-        self.assertEqual(6, m.paths_in_matrix(3, 3))
-        self.assertEqual(705432, m.paths_in_matrix(12, 12))
+        """Validated solution to `paths_in_matrix` problem."""
+        assert m.paths_in_matrix(1, 1) == 1
+        assert m.paths_in_matrix(3, 3) == 6
+        assert m.paths_in_matrix(12, 12) == 705432
 
     def test_closest_palindrome_number(self):
-        "Test `closest_palindrome_number`."
-        self.assertEqual(0, m.closest_palindrome_number(0))
-        self.assertEqual(9, m.closest_palindrome_number(10))
-        self.assertEqual(99, m.closest_palindrome_number(100))
-        self.assertEqual(101, m.closest_palindrome_number(101))
-        self.assertEqual(999, m.closest_palindrome_number(1000))
-        self.assertEqual(1001, m.closest_palindrome_number(1001))
-        self.assertEqual(55, m.closest_palindrome_number(60))
-        self.assertEqual(202, m.closest_palindrome_number(197))
-        self.assertEqual(191, m.closest_palindrome_number(195))
+        """Test `closest_palindrome_number`."""
+        assert m.closest_palindrome_number(0) == 0
+        assert m.closest_palindrome_number(10) == 9
+        assert m.closest_palindrome_number(100) == 99
+        assert m.closest_palindrome_number(101) == 101
+        assert m.closest_palindrome_number(1000) == 999
+        assert m.closest_palindrome_number(1001) == 1001
+        assert m.closest_palindrome_number(60) == 55
+        assert m.closest_palindrome_number(197) == 202
+        assert m.closest_palindrome_number(195) == 191
 
     def test_next_happy_number(self):
-        "Test `next_happy_number`."
-        self.assertEqual(7, m.next_happy_number(1))
-        self.assertEqual(7, m.next_happy_number(3))
-        self.assertEqual(10, m.next_happy_number(7))
-        self.assertEqual(13, m.next_happy_number(10))
-        self.assertEqual(1003, m.next_happy_number(1000))
+        """Test `next_happy_number`."""
+        assert m.next_happy_number(1) == 7
+        assert m.next_happy_number(3) == 7
+        assert m.next_happy_number(7) == 10
+        assert m.next_happy_number(10) == 13
+        assert m.next_happy_number(1000) == 1003
 
     def test_prime_numbers(self):
-        "Test `prime_numbers` generator."
-        self.assertEqual([], list(m.prime_numbers(0)))
-        self.assertEqual([], list(m.prime_numbers(1)))
-        self.assertEqual([2], list(m.prime_numbers(2)))
-        self.assertEqual([2, 3], list(m.prime_numbers(3)))
-        self.assertEqual([2, 3], list(m.prime_numbers(4)))
-        self.assertEqual([2, 3, 5], list(m.prime_numbers(5)))
-        self.assertEqual([2, 3, 5], list(m.prime_numbers(6)))
-        self.assertEqual([2, 3, 5, 7], list(m.prime_numbers(7)))
-        self.assertEqual([2, 3, 5, 7, 11, 13, 17, 19], list(m.prime_numbers(22)))
-        self.assertEqual([2, 3, 5, 7, 11, 13, 17, 19, 23], list(m.prime_numbers(23)))
-        self.assertEqual([2, 3, 5, 7, 11, 13, 17, 19, 23], list(m.prime_numbers(24)))
-        self.assertEqual([2, 3, 5, 7, 11, 13, 17, 19, 23], list(m.prime_numbers(25)))
-        self.assertEqual(9592, len(list(m.prime_numbers(100000))))
+        """Test `prime_numbers` generator."""
+        assert [] == list(m.prime_numbers(0))
+        assert [] == list(m.prime_numbers(1))
+        assert [2] == list(m.prime_numbers(2))
+        assert [2, 3] == list(m.prime_numbers(3))
+        assert [2, 3] == list(m.prime_numbers(4))
+        assert [2, 3, 5] == list(m.prime_numbers(5))
+        assert [2, 3, 5] == list(m.prime_numbers(6))
+        assert [2, 3, 5, 7] == list(m.prime_numbers(7))
+        assert [2, 3, 5, 7, 11, 13, 17, 19] == list(m.prime_numbers(22))
+        assert [2, 3, 5, 7, 11, 13, 17, 19, 23] == list(m.prime_numbers(23))
+        assert [2, 3, 5, 7, 11, 13, 17, 19, 23] == list(m.prime_numbers(24))
+        assert [2, 3, 5, 7, 11, 13, 17, 19, 23] == list(m.prime_numbers(25))
+        assert len(list(m.prime_numbers(100000))) == 9592
 
     def test_prime_sum(self):
-        "Test `prime_sum`."
-        self.assertEqual((2, 2), m.prime_sum(4))
-        self.assertEqual((2, 3), m.prime_sum(5))
-        self.assertEqual((3, 3), m.prime_sum(6))
-        self.assertEqual((2, 5), m.prime_sum(7))
-        self.assertEqual((2, 7), m.prime_sum(9))
-        self.assertEqual((13, 5237), m.prime_sum(5250))
-        self.assertEqual((173, 7253), m.prime_sum(7426))
-        self.assertEqual((173, 33923), m.prime_sum(34096))
+        """Test `prime_sum`."""
+        assert m.prime_sum(4) == (2, 2)
+        assert m.prime_sum(5) == (2, 3)
+        assert m.prime_sum(6) == (3, 3)
+        assert m.prime_sum(7) == (2, 5)
+        assert m.prime_sum(9) == (2, 7)
+        assert m.prime_sum(5250) == (13, 5237)
+        assert m.prime_sum(7426) == (173, 7253)
+        assert m.prime_sum(34096) == (173, 33923)
 
     def test_best_numbers(self):
-        "Test `best_numbers`."
-        self.assertEqual(2, m.best_numbers(2, 1, 2, 3, 5))
-        self.assertEqual(4, m.best_numbers(4, 6, 7, 5, 3))
-        self.assertEqual(716192774, m.best_numbers(10000, 1, 5, 2, 5))
+        """Test `best_numbers`."""
+        assert m.best_numbers(2, 1, 2, 3, 5) == 2
+        assert m.best_numbers(4, 6, 7, 5, 3) == 4
+        assert m.best_numbers(10000, 1, 5, 2, 5) == 716192774
 
     def test_find_nth_k_bit_number(self):
-        "Test `find_nth_k_bit_number`."
-        self.assertEqual(1, m.find_nth_k_bit_number(2, 3))
-        self.assertEqual(8, m.find_nth_k_bit_number(5, 1))
-        self.assertEqual(5, m.find_nth_k_bit_number(6, 2))
+        """Test `find_nth_k_bit_number`."""
+        assert m.find_nth_k_bit_number(2, 3) == 1
+        assert m.find_nth_k_bit_number(5, 1) == 8
+        assert m.find_nth_k_bit_number(6, 2) == 5
 
     def test_combmod(self):
-        "Test `combmod`."
-        self.assertEqual(comb(1, 1), m.combmod(1, 1, 7))
-        self.assertEqual(comb(6, 2) % 7, m.combmod(6, 2, 7))
-        self.assertEqual(comb(6, 2), m.combmod(6, 2, 23))
-        self.assertEqual(comb(11, 7) % 23, m.combmod(11, 7, 23))
+        """Test `combmod`."""
+        assert comb(1, 1) == m.combmod(1, 1, 7)
+        assert comb(6, 2) % 7 == m.combmod(6, 2, 7)
+        assert comb(6, 2) == m.combmod(6, 2, 23)
+        assert comb(11, 7) % 23 == m.combmod(11, 7, 23)

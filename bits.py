@@ -1,9 +1,9 @@
-"Bit manipulation related puzzles."
+"""Bit manipulation related puzzles."""
 
-from typing import List, Tuple
+from __future__ import annotations
 
 
-def count_different_bit_pairs(a: List[int]) -> int:
+def count_different_bit_pairs(a: list[int]) -> int:
     """Count all bit differences for number pairs from array `a`.
 
     For each pair of integers in the array `a` sum all the differences in bits.
@@ -25,22 +25,24 @@ def count_different_bit_pairs(a: List[int]) -> int:
 class BitTrie:
     """A trie sorting integers with nodes splitting for each bit.
 
-    Each node in the trie is just an array of two, with one cell for 0 and the other for 1.
+    Each node in the trie is an array of two, with one cell for 0 and the other for 1.
     The leaf nodes are at the same distance of max `bits`.
     The leaf nodes also store the actual number as data.
     """
 
-    def __init__(self, bits: int = 32):
+    def __init__(self, bits: int = 32) -> None:
         """Initialize the `BitTrie`.
 
         Args:
-            bits (int, optional): Maximum number of bits for integers stored. Defaults to 32.
+        ----
+            bits (int, optional): Max number of bits for integers stored. Default: 32.
+
         """
         self.root = [0, 0]
         self.bits = bits
 
-    def insert(self, num: int, data=0):
-        "Insert `num` into the trie. Extra `data` can be stored with it."
+    def insert(self, num: int, data=0) -> None:
+        """Insert `num` into the trie. Extra `data` can be stored with it."""
         n: list = self.root
         for i in reversed(range(self.bits)):
             r = (num >> i) & 1
@@ -50,7 +52,7 @@ class BitTrie:
         n[:] = [num, data]
 
     def nearest(self, num: int):
-        "Find the nearest number to `num`. Returns the number plus additional data."
+        """Find the nearest number to `num`. Returns the number plus additional data."""
         n: list = self.root
         for i in reversed(range(self.bits)):
             r = (num >> i) & 1
@@ -61,8 +63,8 @@ class BitTrie:
         return n
 
 
-def max_xor_sub_array(a: list) -> Tuple[int, list]:
-    "For an array `a` of integers, find the largest XOR value of a sub-array."
+def max_xor_sub_array(a: list) -> tuple[int, list]:
+    """For an array `a` of integers, find the largest XOR value of a sub-array."""
     # The idea is to generate a cumulative XOR value,
     # and find the previous cumulative value which would result in the highest
     # XOR if applied to the current XOR value.
@@ -94,7 +96,7 @@ def max_xor_sub_array(a: list) -> Tuple[int, list]:
 
 
 def max_xor_subset(a: list) -> int:
-    "Return largest XOR value of `a` subset"
+    """Return largest XOR value of `a` subset."""
     # The idea is to always use the maximum element in the array,
     # then remove its bits from the set while adding those bits
     # to the maximum accumulated so far.

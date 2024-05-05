@@ -1,26 +1,28 @@
 """Puzzles related to strings."""
 
+from __future__ import annotations
+
 from collections import Counter
 from functools import lru_cache, reduce
 from itertools import accumulate, combinations, islice
-from typing import List, Optional, Sequence
+from typing import Sequence
 
 from future import pairwise
 from graphs import topological_order
 
 
-def splint(s: str) -> List[int]:
-    "Split string `s` into ints."
+def splint(s: str) -> list[int]:
+    """Split string `s` into ints."""
     return list(map(int, s.split()))
 
 
 class StringView(Sequence):
-    "View into a string."
+    """View into a string."""
 
     M = 10**9 + 9  # 30 bits
     P = 29791
 
-    def __init__(self, s: str, start: int, stop: int, h=None):
+    def __init__(self, s: str, start: int, stop: int, h=None) -> None:
         self.s = s
         self.start = start
         self.stop = stop
@@ -33,18 +35,20 @@ class StringView(Sequence):
             self._hash = h
 
     def expandable(self) -> bool:
-        "True if the view can be expanded."
+        """True if the view can be expanded."""
         return self.start > 0 and self.stop < len(self.s)
 
-    def expand(self) -> "StringView":
+    def expand(self) -> StringView:
         """Expand the view to the left and to the right.
 
         Test that the string is `expandable` before.
         Useful for palindromes.
 
         Example:
+        -------
             v = View("abcdef", 2, 4) => "cd"
             v.expand() => "bcde"
+
         """
         assert self.expandable()
         start, stop = self.start - 1, self.stop + 1
@@ -84,24 +88,24 @@ class StringView(Sequence):
 
 
 def reverse_words(s: str, sep: str = " ") -> str:
-    "Reverse the order of words in `s`, separated by `sep`."
+    """Reverse the order of words in `s`, separated by `sep`."""
     return sep.join(reversed(s.split(sep)))
 
 
 def palindrome(s: str) -> bool:
-    "True if `s` is a palindrome."
+    """True if `s` is a palindrome."""
     # s == s[::-1]
     # Runs in O(N) time and O(1) space.
     return all(s[i] == s[-1 - i] for i in range(len(s) // 2))
 
 
 def anagram(a: str, b: str) -> bool:
-    "True if `a` and `b` contain the same characters."
+    """True if `a` and `b` contain the same characters."""
     return Counter(a) == Counter(b)
 
 
 def isomorphic(a: str, b: str) -> bool:
-    "True if characters in `a` and `b` can be mapped 1:1 to each other."
+    """True if characters in `a` and `b` can be mapped 1:1 to each other."""
     ab, ba = {}, {}
     return len(a) == len(b) and all(
         cb == ab.setdefault(ca, cb) and ca == ba.setdefault(cb, ca)
@@ -109,8 +113,8 @@ def isomorphic(a: str, b: str) -> bool:
     )
 
 
-def common_prefix(a: List[str]):
-    "Return the longest prefix among the strings from `a`."
+def common_prefix(a: list[str]):
+    """Return the longest prefix among the strings from `a`."""
     if not a:
         return ""
     mnl = min(map(len, a))
@@ -119,13 +123,13 @@ def common_prefix(a: List[str]):
 
 
 def equal_rotated(a: str, b: str, n: int) -> bool:
-    "True if `a` and `b` are rotated by `n` in any direction."
+    """True if `a` and `b` are rotated by `n` in any direction."""
     n %= min(len(a), len(b))
     return a == b[n:] + b[:n] or b == a[n:] + a[:n]
 
 
 def first_unique(s: str) -> str:
-    "First unique character in the string `s`."
+    """First unique character in the string `s`."""
     c = Counter(s)
     return next((x for x in s if c[x] == 1), "$")
 
@@ -134,7 +138,7 @@ R2D = {"I": 1, "V": 5, "X": 10, "L": 50, "C": 100, "D": 500, "M": 1000}
 
 
 def roman_to_decimal(r: str) -> int:
-    "Return the decimal value of the roman literal `r`."
+    """Return the decimal value of the roman literal `r`."""
     d = 0
     prev = 0
     for char in r:
@@ -145,7 +149,7 @@ def roman_to_decimal(r: str) -> int:
 
 
 def max_distinct_char_substring(s: str) -> int:
-    "Returns length of the longest substring with distinct characters."
+    """Returns length of the longest substring with distinct characters."""
     seen = {}
     i = -1
     x = 0
@@ -157,7 +161,7 @@ def max_distinct_char_substring(s: str) -> int:
 
 
 def edit_distance(s: str, t: str) -> int:
-    "Edit distance between two strings `s` and `t`."
+    """Edit distance between two strings `s` and `t`."""
 
     # The `dp` matrix is |s|x|t| in size.
     # The execution takes O(|s|*|t|) steps.
@@ -177,7 +181,7 @@ def edit_distance(s: str, t: str) -> int:
 
 
 def word_break(s: str, d) -> bool:
-    "Can the string `s` be broken in words from dictionary `d`?"
+    """Can the string `s` be broken in words from dictionary `d`?."""
     d = set(d)
     d.add("")
     mx = max(map(len, d))
@@ -191,8 +195,8 @@ def word_break(s: str, d) -> bool:
     return rec(s)
 
 
-def word_parts(d: List[str], s: str) -> List[str]:
-    "Return all possible combinations of words from `d` that make up `s`."
+def word_parts(d: list[str], s: str) -> list[str]:
+    """Return all possible combinations of words from `d` that make up `s`."""
     # The idea is to iterate recursively from the end and comparing the
     # words from the dictionary list `d` to the suffix.
 
@@ -207,14 +211,14 @@ def word_parts(d: List[str], s: str) -> List[str]:
             if i >= 0 and s[i:j] == suffix:
                 # If there was a match to the suffix,
                 # generate an expansion for all the prefixes.
-                o.extend(x + [suffix] for x in sub(i))
+                o.extend([*x, suffix] for x in sub(i))
         return o
 
     return [" ".join(b) for b in sub(len(s))]
 
 
-def longest_palindrome_substring_lengths(s: str) -> List[int]:
-    "Returns an array of lengths for each palindrome substring in `s`."
+def longest_palindrome_substring_lengths(s: str) -> list[int]:
+    """Returns an array of lengths for each palindrome substring in `s`."""
     # Uses Manacher's algorithm.
     # Runs in O(N)
     n = len(s) * 2
@@ -242,7 +246,7 @@ def longest_palindrome_substring_lengths(s: str) -> List[int]:
 
 
 def longest_palindrome(s: str) -> str:
-    "Return longest palindrome substring from `s`."
+    """Return longest palindrome substring from `s`."""
     if s == "":
         return ""
     lps = longest_palindrome_substring_lengths(s)
@@ -252,21 +256,21 @@ def longest_palindrome(s: str) -> str:
 
 
 def longest_palindrome_length(s: str) -> int:
-    "Return the size of the longest palindrome in `s`."
+    """Return the size of the longest palindrome in `s`."""
     if len(s) <= 1:
         return len(s)
     return max(longest_palindrome_substring_lengths(s))
 
 
 def count_of_palindrome_substrings(s: str) -> int:
-    "Return the count of all palindrome substrings in `s`."
+    """Return the count of all palindrome substrings in `s`."""
     if len(s) <= 1:
         return len(s)
     return sum((l + 1) // 2 for l in longest_palindrome_substring_lengths(s))
 
 
 def distinct_palindrome_substrings(s: str) -> int:
-    "Return the count of distinct palindromes within `s`."
+    """Return the count of distinct palindromes within `s`."""
     # Uses Manacher's algorithm.
     # Runs in O(N).
     n = len(s)
@@ -302,7 +306,7 @@ def distinct_palindrome_substrings(s: str) -> int:
 
 
 def subsequence_count(s: str, t: str) -> int:
-    "Number of times `t` shows in `s` as a loose subsequence."
+    """Number of times `t` shows in `s` as a loose subsequence."""
 
     @lru_cache(None)
     def sub(i, j):
@@ -316,7 +320,7 @@ def subsequence_count(s: str, t: str) -> int:
 
 
 def palindromic_partitions(s: str) -> int:
-    "Return the minimum number of cuts to partition `s` into palindromes."
+    """Return the minimum number of cuts to partition `s` into palindromes."""
 
     @lru_cache(None)
     def isp(i, j):
@@ -326,14 +330,16 @@ def palindromic_partitions(s: str) -> int:
     dp = [0] * n
     for j in range(n):
         dp[j] = int(isp(0, j)) or reduce(
-            min, (dp[k] + 1 for k in range(1, j) if isp(k + 1, j)), j + 1
+            min,
+            (dp[k] + 1 for k in range(1, j) if isp(k + 1, j)),
+            j + 1,
         )
 
     return (int(n == 0) or dp[n - 1]) - 1
 
 
-def smallest_window_with_all_characters(s: str, p: str) -> Optional[str]:
-    "Return the smallest window into `s` containing all the chars in `p`."
+def smallest_window_with_all_characters(s: str, p: str) -> str | None:
+    """Return the smallest window into `s` containing all the chars in `p`."""
     sl = len(s)
     pl = len(p)
     if sl < pl:
@@ -360,8 +366,7 @@ def smallest_window_with_all_characters(s: str, p: str) -> Optional[str]:
 
 
 def boolean_parentheses(s: str) -> int:
-    """
-    For an expression of the type `T|F&T^F`, consisting of literals `T` and `F`,
+    """For an expression of the type `T|F&T^F`, consisting of literals `T` and `F`,
     and consisting of boolean operators `&` (and), `|` (or), `^` (xor),
     count the ways the expression can be parenthesized to generate a true value.
     """
@@ -385,7 +390,7 @@ def boolean_parentheses(s: str) -> int:
 
 
 def alien_alphabet(words):
-    "For a sorted list of `words` return the alien alphabet used to sort it."
+    """For a sorted list of `words` return the alien alphabet used to sort it."""
     chars = set(words[0])
     edges = {}
     for a, b in pairwise(words):
@@ -398,7 +403,7 @@ def alien_alphabet(words):
 
 
 def fix_palindrome(s: str) -> int:
-    "Return number of characters to be added to make a string a palindrome."
+    """Return number of characters to be added to make a string a palindrome."""
 
     @lru_cache(None)
     def count(i, j):
@@ -408,15 +413,14 @@ def fix_palindrome(s: str) -> int:
                 count(i + 1, j - 1)
                 if s[i] == s[j]
                 else min(count(i + 1, j), count(i, j - 1)) + 1
-            )
+            ),
         )
 
     return count(0, len(s) - 1)
 
 
 def artistic_photo_count(s: str, x: int, y: int) -> int:
-    """
-    String `s` contains a photography set including positions for:
+    """String `s` contains a photography set including positions for:
         P - the photographer,
         A - the actor/model,
         B - the backdrop.
@@ -428,8 +432,8 @@ def artistic_photo_count(s: str, x: int, y: int) -> int:
     Return number of artistic photos.
     """
     l = len(s) - 1
-    ps = list(accumulate(map(lambda c: int(c == "P"), s)))
-    bs = list(accumulate(map(lambda c: int(c == "B"), s)))
+    ps = list(accumulate(int(c == "P") for c in s))
+    bs = list(accumulate(int(c == "B") for c in s))
     p = lambda i: int(i >= 0 and ps[min(i, l)])
     b = lambda i: int(i >= 0 and bs[min(i, l)])
     actors = [i for i, c in enumerate(s) if c == "A" and x <= i <= l - x]
@@ -441,7 +445,7 @@ def artistic_photo_count(s: str, x: int, y: int) -> int:
 
 
 def distinct_subsequence_count(s: str) -> int:
-    "Return number of distinct (loose) subsequences in `s`."
+    """Return number of distinct (loose) subsequences in `s`."""
     m = {}
     # subsequence is any sequence with any characters removed.
     # E.g.: aba => '' a ab aa b ba aba => 7
@@ -452,12 +456,12 @@ def distinct_subsequence_count(s: str) -> int:
 
 
 def permutations(string: str) -> list:
-    "Return a sorted list of permutations of `string`."
+    """Return a sorted list of permutations of `string`."""
     sols = []
     n = len(string)
     s = list(string)
 
-    def rec(i):
+    def rec(i) -> None:
         if i >= n:
             sols.append("".join(s))
             return
@@ -472,7 +476,7 @@ def permutations(string: str) -> list:
 
 
 def pattern_match(pattern: str, string: str) -> bool:
-    "Match `pattern` containing `*` and `?` to `string`."
+    """Match `pattern` containing `*` and `?` to `string`."""
     pl = len(pattern)
     sl = len(string)
 
@@ -498,7 +502,7 @@ def pattern_match(pattern: str, string: str) -> bool:
 
 
 def longest_repeating_substring(s: str) -> str:
-    "Return the longest repeating (non-overlapping) substring from `s`."
+    """Return the longest repeating (non-overlapping) substring from `s`."""
     # This runs surprisingly faster than the dynamic programming solution.
     # The worst case is O(N^2) but we use two tricks to cut down the problem space.
     n = len(s)
@@ -516,7 +520,7 @@ def longest_repeating_substring(s: str) -> str:
 
 
 def longest_prefix_suffix_length(p: str) -> int:
-    "Return the length of the longest proper prefix that is also a suffix."
+    """Return the length of the longest proper prefix that is also a suffix."""
     # Uses KMP (Knuth Morris Pratt) algorithm. Runs in O(N).
     pi = [0] * len(p)  # the computed PI table
     k = 0  # length of the prefix
@@ -540,7 +544,7 @@ def longest_prefix_suffix_length(p: str) -> int:
 
 
 def extra_palindrome_chars(s: str) -> int:
-    "Returns number of new chars upfront necessary to make `s` a palindrome."
+    """Returns number of new chars upfront necessary to make `s` a palindrome."""
     # Uses KMP (Knuth Morris Pratt) algorithm  to determine the length
     # of the length of the longest prefix of `s` equal to a suffix of
     # the reverse of `s`.
@@ -562,12 +566,12 @@ def extra_palindrome_chars(s: str) -> int:
     return n - pi[-1]
 
 
-def word_wrap(words: List[int], k: int) -> int:
-    "Return min sum(extra_spaces**2) for a wrapped text."
+def word_wrap(words: list[int], k: int) -> int:
+    """Return min sum(extra_spaces**2) for a wrapped text."""
     # Runs in O(n*n), aux space O(n)
     n: int = len(words)
     mx: int = n * k**2  # maximum possible result
-    dp: List[int] = [0] * (n + 1)  # dynamic programming scratchpad
+    dp: list[int] = [0] * (n + 1)  # dynamic programming scratchpad
 
     # start from the back
     for i in reversed(range(n)):
@@ -586,7 +590,7 @@ def word_wrap(words: List[int], k: int) -> int:
 
 
 def sum_string(s: str) -> bool:
-    "True if `s` can be split recursively into `a + b = c` substrings."
+    """True if `s` can be split recursively into `a + b = c` substrings."""
     # "12243660" -> "12", "24", "36", "60"
     # The idea is to split the string into 3 parts: a + b + remainder
     # Note that: a, b <- b, a + b
@@ -604,7 +608,7 @@ def sum_string(s: str) -> bool:
 
 
 def k_alphabet_string_with_all_substrings(n: int, k: int) -> str:
-    "Return a string that contains all substrings of length `n` from the `k` alphabet."
+    """Return a string that contains all substrings of length `n` from the `k` alphabet."""
     # The k-alphabet is restricted to: "0123456789"[:k]
     # The idea presented here is to greedily add digits to the string,
     # while keeping track of visited substrings so far.
@@ -622,7 +626,7 @@ def k_alphabet_string_with_all_substrings(n: int, k: int) -> str:
     # The output string is initialized with the base substring.
     o = "0" * n
     # The base substring is marked as visited.
-    v = set([o])
+    v = {o}
     end = k**n  # count of all possible substrings.
     while len(v) < end:
         p = o[1 - n :]  # last n - 1 digits in the output string.

@@ -1,12 +1,33 @@
 [tool.ruff]
 line-length = 88
 target-version = "py38"
+unsafe-fixes = true
+exclude = ["builtins.pyi", "**/*.pyi"]
 
 [tool.ruff.lint]
-select = ["E", "F", "UP", "B", "Q", "SIM", "I"]
+select = ["ALL"]
+# select = ["E", "W", "N", "NPY", "PD",
+#     "PL", "F", "UP",  "I",
+#     "A", "B", "COM", "C4", "DTZ", "EM", "ISC", "ICN",
+#     "PIE", "T20", "PYI", "PT", "Q", "RSE", "RET", "SLF",
+#     "SLOT", "SIM", "TID", "TCH", "ARG", "PTH", "FIX", "TD",
+#     "ERA", "FLY", "PERF", "FURB", "RUF"]
 
-ignore = ["E741", "E731"]
-exclude = ["builtins.pyi", "**/*.pyi"]
+fixable = ["ALL"]
+unfixable = []
+
+# E741 - ambiguous variable name
+# E731 - lambda assignment
+# PLR2004 - magic value comparison
+# ERA001 - commented-out code
+# PLR0913 - too many function parameters
+# EXE002 - no shebang
+# ANN101 - missing type annotation for self
+ignore = ["E741", "E731", "PLR2004", "ERA001", "PLR0913", "EXE002",
+        "ANN101",]
+
+[tool.ruff.lint.per-file-ignores]
+"**/test_*" = ["S101", "ANN201"]
 
 [tool.mypy]
 disable_error_code = [

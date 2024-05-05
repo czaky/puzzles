@@ -1,23 +1,24 @@
 """Module for number and arithmetic related puzzles."""
 
+from __future__ import annotations
+
 from functools import reduce
 from math import comb, floor, log
 from operator import mul
-from typing import Tuple
 
 # The modulo operation is crucial to efficiently solving the division problem.
 M = 10**9 + 7
 
 
 def digits(n: int):
-    "Iterates over decimal digits of `n`."
+    """Iterates over decimal digits of `n`."""
     while n:
         yield n % 10
         n //= 10
 
 
 def floor_sqrt(x: int) -> int:
-    "Return the floor of `sqrt(x)`."
+    """Return the floor of `sqrt(x)`."""
     if x in (0, 1):
         return x
     l = 0
@@ -36,7 +37,7 @@ def floor_sqrt(x: int) -> int:
 
 
 def binary_string_by_three(s: str) -> bool:
-    "True if binary number in `s` is divisible by 3."
+    """True if binary number in `s` is divisible by 3."""
     # difference of even and odd "1"s is divisible by 3
     return (
         sum(c == "1" for i, c in enumerate(s) if i % 2)
@@ -45,12 +46,12 @@ def binary_string_by_three(s: str) -> bool:
 
 
 def josephus(n: int, k: int) -> int:
-    "Return zero-based index of survivor in Josephus problem."
+    """Return zero-based index of survivor in Josephus problem."""
     return (josephus(n - 1, k) + k) % n if n > 1 else 0
 
 
 def factorial_trailing_zeros(n: int) -> int:
-    "Returns number of trailing zeros in a factorial of `n`."
+    """Returns number of trailing zeros in a factorial of `n`."""
     # Zeros come from 5 * 2.
     # Count only 5s as there will be more 2s.
     # 1! to 24! has n // 5 fives as factor.
@@ -65,13 +66,13 @@ def factorial_trailing_zeros(n: int) -> int:
 
 
 def paths_in_matrix(m: int, n: int) -> int:
-    "Return number of unique paths from (1,1) to (m,n)."
+    """Return number of unique paths from (1,1) to (m,n)."""
     # (m+n-2)! / (m-1)! / (n-1)!
     return reduce(mul, range(m, m + n - 1), 1) // reduce(mul, range(2, n), 1)
 
 
 def frog_hops(n: int) -> int:
-    "In how many ways a frog can cover N tiles when jumping: 1, 2, or 3?"
+    """In how many ways a frog can cover N tiles when jumping: 1, 2, or 3?."""
     if n == 0:
         return 0
     a, b, c = 1, 1, 2
@@ -81,8 +82,7 @@ def frog_hops(n: int) -> int:
 
 
 def uniform_integers(a: int, b: int) -> int:
-    """
-    Count number of integers between `[a, b]` with same digits.
+    """Count number of integers between `[a, b]` with same digits.
 
     Uniform integers are of the form: 111, 222, ..., 999.
     They are made of the same digit in decimal notation.
@@ -96,7 +96,7 @@ def uniform_integers(a: int, b: int) -> int:
 
 
 def closest_palindrome_number(n: int) -> int:
-    "Return the closest number to `n` that is a palindrome number."
+    """Return the closest number to `n` that is a palindrome number."""
     if n <= 10:
         # Return num if n <= 9
         # Return 9 if n == 10
@@ -115,7 +115,7 @@ def closest_palindrome_number(n: int) -> int:
 
 
 def next_happy_number(n: int) -> int:
-    "The next number to `n` with digits summing to 1 recursively."
+    """The next number to `n` with digits summing to 1 recursively."""
     # Get the recursive sum of digits.
     ss = lambda n: n if n < 10 else ss(sum(d * d for d in digits(n)))
     # Recursively determine the next "happy" number.
@@ -130,7 +130,7 @@ _prime_table = []
 
 def _primes(n: int):
     # Generate potential prime numbers skipping all even ones.
-    global _prime_table  # pylint: disable=global-statement
+    global _prime_table  # pylint: disable=global-statement  # noqa: PLW0603
     pt = _prime_table
     lpt = len(pt)
     if n - 2 <= lpt:
@@ -153,7 +153,7 @@ def _primes(n: int):
 
 
 def prime_numbers(n: int):
-    "Generate primes until n."
+    """Generate primes until n."""
     if n < 2:
         return
     yield 2
@@ -164,8 +164,8 @@ def prime_numbers(n: int):
             yield p
 
 
-def prime_sum(n: int) -> Tuple[int, int]:  # pyright: ignore
-    "Return two prime numbers that sum to the even number `n`."
+def prime_sum(n: int) -> tuple[int, int]:  # pyright: ignore
+    """Return two prime numbers that sum to the even number `n`."""
     assert n > 3
 
     primes = list(prime_numbers(n))
@@ -192,7 +192,7 @@ def best_numbers(n: int, a: int, b: int, c: int, d: int) -> int:
     # Then return the number of permutations.
 
     # A valid number (sum) contains `c` and `d` in the decimal representation.
-    cd = set([c, d])
+    cd = {c, d}
     valid = lambda s: bool(cd & set(digits(s)))
 
     if a == b:
@@ -228,7 +228,7 @@ def best_numbers(n: int, a: int, b: int, c: int, d: int) -> int:
 
 
 def find_nth_k_bit_number(n: int, k: int) -> int:
-    "Find the `n`th number that has at most `k` bits."
+    """Find the `n`th number that has at most `k` bits."""
     # The puzzle requires combinatorics, bit-manipulations, and binary-search.
     # The idea is to use binary search, while calculating.
     # the count of numbers for a given speculated solution.
@@ -267,7 +267,7 @@ def find_nth_k_bit_number(n: int, k: int) -> int:
 
 
 def combmod(n: int, k: int, mod: int) -> int:
-    "Return binominal, combinatorial factor modulo `mod`"
+    """Return binominal, combinatorial factor modulo `mod`."""
     if k < 0 or k > n:
         return 0
     k = min(k, n - k)

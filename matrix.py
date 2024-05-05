@@ -1,20 +1,21 @@
-"Puzzles around matrices."
+"""Puzzles around matrices."""
+
+from __future__ import annotations
 
 from bisect import bisect_right
 from functools import lru_cache
 from itertools import accumulate, combinations
-from typing import List, Tuple
 
 import arrays
 
 
-def make(s: str) -> List[List[int]]:
-    "Parse a string into a matrix."
+def make(s: str) -> list[list[int]]:
+    """Parse a string into a matrix."""
     return [list(map(int, l.split())) for l in s.splitlines()]
 
 
-def find_sorted(hay: List[List[int]], needle: int) -> bool:
-    "True if `needle` is in the sorted `hay` matrix."
+def find_sorted(hay: list[list[int]], needle: int) -> bool:
+    """True if `needle` is in the sorted `hay` matrix."""
     n = len(hay)
     m = len(hay[0])
     i = n - 1
@@ -30,8 +31,8 @@ def find_sorted(hay: List[List[int]], needle: int) -> bool:
     return False
 
 
-def rotate90cc(m: List[List[int]]):
-    "Rotate matrix `m` 90deg counter-clockwise."
+def rotate90cc(m: list[list[int]]) -> None:
+    """Rotate matrix `m` 90deg counter-clockwise."""
     # Transpose
     n = len(m)
     for i, j in combinations(range(n), 2):
@@ -40,9 +41,8 @@ def rotate90cc(m: List[List[int]]):
     m.reverse()
 
 
-def optimum_multiplications(a: List[int]) -> int:
-    """
-    Given a list of matrix sizes (a[i] x a[i+1])
+def optimum_multiplications(a: list[int]) -> int:
+    """Given a list of matrix sizes (a[i] x a[i+1])
     return minimum number of operations.
     """
 
@@ -63,15 +63,14 @@ def optimum_multiplications(a: List[int]) -> int:
 A = ord("A")
 
 
-def optimum_brackets(a: List[int]) -> str:
-    """
-    Given a list of matrix sizes (a[i] x a[i+1])
+def optimum_brackets(a: list[int]) -> str:
+    """Given a list of matrix sizes (a[i] x a[i+1])
     return optimal bracketed multiplication expression
-    in the form:  `A(BC)D`
+    in the form:  `A(BC)D`.
     """
 
     @lru_cache(None)
-    def sub(i: int, j: int) -> Tuple[int, int]:
+    def sub(i: int, j: int) -> tuple[int, int]:
         # Multiplying (i, k) x (k, j) matrices gives: (i, j) matrix.
         # The number of multiplications necessary is: i * k * j
         # For each K we multiply two matrices resulting from recursive calls:
@@ -93,8 +92,8 @@ def optimum_brackets(a: List[int]) -> str:
     return par(1, len(a) - 1)
 
 
-def sorted_median(m: List[List[int]]) -> int:
-    "Return a median of a row-wise sorted matrix."
+def sorted_median(m: list[list[int]]) -> int:
+    """Return a median of a row-wise sorted matrix."""
     mid = (len(m) * len(m[0]) + 1) // 2
     l = min(r[0] for r in m)
     h = max(r[-1] for r in m)
@@ -107,8 +106,8 @@ def sorted_median(m: List[List[int]]) -> int:
     return l
 
 
-def max_sum_rectangle(m: List[List[int]]) -> int:
-    "Return the maximum sum of a sub-matrix of `m`."
+def max_sum_rectangle(m: list[list[int]]) -> int:
+    """Return the maximum sum of a sub-matrix of `m`."""
     # The idea is to iterate over combinations of rows (top, bottom).
     # Computing a cumulative sum for each of those columns between top and bottom row.
     # Then apply Kedane's algorithm against those cumulative sums.
@@ -127,8 +126,8 @@ def max_sum_rectangle(m: List[List[int]]) -> int:
     return mx if mx > 0 else max(map(max, m))
 
 
-def zero_sum_sub_matrix(m: List[List[int]]) -> List[List[int]]:
-    "Return the largest sub-matrix of `m` that sums to zero."
+def zero_sum_sub_matrix(m: list[list[int]]) -> list[list[int]]:
+    """Return the largest sub-matrix of `m` that sums to zero."""
     # The idea is borrowed from the 2D Kadane's algorithm.
     # We use top, bottom cutoff to accumulate the values for the columns into an array.
     # Then we apply the `zero_sum_sub_array` above
