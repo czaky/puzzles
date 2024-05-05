@@ -453,3 +453,28 @@ class TestTrees(unittest.TestCase):
         self.assertEqual(1, t.candy_tree_equality(t.make("0 1 2")))
         self.assertEqual(1, t.candy_tree_equality(t.make("2 1 0")))
         self.assertEqual(2, t.candy_tree_equality(t.make("1 2 0")))
+
+    def test_min_bst_with_a_sum(self):
+        "Test `min_bst_with_a_sum`."
+        r = t.make("1")
+        self.assertEqual(1, t.min_bst_with_a_sum(r, 1))
+        r = t.make("1 2 3")
+        self.assertEqual(1, t.min_bst_with_a_sum(r, 2))
+        self.assertEqual(1, t.min_bst_with_a_sum(r, 3))
+        self.assertEqual(-1, t.min_bst_with_a_sum(r, 6))
+        r = t.make("2 1 3")
+        self.assertEqual(1, t.min_bst_with_a_sum(r, 1))
+        self.assertEqual(-1, t.min_bst_with_a_sum(r, 2))
+        self.assertEqual(3, t.min_bst_with_a_sum(r, 6))
+        r = t.make("1 N 3 2 4")
+        self.assertEqual(4, t.min_bst_with_a_sum(r, 10))
+        r = t.make("1 N 3 1 5")
+        self.assertEqual(-1, t.min_bst_with_a_sum(r, 10))
+        r = t.make("27 24 N 17 26 10 N N N N 12 10 14")
+        self.assertEqual(-1, t.min_bst_with_a_sum(r, 113))
+        r = t.make(
+            "5146 8127 4333 7177 370  3598 4005 2737 8147 918  2423 "
+            "4418 3658 3965 3609 4506 7905 3531 5786 7069 5986 4125 "
+            "3109 5378 3898 6654 2270 2614 8579 7243 8788"
+        )
+        self.assertEqual(1, t.min_bst_with_a_sum(r, 4125))

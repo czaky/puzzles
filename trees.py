@@ -1,9 +1,9 @@
 """Puzzles related to binary (search) trees."""
 
-import math
 from collections import deque
 from functools import reduce
 from itertools import islice
+from math import inf
 from typing import Deque, List, Optional, Tuple
 
 import lists
@@ -564,18 +564,29 @@ def insert_balanced(n: Node, value: int):
     return n.insert_balanced(value) if n else TreeNode(value)
 
 
-# Determine if a tree is an ordered BST (may be unbalanced)
-def is_bst(root: Node) -> bool:
-    "True if `root` is a BST."
+def is_bst(n: "Node", mn: float = -inf, mx: float = inf) -> bool:
+    """
+    Determine if the binary tree starting at `n` is a BST.
 
-    def ordered(n: Node, mn: float, mx: float) -> bool:
-        return not n or (
-            (mn <= n.data <= mx)
-            and ordered(n.left, mn, n.data - 1)
-            and ordered(n.right, n.data + 1, mx)
-        )
+    Parameters
+    ----------
+    n : Node
+        Root of the tree to investigate
+    mn : float, optional
+        Min value for the tree values, by default -inf
+    mx : float, optional
+        Max value for the tree values, by default inf
 
-    return ordered(root, -math.inf, math.inf)
+    Returns
+    -------
+    bool
+        True for a BST with values between `mn` and `mx` (inclusive).
+    """
+    return not n or (
+        (mn <= n.data <= mx)
+        and is_bst(n.left, mn, n.data - 1)
+        and is_bst(n.right, n.data + 1, mx)
+    )
 
 
 def successor(t: Node, x: int) -> Optional[Node]:
@@ -761,7 +772,7 @@ def max_width(t: Node) -> int:
 
 def max_path_sum(t: Node) -> int:
     "Return max path sum between nodes of rank 1."
-    mx = [-math.inf]
+    mx = [-inf]
 
     def rec(n):
         if not n:
@@ -929,3 +940,39 @@ def candy_tree_equality(r: Node) -> int:
 
     assert r and dfs(r) == 1
     return moves
+
+
+def min_bst_with_a_sum(r: Node, target: int) -> int:
+    """
+    Find a subtree under `r` that has a sum of nodes equal to `target`.
+
+    Return the count of nodes for a smallest tree like that.
+
+    Parameters
+    ----------
+    r : Node
+        Root node.
+    target : int
+        Searched sum of nodes for the subtree.
+
+    Returns
+    -------
+    int
+        Count of nodes in the subtree.
+    """
+
+    def dfs(n: Node):
+        if not n:
+            return inf, 0, 0
+        lmc, lc, ls = dfs(n.left)
+        rmc, rc, rs = dfs(n.right)
+        mc = min(lmc, rmc)
+        if mc < inf:
+            return mc, 0, 0
+        c, s = lc + rc + 1, ls + rs + n.data
+        if s == target and is_bst(n):
+            return c, 0, 0
+        return inf, c, s
+
+    mc = dfs(r)[0]
+    return int(mc) if mc < inf else -1
