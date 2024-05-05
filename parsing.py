@@ -2,16 +2,16 @@
 
 from __future__ import annotations
 
-from typing import Callable, Sequence
+from typing import Any, Callable, Sequence
 
 
-def expression_tuple(*args):
+def expression_tuple(*args: Any) -> tuple:
     """Return args as a tuple."""
     return args
 
 
-def parse_binop_expression(tokens: Sequence, make: Callable = expression_tuple):
-    """Parses an arithmetic expression consisting of literals or symbols and operators.
+def parse_binop_expression(tokens: Sequence, make: Callable = expression_tuple) -> Any:
+    """Parse an arithmetic expression consisting of literals or symbols and operators.
 
     The literals and symbols are single letters or numbers and
     the operators are from the '+-*/()' set.
@@ -22,12 +22,15 @@ def parse_binop_expression(tokens: Sequence, make: Callable = expression_tuple):
 
     Parameters
     ----------
-        tokens (Sequence): tokenized expression.
-        make (Callable): generates binary expression objects out of arguments.
+    tokens : Sequence
+        tokenized expression
+    make : Callable, optional
+        expression constructor
 
     Returns
     -------
-        any: the root of the parsed expression (as returned by the `make` function).
+    str
+        the root of the parsed expression (as returned by the `make` function).
 
     """
     # The implementation here avoids recursion and uses two stacks
@@ -40,7 +43,7 @@ def parse_binop_expression(tokens: Sequence, make: Callable = expression_tuple):
     # Start with an implicit, opening bracket.
     ops = ["("]
 
-    def close_bracket():
+    def close_bracket() -> Any:
         # This is called when we close and process a (bracketed) sub-expression
         #
         # The remaining operators here are "+-".
@@ -51,7 +54,7 @@ def parse_binop_expression(tokens: Sequence, make: Callable = expression_tuple):
             rargs.append(args.pop())
             rops.append(ops.pop())
         # We should have arrived at the opening bracket.
-        assert ops.pop() == "("
+        assert ops.pop() == "("  # noqa: S101
         # Apply the operators (in reversed order) to form the expressions.
         while rops:
             rargs.append(make(rops.pop(), rargs.pop(), rargs.pop()))
@@ -81,7 +84,7 @@ def parse_binop_expression(tokens: Sequence, make: Callable = expression_tuple):
 
 
 def simplified_binop_expression_factory() -> tuple[Callable, Callable]:
-    """Returns an expression formatter and a string extractor."""
+    """Return an expression formatter and a string extractor."""
     # Define the grammar:
     # Precedence rank of the operators.
     rank = {"*": 1, "/": 1, "+": 2, "-": 2}
@@ -118,7 +121,7 @@ def simplify_binops_brackets_one_pass(tokens: Sequence) -> str:
 
 def format_binop_expression(
     e: str | tuple,
-    factory=simplified_binop_expression_factory,
+    factory: Callable = simplified_binop_expression_factory,
 ) -> str:
     """Format expressions consisting of (<operator>, <arg1>, <arg2>)."""
     if isinstance(e, str):

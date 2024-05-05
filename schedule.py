@@ -6,8 +6,10 @@ from functools import reduce
 
 
 def meetings(start: list[int], end: list[int]) -> int:
-    """Returns maximum number of meetings that can be scheduled
-    in one room based on the meetings' `start` and `end` times.
+    """Return maximum number of meetings that can be scheduled.
+
+    The meetings are scheduled  in one room based on the meetings
+    `start` and `end` times.
     """
     return reduce(
         (lambda v, m: (v[0] + 1, m[0]) if v[1] < m[1] else v),
