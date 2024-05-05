@@ -90,7 +90,7 @@ def rotate(a: list, left: int = 1) -> None:
 
 def transition_point(a: list) -> int:
     """Transition index in sorted list `a` of '0's and '1's."""
-    return upper_index(lambda m: a[m] != 1, 0, len(a) - 1, -1) or 0
+    return upper_index(lambda m: a[m] != 1, 0, len(a) - 1, -1)
 
 
 def min_distance(a: list, x: int, y: int) -> int:
@@ -162,7 +162,7 @@ def meta_cafeteria(n: int, d: int, s: list[int]) -> int:
 
 def floor_element(a: list[int], x: int) -> int:
     """Return the largest element smaller or equal to `x` from sorted `a`."""
-    return upper_index(lambda m: a[m] <= x, 0, len(a) - 1, -1) or 0
+    return upper_index(lambda m: a[m] <= x, 0, len(a) - 1, -1)
 
 
 def product_except_self(nums: list[int]) -> list[int]:
@@ -261,7 +261,7 @@ def find_extra_element(a: list[int], b: list[int]) -> int:
     # Runs in O(log N)
     if len(a) < len(b):
         a, b = b, a
-    return upper_index(lambda m: a[m] >= b[m], 0, len(b) - 1, -1) + 1
+    return upper_index(lambda m: a[m] == b[m], 0, len(b) - 1, -1) + 1
 
 
 def pascal_triangle_row(n: int) -> list[int]:
@@ -311,7 +311,7 @@ def duplicated_sorted_find_unique(a: list[int]) -> int:
     # 1 1 2 2 3 4 4 5 5
     # 1=1 2=2 3<4 4<5 5
     return a[
-        upper_index(lambda m: a[2 * m] >= a[2 * m + 1], 0, len(a) // 2 - 1, -1) * 2 + 2
+        upper_index(lambda m: a[2 * m] == a[2 * m + 1], 0, len(a) // 2 - 1, -1) * 2 + 2
     ]
 
 
@@ -335,8 +335,8 @@ def toys_with_budget(a: list[int], b: int) -> int:
 
 def first_last(a: list[int], x: int) -> tuple[int, int]:
     """Return the first and last index of `x` in a sorted array `a`."""
-    l: int = upper_index(lambda m: a[m] < x, 0, len(a) - 1, -1) + 1
-    h: int = upper_index(lambda m: a[m] <= x, l, len(a) - 1, -1) + 0
+    l: int = lower_index(lambda m: a[m] >= x, 0, len(a) - 1, len(a))
+    h: int = upper_index(lambda m: a[m] <= x, l, len(a) - 1, -1)
     return (l, h) if l <= h else (-1, -1)
 
 
@@ -584,7 +584,7 @@ def aggressive_cows(stalls: list, cows: int) -> int:
     stalls.sort()
     ac = lambda d: lambda a, s: s - a[1] >= d and (a[0] + 1, s) or a
     le = lambda d: cows <= reduce(ac(d), stalls, (1, stalls[0]))[0]
-    return upper_index(le, 1, stalls[-1] - stalls[0]) + 0
+    return upper_index(le, 1, stalls[-1] - stalls[0])
 
 
 def smaller_on_right_counts(arr: list) -> list:
@@ -697,7 +697,7 @@ def min_sum_split(a: list, k: int) -> int:
     # Assure that the number of splits is less or equal to k
     fit = lambda mx: k >= reduce(acc(mx), a, (0, 1))[1]
     # Use binary search to find the maximum sub-sum.
-    return lower_index(fit, max(a), sum(a)) + 0
+    return lower_index(fit, max(a), sum(a))
 
 
 def out_ouf_there_number(a: list[int]) -> int:
