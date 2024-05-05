@@ -21,7 +21,7 @@ def min_diff_set_partition(a: list[int]) -> tuple[int, int]:
 
     """
 
-    def f(i, j, x, y):
+    def f(i: int, j: int, x: int, y: int) -> int:
         if j == i:
             x += sum(a[:i])
         elif j:

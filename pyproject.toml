@@ -25,8 +25,9 @@ unfixable = []
 # ANN101 - missing type annotation for self
 # ANN401 - ANY prohibited
 # PGH003 - use specific violation code when ignoring
+# C901 - too complex
 ignore = ["E741", "E731", "PLR2004", "ERA001", "PLR0913", "EXE002",
-        "ANN101", "ANN401", "PGH003"]
+        "ANN101", "ANN401", "PGH003", "C901"]
 
 [tool.ruff.lint.per-file-ignores]
 "**/test_*" = ["S101", "ANN201"]

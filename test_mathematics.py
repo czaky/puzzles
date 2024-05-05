@@ -93,11 +93,11 @@ class TestNumbers(unittest.TestCase):
         assert m.prime_sum(7426) == (173, 7253)
         assert m.prime_sum(34096) == (173, 33923)
 
-    def test_best_numbers(self):
-        """Test `best_numbers`."""
-        assert m.best_numbers(2, 1, 2, 3, 5) == 2
-        assert m.best_numbers(4, 6, 7, 5, 3) == 4
-        assert m.best_numbers(10000, 1, 5, 2, 5) == 716192774
+    def test_abcd_numbers(self):
+        """Test `abcd_numbers`."""
+        assert m.abcd_numbers(2, 1, 2, 3, 5) == 2
+        assert m.abcd_numbers(4, 6, 7, 5, 3) == 4
+        assert m.abcd_numbers(10000, 1, 5, 2, 5) == 716192774
 
     def test_find_nth_k_bit_number(self):
         """Test `find_nth_k_bit_number`."""

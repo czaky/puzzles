@@ -5,13 +5,14 @@ from __future__ import annotations
 from functools import reduce
 from math import comb, floor, log
 from operator import mul
+from typing import Iterator
 
 # The modulo operation is crucial to efficiently solving the division problem.
 M = 10**9 + 7
 
 
-def digits(n: int):
-    """Iterates over decimal digits of `n`."""
+def digits(n: int) -> Iterator[int]:
+    """Iterate over decimal digits of `n`."""
     while n:
         yield n % 10
         n //= 10
@@ -37,7 +38,7 @@ def floor_sqrt(x: int) -> int:
 
 
 def binary_string_by_three(s: str) -> bool:
-    """True if binary number in `s` is divisible by 3."""
+    """Return True if binary number from `s` is divisible by 3."""
     # difference of even and odd "1"s is divisible by 3
     return (
         sum(c == "1" for i, c in enumerate(s) if i % 2)
@@ -51,7 +52,7 @@ def josephus(n: int, k: int) -> int:
 
 
 def factorial_trailing_zeros(n: int) -> int:
-    """Returns number of trailing zeros in a factorial of `n`."""
+    """Return number of trailing zeros in a factorial of `n`."""
     # Zeros come from 5 * 2.
     # Count only 5s as there will be more 2s.
     # 1! to 24! has n // 5 fives as factor.
@@ -88,7 +89,7 @@ def uniform_integers(a: int, b: int) -> int:
     They are made of the same digit in decimal notation.
     """
 
-    def uniform(n):
+    def uniform(n: int) -> int:
         l = floor(log(max(n, 1), 10)) + 1
         return 9 * (l - 1) + n // ((10**l - 1) // 9)
 
@@ -102,7 +103,7 @@ def closest_palindrome_number(n: int) -> int:
         # Return 9 if n == 10
         return n - n // 10
 
-    def pal(n: int):
+    def pal(n: int) -> int:
         # Create a palindrome number out of `n`.
         s = str(n)
         m, r = divmod(len(s) - 1, 2)
@@ -115,7 +116,7 @@ def closest_palindrome_number(n: int) -> int:
 
 
 def next_happy_number(n: int) -> int:
-    """The next number to `n` with digits summing to 1 recursively."""
+    """Return the next number to `n` with digits summing to 1 recursively."""
     # Get the recursive sum of digits.
     ss = lambda n: n if n < 10 else ss(sum(d * d for d in digits(n)))
     # Recursively determine the next "happy" number.
@@ -128,7 +129,7 @@ def next_happy_number(n: int) -> int:
 _prime_table = []
 
 
-def _primes(n: int):
+def _primes(n: int) -> list:
     # Generate potential prime numbers skipping all even ones.
     global _prime_table  # pylint: disable=global-statement  # noqa: PLW0603
     pt = _prime_table
@@ -152,7 +153,7 @@ def _primes(n: int):
     return nums
 
 
-def prime_numbers(n: int):
+def prime_numbers(n: int) -> Iterator:
     """Generate primes until n."""
     if n < 2:
         return
@@ -166,7 +167,9 @@ def prime_numbers(n: int):
 
 def prime_sum(n: int) -> tuple[int, int]:  # pyright: ignore
     """Return two prime numbers that sum to the even number `n`."""
-    assert n > 3
+    if n <= 3:
+        msg = "Expected argument larger than 3."
+        raise ValueError(msg)
 
     primes = list(prime_numbers(n))
 
@@ -183,10 +186,13 @@ def prime_sum(n: int) -> tuple[int, int]:  # pyright: ignore
     return 0, n
 
 
-def best_numbers(n: int, a: int, b: int, c: int, d: int) -> int:
-    """Return a count of integers of `n` length of decimal representation that fulfill:
-    1.) The numbers are made only of digits `a` and `b`.
-    2.) Sum of the digits of the numbers contains at least one of `c` and `d`.
+def abcd_numbers(n: int, a: int, b: int, c: int, d: int) -> int:
+    """Return a count of integers fullfilling specific requirements.
+
+    Requirements:
+        1) Length of the decimal representation is `n` and,
+        2) the numbers are made only of digits `a` and `b`.
+        3) sum of the digits of the numbers contains at least one of `c` and `d`.
     """
     # The idea is to find `n_a` and `n_b` split with the sum having the property 2.)
     # Then return the number of permutations.

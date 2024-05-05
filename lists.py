@@ -4,26 +4,37 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from itertools import islice
-from typing import Any, Iterable, Optional
+from typing import Any, Iterable, Iterator, Optional
 
 
 class ListNode(Sequence):
     """Linked List Node."""
 
-    def __init__(self, data) -> None:
+    def __init__(self, data: Any) -> None:
+        """Create a ListNode using `data` as node value.
+
+        Parameters
+        ----------
+        data : Any
+            Value assigned to this node.
+
+        """
         self.data = data
         self.next: Node = None
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator:
+        """Iterate over the list node values."""
         n = self
         while n is not None:
             yield n.data
             n = n.next
 
     def __bool__(self) -> bool:
+        """Return True."""
         return True
 
     def __len__(self) -> int:
+        """Compute the length starting at this node."""
         n: Node = self.next
         c = 1
         while n is not None:
@@ -32,6 +43,7 @@ class ListNode(Sequence):
         return c
 
     def __contains__(self, x: object) -> bool:
+        """Return True if x is contained in this list."""
         n = self
         while n is not None:
             if n.data == x:
@@ -39,7 +51,8 @@ class ListNode(Sequence):
             n = n.next
         return False
 
-    def __getitem__(self, i) -> Sequence:
+    def __getitem__(self, i: int | slice) -> Any:
+        """Return an element or a slice of this List."""
         n = self
         if isinstance(i, int):
             while n is not None and i > 0:
@@ -58,8 +71,7 @@ class ListNode(Sequence):
             if step < 0:
                 result.reverse()
             return result
-        assert isinstance(i, slice | int)
-        return []
+        return None
 
     def append(self, n: Node) -> None:
         """Append node `n` to this list."""
@@ -186,9 +198,12 @@ def dedup(head: Node) -> Node:
 
 def delete_node(n: Node) -> None:
     """Remove node without reference to `head`."""
-    assert n.next
-    n.data = n.next.data
-    n.next = n.next.next
+    if n.next:
+        n.data = n.next.data
+        n.next = n.next.next
+    else:
+        msg = "Cannot erase node value with next node."
+        raise IndexError(msg)
 
 
 def remove_smaller_nodes_left(h: Node) -> Node:
@@ -394,7 +409,9 @@ def merge_sort(h: Node) -> Node:
 
 
 def rearrange_alphabet_list(h: Node) -> Node:
-    """Given a linked list containing letters of Latin alphabet,
+    """Rearrange vovel nodes first.
+
+    Given a linked list containing letters of Latin alphabet,
     rearrange the nodes so that all the vowels come first.
     Otherwise, honor the order of the elements.
 

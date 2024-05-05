@@ -15,7 +15,7 @@ def make(s: str) -> list[list[int]]:
 
 
 def find_sorted(hay: list[list[int]], needle: int) -> bool:
-    """True if `needle` is in the sorted `hay` matrix."""
+    """Return True if `needle` is in the sorted `hay` matrix."""
     n = len(hay)
     m = len(hay[0])
     i = n - 1
@@ -42,12 +42,17 @@ def rotate90cc(m: list[list[int]]) -> None:
 
 
 def optimum_multiplications(a: list[int]) -> int:
-    """Given a list of matrix sizes (a[i] x a[i+1])
-    return minimum number of operations.
+    """Return minimum number of operations for matrices described by `a`.
+
+    Given a list of matrix sizes of (a[i] x a[i+1])
+    return minimum number of operations necessary.
+
+    The number of operations differs by the sequence of
+    matrix multiplication applied.
     """
 
     @lru_cache(None)
-    def sub(i, j):
+    def sub(i: int, j: int) -> int:
         # Multiplying (i, k) x (k, j) matrices gives: (i, j) matrix.
         # The number of multiplications necessary is: i * k * j
         # For each K we multiply two matrices resulting from recursive calls:
@@ -64,7 +69,9 @@ A = ord("A")
 
 
 def optimum_brackets(a: list[int]) -> str:
-    """Given a list of matrix sizes (a[i] x a[i+1])
+    """Return optimal bracketed matrix multiplication string, minimizing operation cost.
+
+    Given a list of matrix sizes (a[i] x a[i+1])
     return optimal bracketed multiplication expression
     in the form:  `A(BC)D`.
     """
@@ -76,7 +83,7 @@ def optimum_brackets(a: list[int]) -> str:
         # For each K we multiply two matrices resulting from recursive calls:
         #   sub(i, k)     => (a[i - 1], a[k])
         #   sub(k + 1, j) => (    a[k], a[j])
-        def split(k):
+        def split(k: int) -> tuple[int, int]:
             return sub(i, k)[0] + a[i - 1] * a[k] * a[j] + sub(k + 1, j)[0], k
 
         # Determine the optimal split for this range.
