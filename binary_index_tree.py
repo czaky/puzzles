@@ -32,15 +32,16 @@ class BinIndexTree:
         elif isinstance(arg, int):
             self.array = [0.0] * arg
         else:
-            assert isinstance(arg, Iterable | int)
+            msg = "Expected `size` as `int` or an `Iterable` to build the tree."
+            raise TypeError(msg)
 
-    def add(self, i: int, value) -> None:
+    def add(self, i: int, value: int) -> None:
         """Add `value` to the tree at index `i`."""
         while i < len(self.array):
             self.array[i] = self.op(self.array[i], value)
             i |= i + 1
 
-    def sum(self, i: int):
+    def sum(self, i: int) -> int:
         """Return cumulative sum at index `i`."""
         s = 0
         while i >= 0:
@@ -51,6 +52,7 @@ class BinIndexTree:
 
 def maximum_broken_toys_queries(toys: list[int], queries: list[list[int]]) -> list[int]:
     """For each query return the maximum number of toys you can buy.
+
     The queries contain broken toy indices in addition to the cost-target.
 
     Parameters

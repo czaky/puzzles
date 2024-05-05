@@ -254,7 +254,7 @@ class TestUnsortedArray(unittest.TestCase):
 
     def test_next_smallest_palindrome(self):
         """Test `next_smallest_palindrome` function."""
-        assert [] == ar.next_smallest_palindrome_number([])
+        assert ar.next_smallest_palindrome_number([]) is []
         assert [1] == ar.next_smallest_palindrome_number([0])
         assert [8] == ar.next_smallest_palindrome_number([7])
         assert [1, 1] == ar.next_smallest_palindrome_number([9])
@@ -263,7 +263,7 @@ class TestUnsortedArray(unittest.TestCase):
         assert [2, 4, 4, 2] == ar.next_smallest_palindrome_number([2, 3, 4, 5])
         assert [2, 3, 6, 3, 2] == ar.next_smallest_palindrome_number([2, 3, 5, 4, 5])
         assert [9, 4, 1, 8, 8, 0, 8, 8, 1, 4, 9] == ar.next_smallest_palindrome_number(
-            [9, 4, 1, 8, 7, 9, 7, 8, 3, 2, 2]
+            [9, 4, 1, 8, 7, 9, 7, 8, 3, 2, 2],
         )
 
     def test_aggressive_cows(self):
@@ -274,7 +274,7 @@ class TestUnsortedArray(unittest.TestCase):
     def test_smaller_on_right_counts(self):
         """Test `smaller_on_right_counts`."""
         assert [6, 1, 1, 1, 0, 1, 0] == ar.smaller_on_right_counts(
-            [12, 1, 2, 3, 0, 11, 4]
+            [12, 1, 2, 3, 0, 11, 4],
         )
         assert [0, 0, 0, 0] == ar.smaller_on_right_counts([1, 2, 3, 4])
         assert [0, 0, 0, 0, 0] == ar.smaller_on_right_counts([1, 2, 3, 4, 5])
@@ -306,7 +306,7 @@ class TestUnsortedArray(unittest.TestCase):
     def test_max_min_window(self):
         """Test `max_min_window`."""
         assert [70, 30, 20, 10, 10, 10, 10] == ar.max_min_window(
-            [10, 20, 30, 50, 10, 70, 30]
+            [10, 20, 30, 50, 10, 70, 30],
         )
 
     def test_candy(self):
@@ -377,7 +377,7 @@ class TestUnsortedArray(unittest.TestCase):
 
     def test_repeated_numbers(self):
         """Test `repeated_numbers`."""
-        assert ar.repeated_numbers([]) == ()
+        assert not ar.repeated_numbers([])
         assert ar.repeated_numbers([1, 1]) == (1,)
         assert ar.repeated_numbers([1, 2, 1]) == (1,)
         assert ar.repeated_numbers([1, 2, 2]) == (2,)
@@ -397,7 +397,8 @@ class TestUnsortedArray(unittest.TestCase):
         assert ar.geek_roads([4, 5, 6, 7, 8, 8, 9], [1, 1, 8, 8, 8, 8, 8]) == 71
         assert (
             ar.geek_roads(
-                [1, 2, 3, 4, 5, 6, 6, 7], [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 7]
+                [1, 2, 3, 4, 5, 6, 6, 7],
+                [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 7],
             )
             == 49
         )

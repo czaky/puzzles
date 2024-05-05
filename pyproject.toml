@@ -23,8 +23,9 @@ unfixable = []
 # PLR0913 - too many function parameters
 # EXE002 - no shebang
 # ANN101 - missing type annotation for self
+# PGH003 - use specific violation code when ignoring
 ignore = ["E741", "E731", "PLR2004", "ERA001", "PLR0913", "EXE002",
-        "ANN101",]
+        "ANN101", "PGH003"]
 
 [tool.ruff.lint.per-file-ignores]
 "**/test_*" = ["S101", "ANN201"]

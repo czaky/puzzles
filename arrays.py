@@ -7,17 +7,17 @@ from functools import lru_cache, reduce
 from itertools import accumulate, chain, islice, starmap
 from math import inf
 from operator import add, mul, neg
-from typing import Iterable
+from typing import Iterable, Iterator
 
 import search
 
 
-def skip(it, n: int = 1):
+def skip(it: Iterable, n: int = 1) -> Iterator:
     """Skip `n` elements in iterator `it`."""
     return islice(it, n, None)
 
 
-def minmax(t):
+def minmax(t: Iterable) -> tuple:
     """Return the min and max values of `t`."""
     return min(t), max(t)
 
@@ -33,12 +33,12 @@ def subrev(a: list, s: int = 0, e: int = -1) -> None:
 
 
 def find_rotation(a: list[int]) -> int:
-    """A sorted list `a` was rotated. Find the rotation index in O(log N)."""
+    """Find the rotation index in O(log N) of a sorted, then rotated list `a`."""
     return (search.binary(lambda m: a[m] <= a[-1], 0, len(a) - 1, -1) or 0) + 1
 
 
 def rotated_minimum(a: list) -> int:
-    """A sorted list `a` was rotated. Find the minimum element in O(log N)."""
+    """Find the min element in O(log N) of a sorted, then rotated list `a`."""
     return a[find_rotation(a)]
 
 
@@ -110,7 +110,7 @@ def min_distance(a: list, x: int, y: int) -> int:
     return mn if mn < len(a) else -1
 
 
-def first_repeating_index(a: list):
+def first_repeating_index(a: list) -> int:
     """Return index of the first repeating element in `a` else -1."""
     c = Counter(a)
     return next((i for i, e in enumerate(a) if c[e] > 1), -1)
@@ -127,9 +127,26 @@ def dedup_sorted(a: list) -> int:
 
 
 def meta_cafeteria(n: int, d: int, s: list[int]) -> int:
-    """Return number of new diners to be seated at distance `d` from
+    """Return a number of new diners to be seated at the table.
+
+    The diners need to be seated at distance `d` from
     each other at a row of `n` seats. `s` is a list of taken seats.
     Seats are counted as [1 .. N] inclusive.
+
+    Parameters
+    ----------
+    n : int
+        Length of the row of seats.
+    d : int
+        Min distance between diners.
+    s : list[int]
+        Seats taken
+
+    Returns
+    -------
+    int
+        Number of new diners that can be seated at distance d.
+
     """
     s.sort()
     return (
@@ -149,8 +166,19 @@ def floor_element(a: list[int], x: int) -> int:
 
 
 def product_except_self(nums: list[int]) -> list[int]:
-    """Return an array where each element is the product of nums
-    except for the element at the given index.
+    """Return a product array leaving elements from `nums` out at their index.
+
+    Parameters
+    ----------
+    nums : list[int]
+        List of inteagers.
+
+    Returns
+    -------
+    list[int]
+        Products of the numbers with nums left out of the product at
+        their corresponding index.
+
     """
     pr = reduce(mul, nums)
     if pr:
@@ -168,7 +196,7 @@ def count_triplets(a: list[int]) -> int:
 
 
 def find_difference(a: list[int], d: int) -> bool:
-    """True if there is an `e` from `a` where `d` - `e` is also in `a`."""
+    """Return true if there is an `e` from `a` where `d` - `e` is also in `a`."""
     c = Counter(a)
     if 0 in c:
         return d in c
@@ -189,7 +217,7 @@ def greater_smaller(a: list[int]) -> int | None:
 
 
 def smallest_sub_with_greater_sum(a: list[int], k: int) -> int:
-    """Returns smallest sublist length with sum above `k`."""
+    """Return smallest sublist length with sum above `k`."""
     i = 0
     s = 0
     n = len(a)
@@ -204,7 +232,7 @@ def smallest_sub_with_greater_sum(a: list[int], k: int) -> int:
 
 
 def window_distinct_count(a: list[int], k: int) -> list[int]:
-    """Returns count of distinct elements for every `k` window in `a`."""
+    """Return count of distinct elements for every `k` window in `a`."""
     if k > len(a):
         return []
     d = {}
@@ -301,7 +329,7 @@ def max_equal_zero_and_one_length(a: list[int]) -> int:
 
 
 def toys_with_budget(a: list[int], b: int) -> int:
-    """Returns number of toys from `a` that can be bought with budget `b`."""
+    """Return number of toys from `a` that can be bought with budget `b`."""
     return next((i for i, c in enumerate(accumulate(sorted(a))) if c > b), len(a))
 
 
@@ -334,7 +362,7 @@ def min_partition_diff(a: list[int]) -> int:
     s = sum(a)
 
     @lru_cache(None)
-    def rec(i, s1):
+    def rec(i: int, s1: int) -> int:
         if i < 0:
             return abs(s - 2 * s1)
         return min(rec(i - 1, s1 + a[i]), rec(i - 1, s1))
@@ -346,7 +374,7 @@ def max_histogram_rectangle(h: list) -> int:
     """Return the max rectangular area under the histogram `h`."""
     s = []
 
-    def it(j, v=0):
+    def it(j: int, v: int = 0) -> Iterator:
         while s and h[s[-1]] > v:
             yield h[s.pop()] * ((j - s[-1] - 1) if s else j)
         s.append(j)
@@ -358,7 +386,7 @@ def max_histogram_rectangle(h: list) -> int:
 def max_matrix_area(m: list[list[int]]) -> int:
     """Matrix `m` contains 1 and 0. Find the largest rectangle."""
 
-    def hist(h, r):
+    def hist(h: list, r: list) -> list:
         h[:] = ((x + 1) * y for x, y in zip(h, r))
         return h
 
@@ -410,7 +438,7 @@ def max_circular_sub_sum(a: list[int]) -> int:
 
 
 def max_sum_substring(s: str, d: dict) -> str:
-    """Return the substring of `s` with max sum, where some character values from `d`."""
+    """Return the substring of `s` with max sum, with character values from `d`."""
     # Kadane`s Algorithm
     # Transform `s` into a numeric array
     num = lambda c: d.get(c, ord(c))
@@ -478,14 +506,31 @@ def kaiten_sushi(belt: list[int], distance: int) -> int:
 
 
 def mail_room_theft(arrivals: list[int], cost: int, theft: float) -> float:
-    """Retrieve arriving packages from mail room at `cost` of entering
-    and in face of `theft` factor.
+    """Retrieve arriving packages from mail room at specific `cost`.
+
+    You need to take into account the `cost` of entering
+    and face the `theft` factor.
 
     Each time the packages are retrieved from the mail room a `cost` needs
     to be paid. There is a probability of `theft` with each new arrival,
     where the packages stored before disappear.
 
     Return the expected collected value of retrieved packages.
+
+    Parameters
+    ----------
+    arrivals : list[int]
+        A list of scheduled package arrivals.
+    cost : int
+        Cost deduced each time the mail-root is entered.
+    theft : float
+        A probability that the packages are stollen from the mail-room each day.
+
+    Returns
+    -------
+    float
+        Collected value minus the accumulated cost.
+
     """
     mr = [0]  # mail_room_value
     cl = [0]  # collected value
@@ -553,7 +598,7 @@ def smaller_on_right_counts(arr: list) -> list:
     x = list(range(n))
     t = x[:]
 
-    def merge(l, m, h) -> None:
+    def merge(l: int, m: int, h: int) -> None:
         # k - number of sorted entries.
         # i - index into the first half.
         # j - index into the second half (m + 1).
@@ -584,7 +629,7 @@ def smaller_on_right_counts(arr: list) -> list:
         # Copy over this part into the temporary array.
         t[l : h + 1] = x[l : h + 1]
 
-    def split(i, j) -> None:
+    def split(i: int, j: int) -> None:
         if i < j:
             m = (i + j) // 2
             split(i, m)
@@ -602,7 +647,7 @@ def unsorted_pairs_count(a: list) -> int:
 
     t = a[:]
 
-    def merge(l, m, h) -> int:
+    def merge(l: int, m: int, h: int) -> int:
         o = 0
         # k - number of sorted entries.
         # i - index into the first half.
@@ -635,7 +680,7 @@ def unsorted_pairs_count(a: list) -> int:
         t[l : h + 1] = a[l : h + 1]
         return o
 
-    def split(i, j) -> int:
+    def split(i: int, j: int) -> int:
         if i < j:
             m = (i + j) // 2
             return split(i, m) + split(m + 1, j) + merge(i, m, j)
@@ -656,7 +701,7 @@ def min_sum_split(a: list, k: int) -> int:
 
 
 def out_ouf_there_number(a: list[int]) -> int:
-    """Smallest positive number not in the array `a` or not a sum of elements from `a`."""
+    """Smallest positive number not a sum of elements from `a`."""
     a.sort()
     # Looking for the lowest number between `a[i]...a[i+1]` that cannot be represented
     # by numbers `a[0] ... a[i]` in any way as a sum.
@@ -677,7 +722,7 @@ def max_min_window(a: list[int]) -> list[int]:
     # Using: [10, 20, 30, 50, 10, 70, 30] as example.
 
     def bracket(b: list[int], it: Iterable[int]) -> list[int]:
-        """Computes the left and right index of a smaller element."""
+        """Compute the left and right index of a smaller element."""
         s = []  # Contains indexes of elements smaller and the previous one.
         for i in it:
             # Remove all elements larger or equal to this one.
@@ -744,7 +789,9 @@ def partition_equal_sum(a: list[int], k: int) -> bool:
 
 
 def candy(r: list[int]) -> int:
-    """Given ratings `r` reward each kid with candies.
+    """Return a number of candies needed to distribute among children.
+
+    Given ratings `r` reward each kid with candies.
     If a child is better than its neighbor it get more candies.
     Each child gets at least 1 candy.
 
@@ -761,7 +808,7 @@ def candy(r: list[int]) -> int:
 
 
 def max_profit(prices: list[int], k: int) -> int:
-    """Return a max-profit to be made for at most `k` sells using `prices` for each day."""
+    """Return a max-profit for at most `k` sells using `prices` for each day."""
     # Each transaction needs a buy and a sell
     k = min(k, len(prices) // 2)
     # For each transaction count `t`:
@@ -798,7 +845,7 @@ def count_changes_to_make_strict(a: list) -> int:
     # can be changed to integers in the intervals between numbers in the LIS.
 
     @lru_cache(None)
-    def lis(j: int):
+    def lis(j: int) -> int:
         # Uses the longest increasing sequence algorithm.
         #   A. Take maximum (+1) of every LIS in the range [0, j)
         #   B. If there is no such subsequence, return 1 number length by default.
@@ -818,7 +865,7 @@ def repeated_numbers(a: list[int]) -> tuple:
     # by flipping the sign at their index position.
     # Since the values may become negative, we need to use `abs`
 
-    def repeated(e):
+    def repeated(e: int) -> int:
         f = a[abs(e)] = -a[abs(e)]
         return f > 0 and abs(e)
 
@@ -826,7 +873,9 @@ def repeated_numbers(a: list[int]) -> tuple:
 
 
 def compress_geek_road(r: list[int], sections: set) -> list[tuple]:
-    """Compress the road `r` into a following representation:
+    """Compress the road `r` representation.
+
+    The road is compressed into the following representation:
         (<baggage>, <intersection-value>, <intersection-length>).
 
     where:
@@ -865,7 +914,9 @@ def compress_geek_road(r: list[int], sections: set) -> list[tuple]:
 
 
 def geek_roads(a: list[int], b: list[int]) -> int:
-    """Two roads `a` and `b` are given. On each road there are buckets
+    """Collect the balls stored in buckets on two roads: `a` and `b`.
+
+    Two roads `a` and `b` are given. On each road there are buckets
     with balls, which can be collected when Geek is on that road.
 
     Geek can switch between roads at intersections marked by the same
@@ -909,13 +960,13 @@ def geek_roads(a: list[int], b: list[int]) -> int:
         lr.append((0, 0, 0))
     elif len(rr) < len(lr):
         rr.append((0, 0, 0))
-    assert len(lr) == len(rr)
+    assert len(lr) == len(rr)  # noqa: S101
 
     # Sum of the balls on the `a` (left) and `b` (right) roads.
     l = r = 0
     for (lb, v, lil), (rb, rv, ril) in zip(reversed(lr), reversed(rr)):
         # Assert that intersection values are aligned.
-        assert v == rv
+        assert v == rv  # noqa: S101
         # Step through or wave in and out.
         # When waving in and out, we sacrifice two 'v' buckets.
         # Waving is only possible if there are at least
@@ -976,6 +1027,7 @@ def partition_by_sum(
 
 def four_partitions_min_sum_difference(a: list[int]) -> int:
     """Partition `a` into four sub-lists.
+
     Return sub-lists' minimum sum difference.
     Sub-lists need to be non-empty and continuous.
 

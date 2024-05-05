@@ -68,8 +68,8 @@ class TestNumbers(unittest.TestCase):
 
     def test_prime_numbers(self):
         """Test `prime_numbers` generator."""
-        assert [] == list(m.prime_numbers(0))
-        assert [] == list(m.prime_numbers(1))
+        assert list(m.prime_numbers(0)) is []
+        assert list(m.prime_numbers(1)) is []
         assert [2] == list(m.prime_numbers(2))
         assert [2, 3] == list(m.prime_numbers(3))
         assert [2, 3] == list(m.prime_numbers(4))
