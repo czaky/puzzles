@@ -1,9 +1,9 @@
 """Module for the array related puzzles."""
 
-import math
 from collections import Counter, deque
 from functools import lru_cache, reduce
 from itertools import accumulate, chain, islice, starmap
+from math import inf
 from operator import add, mul, neg
 from typing import Iterable, List, Optional, Tuple
 
@@ -379,10 +379,10 @@ def median2(a: List[int], b: List[int]) -> float:
         ma = (l + h) // 2
         mb = p - ma
 
-        la = a[ma - 1] if ma > 0 else -math.inf
-        lb = b[mb - 1] if mb > 0 else -math.inf
-        ra = a[ma] if ma < len(a) else math.inf
-        rb = b[mb] if mb < len(b) else math.inf
+        la = a[ma - 1] if ma > 0 else -inf
+        lb = b[mb - 1] if mb > 0 else -inf
+        ra = a[ma] if ma < len(a) else inf
+        rb = b[mb] if mb < len(b) else inf
 
         if la <= rb and lb <= ra:
             y, x = max(la, lb), min(ra, rb)
@@ -967,3 +967,66 @@ def partition_by_sum(
             mn = min(mn, (ls - rs, rs))
             h = m - 1
     return mn[1], sum(mn)
+
+
+def four_partitions_min_sum_difference(a: List[int]) -> int:
+    """
+    Partition `a` into four sub-lists.
+    Return sub-lists' minimum sum difference.
+    Sub-lists need to be non-empty and continuous.
+
+    Parameters
+    ----------
+    a : List[int]
+        A list of integers to partition.
+
+    Returns
+    -------
+    int
+        Minimum difference of sums in the partition.
+    """
+    n = len(a)
+    csum = [0] + list(accumulate(a))
+
+    def partition(start: int, stop: int) -> Tuple[int, int]:
+        # Using cumulative array above,
+        # calculate a partition with the two sums being minimal.
+        # Start search at second element, stop at second to last.
+        # Note: `csum` has a leading `[0]`
+        l, h = start + 1, stop - 1
+        # (abs difference, min-set-sum)
+        mn = (csum[stop] - csum[start], csum[start])
+        while l <= h:
+            m = (l + h) // 2
+            # the `csum` array is shifted to the right.
+            # csum[start] - sums all the numbers before start.
+            ls = csum[m] - csum[start]
+            # csum[stop] - sums all the numbers before stop.
+            rs = csum[stop] - csum[m]
+            if ls < rs:
+                mn = min(mn, (rs - ls, ls))
+                l = m + 1
+            else:
+                mn = min(mn, (ls - rs, rs))
+                h = m - 1
+        # smaller sub-set sum, larger sub-set sum
+        return mn[1], sum(mn)
+
+    mn = inf
+    # Iterate through all the possible splits,
+    # and derive the minimum difference of sums of
+    # the four subsets.
+    # Since `[0, j)` needs at least 2 elements,
+    # `j` needs to start at 2.
+    # Since `[j, n)` needs at least 2 elements,
+    # `j` needs to stop at `n-2`.
+    for j in range(2, n - 1):
+        # partition [0, j)
+        w, x = partition(0, j)
+        # partition [j, n)
+        y, z = partition(j, n)
+        # w, y are the minimum subset sums
+        # x, z are the maximum subset sums
+        mn = min(mn, max(x, z) - min(w, y))
+
+    return int(mn)
