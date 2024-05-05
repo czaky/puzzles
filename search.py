@@ -115,3 +115,117 @@ def geek_cake_distribution(chunks: list[int], k: int) -> int:
         return sc
 
     return upper_index(lambda m: k <= slices(m), min(chunks), sum(chunks), 0)
+
+
+def find_rotation(a: list[int]) -> int:
+    """Find the rotation index in O(log N) of a sorted, then rotated list `a`."""
+    return upper_index(lambda m: a[m] > a[-1], 0, len(a) - 1, -1) + 1
+
+
+def rotated_minimum(a: list) -> int:
+    """Find the min element in O(log N) of a sorted, then rotated list `a`."""
+    return a[find_rotation(a)]
+
+
+def bitonic_point(a: list[int]) -> int:
+    """Maximum of strictly increasing array then maybe strictly decreasing."""
+    # Runs in O(log N)
+    return a[upper_index(lambda m: a[m - 1] <= a[m], 1, len(a) - 1, len(a) - 1)]
+
+
+def transition_point(a: list) -> int:
+    """Transition index in sorted list `a` of '0's and '1's."""
+    return upper_index(lambda m: a[m] != 1, 0, len(a) - 1, -1)
+
+
+def floor_element(a: list[int], x: int) -> int:
+    """Return the largest element smaller or equal to `x` from sorted `a`."""
+    return upper_index(lambda m: a[m] <= x, 0, len(a) - 1, -1)
+
+
+def find_extra_element(a: list[int], b: list[int]) -> int:
+    """Return index of an extra element in sorted arrays `a` and `b`."""
+    # Runs in O(log N)
+    return upper_index(lambda m: a[m] == b[m], 0, min(len(a), len(b)) - 1, -1) + 1
+
+
+def duplicated_sorted_find_unique(a: list[int]) -> int:
+    """In a sorted array find the unique one with every other duplicated."""
+    # 1 1 2 2 3 4 4 5 5
+    # 1=1 2=2 3<4 4<5 5
+    return a[
+        upper_index(lambda m: a[2 * m] == a[2 * m + 1], 0, len(a) // 2 - 1, -1) * 2 + 2
+    ]
+
+
+def first_last(a: list[int], x: int) -> tuple[int, int]:
+    """Return the first and last index of `x` in a sorted array `a`."""
+    l: int = lower_index(lambda m: a[m] >= x, 0, len(a) - 1, len(a))
+    h: int = upper_index(lambda m: a[m] <= x, l, len(a) - 1, -1)
+    return (l, h) if l <= h else (-1, -1)
+
+
+def equilibrium_point(a: list) -> int:
+    """Index in `a` where sums of elements before and after are equal."""
+    # O(N)
+    # See partition_by sum for O(log N) approach.
+    l = 0
+    h = len(a) - 1
+    l_sum = 0
+    h_sum = 0
+    while l < h:
+        if l_sum < h_sum:
+            l_sum += a[l]
+            l += 1
+        else:
+            h_sum += a[h]
+            h -= 1
+    if l_sum == h_sum:
+        return l
+    return -1
+
+
+def partition_by_sum(
+    csum: list[int],
+    start: int = 0,
+    stop: int | None = None,
+) -> tuple[int, int]:
+    """Partition the array a so the sums left and right are closest.
+
+    Parameters
+    ----------
+    csum : List[int]
+        List of cumulative integers to partition, starting with 0.
+    start : int, optional
+        Start index on the array to consider, by default 0
+    stop : int | None, optional
+        Exclusive stop index on the array to consider, by default None
+
+    Returns
+    -------
+    Tuple[int, int]
+        The left and right sum, sorted.
+
+    """
+    # O(log N) approach, if the `csum` array is available in advance.
+    # See `equilibrum_point` for a O(N) approach.
+    if stop is None:
+        stop = len(csum) - 1
+    # This assumes that `csum` is derived from array `a` by this process:
+    #    `csum = list(accumulate(a, initial=0))`
+    # `csum` is longer than `a` by 1, with leading 0.
+    #  starting at second element, stopping at second to last.
+    l, h = start + 1, stop - 1
+    # (abs difference, min-sum)
+    mn = (csum[stop] - csum[start], csum[start])
+    while l <= h:
+        m = (l + h) // 2
+        ls = csum[m] - csum[start]
+        rs = csum[stop] - csum[m]
+        if ls < rs:
+            mn = min(mn, (rs - ls, ls))
+            l = m + 1
+        else:
+            mn = min(mn, (ls - rs, rs))
+            h = m - 1
+    return mn[1], sum(mn)

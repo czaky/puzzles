@@ -8,28 +8,9 @@ import arrays as ar
 class TestRotatedArray(unittest.TestCase):
     """Test class for sorted, rotated array puzzles."""
 
-    def test_rotated_minimum(self):
-        """Test `rotated_minimum` function."""
-        assert ar.rotated_minimum([1, 2, 3, 4]) == 1
-        assert ar.rotated_minimum([5, 1, 2, 3, 4]) == 1
-        assert ar.rotated_minimum([2, 3, 4, 5, 1]) == 1
-
 
 class TestUnsortedArray(unittest.TestCase):
     """Test class for unsorted array puzzles."""
-
-    def test_equilibrium_point(self):
-        """Test `equilibrium_point` function."""
-        assert ar.equilibrium_point([1, 3, 5, 2, 2]) == 2
-        assert ar.equilibrium_point([8, 2, 3, 1, 4]) == 1
-        assert ar.equilibrium_point([1, 2, 3, 3]) == 2
-        assert ar.equilibrium_point([1, 2, 3]) == -1
-
-    def test_bitonic_point(self):
-        """Test `bitonic_point` function."""
-        assert ar.bitonic_point([1, 3, 5]) == 5
-        assert ar.bitonic_point([1, 3, 5, 4]) == 5
-        assert ar.bitonic_point([1]) == 1
 
     def test_duplicates(self):
         """Test `duplicates` function."""
@@ -90,14 +71,6 @@ class TestUnsortedArray(unittest.TestCase):
         a = [1, 2, 3, 4, 5]
         ar.rotate(a, -3)
         assert [3, 4, 5, 1, 2] == a
-
-    def test_transition_point(self):
-        """Test `transition_point`."""
-        assert ar.transition_point([1, 1, 1, 1]) == -1
-        assert ar.transition_point([0, 1, 1, 1]) == 0
-        assert ar.transition_point([0, 0, 1, 1]) == 1
-        assert ar.transition_point([0, 0, 0, 1]) == 2
-        assert ar.transition_point([0, 0, 0, 0]) == 3
 
     def test_min_distance(self):
         """Test `min_distance` function."""
@@ -161,16 +134,6 @@ class TestUnsortedArray(unittest.TestCase):
         assert [2, 2, 2, 2] == ar.window_distinct_count([10, 3, 5, 6, 2], 2)
         assert [3, 4, 4, 3] == ar.window_distinct_count([1, 2, 1, 3, 4, 2, 3], 4)
 
-    def test_find_extra_element(self):
-        """Test `find_extra_element` function."""
-        assert ar.find_extra_element([1], []) == 0
-        assert ar.find_extra_element([1, 2], [1]) == 1
-        assert ar.find_extra_element([1, 2], [2]) == 0
-        assert ar.find_extra_element([1], [1, 2]) == 1
-        assert ar.find_extra_element([2], [1, 2]) == 0
-        assert ar.find_extra_element([1, 2, 3], [1, 2]) == 2
-        assert ar.find_extra_element([1, 2, 3], [2, 3]) == 0
-        assert ar.find_extra_element([1, 2, 3, 4, 5], [1, 2, 4, 5]) == 2
 
     def test_pascal_triangle_row(self):
         """Test `test_pascal_triangle_row` function."""
@@ -185,11 +148,6 @@ class TestUnsortedArray(unittest.TestCase):
         assert ar.min_diff([2, 30, 8, 11, 20, 1, 3], 4) == 7
         assert ar.min_diff([1, 7, 3], 2) == 2
 
-    def test_duplicated_sorted_find_unique(self):
-        """Test `duplicated_sorted_find_unique` function."""
-        assert ar.duplicated_sorted_find_unique([1, 1, 5, 8, 8]) == 5
-        assert ar.duplicated_sorted_find_unique([1, 3, 3, 4, 4, 5, 5]) == 1
-        assert ar.duplicated_sorted_find_unique([1, 1, 3]) == 3
 
     def test_max_equal_zero_and_one_length(self):
         """Test `max_equal_zero_and_one_length` function."""
@@ -204,14 +162,6 @@ class TestUnsortedArray(unittest.TestCase):
         assert ar.toys_with_budget([60, 5, 4, 3, 2, 20], 15) == 4
         assert ar.toys_with_budget([30, 20, 50], 100) == 3
 
-    def test_first_last(self):
-        """Test `first_last` function."""
-        assert ar.first_last([1, 2, 3, 3, 3, 4], 1) == (0, 0)
-        assert ar.first_last([1, 2, 3, 3, 3, 4], 3) == (2, 4)
-        assert ar.first_last([1, 1, 2, 3, 3, 3, 4], 1) == (0, 1)
-        assert ar.first_last([1, 1, 2, 3, 3, 3, 4], 4) == (6, 6)
-        assert ar.first_last([1, 1, 2, 3, 4, 4, 4], 4) == (4, 6)
-        assert ar.first_last([1, 1, 2, 3, 4, 4, 4], 5) == (-1, -1)
 
     def test_merge_sorted(self):
         """Test `merge_sorted` function."""
@@ -402,11 +352,3 @@ class TestUnsortedArray(unittest.TestCase):
             )
             == 49
         )
-
-    def test_partition_by_sum(self):
-        """Test `partition_by_sum`."""
-        assert ar.partition_by_sum([]) == (0, 0)
-        assert ar.partition_by_sum([2]) == (0, 2)
-        assert ar.partition_by_sum([2, 2]) == (2, 2)
-        assert ar.partition_by_sum([2, 2, 2]) == (2, 4)
-        assert ar.partition_by_sum([2, 2, 2, 2]) == (4, 4)

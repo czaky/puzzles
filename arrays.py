@@ -32,40 +32,6 @@ def subrev(a: list, s: int = 0, e: int = -1) -> None:
         a[s + i], a[e - i] = a[e - i], a[s + i]
 
 
-def find_rotation(a: list[int]) -> int:
-    """Find the rotation index in O(log N) of a sorted, then rotated list `a`."""
-    return upper_index(lambda m: a[m] > a[-1], 0, len(a) - 1, -1) + 1
-
-
-def rotated_minimum(a: list) -> int:
-    """Find the min element in O(log N) of a sorted, then rotated list `a`."""
-    return a[find_rotation(a)]
-
-
-def equilibrium_point(a: list) -> int:
-    """Index in `a` where sums of elements before and after are equal."""
-    l = 0
-    h = len(a) - 1
-    l_sum = 0
-    h_sum = 0
-    while l < h:
-        if l_sum < h_sum:
-            l_sum += a[l]
-            l += 1
-        else:
-            h_sum += a[h]
-            h -= 1
-    if l_sum == h_sum:
-        return l
-    return -1
-
-
-def bitonic_point(a: list[int]) -> int:
-    """Maximum of strictly increasing array then maybe strictly decreasing."""
-    # Runs in O(log N)
-    return a[upper_index(lambda m: a[m - 1] <= a[m], 1, len(a) - 1, len(a) - 1)]
-
-
 def duplicates(a: list) -> list:
     """Return elements of the list `a` occurring more than once."""
     return sorted((Counter(a) - Counter(set(a))).keys())
@@ -86,11 +52,6 @@ def rotate(a: list, left: int = 1) -> None:
     subrev(a, 0, left - 1)
     subrev(a, left, n - 1)
     a.reverse()
-
-
-def transition_point(a: list) -> int:
-    """Transition index in sorted list `a` of '0's and '1's."""
-    return upper_index(lambda m: a[m] != 1, 0, len(a) - 1, -1)
 
 
 def min_distance(a: list, x: int, y: int) -> int:
@@ -158,11 +119,6 @@ def meta_cafeteria(n: int, d: int, s: list[int]) -> int:
         # [s[-1], n + (d+1)] we can seat ppl every (d + 1) seats.
         + (n - s[-1]) // (d + 1)
     )
-
-
-def floor_element(a: list[int], x: int) -> int:
-    """Return the largest element smaller or equal to `x` from sorted `a`."""
-    return upper_index(lambda m: a[m] <= x, 0, len(a) - 1, -1)
 
 
 def product_except_self(nums: list[int]) -> list[int]:
@@ -256,14 +212,6 @@ def window_distinct_count(a: list[int], k: int) -> list[int]:
     return cnt
 
 
-def find_extra_element(a: list[int], b: list[int]) -> int:
-    """Return index of an extra element in sorted arrays `a` and `b`."""
-    # Runs in O(log N)
-    if len(a) < len(b):
-        a, b = b, a
-    return upper_index(lambda m: a[m] == b[m], 0, len(b) - 1, -1) + 1
-
-
 def pascal_triangle_row(n: int) -> list[int]:
     """Return the nth row of pascal triangle."""
     pr = [1] * n
@@ -306,15 +254,6 @@ def bubble_sort(a: list[int]) -> None:
             break
 
 
-def duplicated_sorted_find_unique(a: list[int]) -> int:
-    """In a sorted array find the unique one with every other duplicated."""
-    # 1 1 2 2 3 4 4 5 5
-    # 1=1 2=2 3<4 4<5 5
-    return a[
-        upper_index(lambda m: a[2 * m] == a[2 * m + 1], 0, len(a) // 2 - 1, -1) * 2 + 2
-    ]
-
-
 def max_equal_zero_and_one_length(a: list[int]) -> int:
     """Return the max length of a sublist containing equal number of 0 and 1."""
     d = {0: -1}
@@ -331,13 +270,6 @@ def max_equal_zero_and_one_length(a: list[int]) -> int:
 def toys_with_budget(a: list[int], b: int) -> int:
     """Return number of toys from `a` that can be bought with budget `b`."""
     return next((i for i, c in enumerate(accumulate(sorted(a))) if c > b), len(a))
-
-
-def first_last(a: list[int], x: int) -> tuple[int, int]:
-    """Return the first and last index of `x` in a sorted array `a`."""
-    l: int = lower_index(lambda m: a[m] >= x, 0, len(a) - 1, len(a))
-    h: int = upper_index(lambda m: a[m] <= x, l, len(a) - 1, -1)
-    return (l, h) if l <= h else (-1, -1)
 
 
 def merge_sorted(a: list[int], b: list[int]) -> None:
@@ -587,6 +519,17 @@ def aggressive_cows(stalls: list, cows: int) -> int:
     return upper_index(le, 1, stalls[-1] - stalls[0])
 
 
+def min_sum_split(a: list, k: int) -> int:
+    """Split `a` in `k` sub-lists. Minimize the maximum sum of every one."""
+    # Search through possible splits of `a` given the maximum `mx` sum of each sub-list.
+    # Calculate the number of splits given the `mx` maximum sum of elements.
+    acc = lambda mx: lambda a, e: (e, a[1] + 1) if a[0] + e > mx else (a[0] + e, a[1])
+    # Assure that the number of splits is less or equal to k
+    fit = lambda mx: k >= reduce(acc(mx), a, (0, 1))[1]
+    # Use binary search to find the maximum sub-sum.
+    return lower_index(fit, max(a), sum(a))
+
+
 def smaller_on_right_counts(arr: list) -> list:
     """Return a list counting elements smaller that each element in `arr`."""
     # This uses merge-sort count-inversion to count the unsorted elements.
@@ -687,17 +630,6 @@ def unsorted_pairs_count(a: list) -> int:
         return 0
 
     return split(0, len(a) - 1)
-
-
-def min_sum_split(a: list, k: int) -> int:
-    """Split `a` in `k` sub-lists. Minimize the maximum sum of every one."""
-    # Search through possible splits of `a` given the maximum `mx` sum of each sub-list.
-    # Calculate the number of splits given the `mx` maximum sum of elements.
-    acc = lambda mx: lambda a, e: (e, a[1] + 1) if a[0] + e > mx else (a[0] + e, a[1])
-    # Assure that the number of splits is less or equal to k
-    fit = lambda mx: k >= reduce(acc(mx), a, (0, 1))[1]
-    # Use binary search to find the maximum sub-sum.
-    return lower_index(fit, max(a), sum(a))
 
 
 def out_ouf_there_number(a: list[int]) -> int:
@@ -980,49 +912,6 @@ def geek_roads(a: list[int], b: list[int]) -> int:
         l, r = lb + max(l + c, r + x), rb + max(r + c, l + x)
 
     return max(l, r)
-
-
-def partition_by_sum(
-    a: list[int],
-    start: int = 0,
-    stop: int | None = None,
-) -> tuple[int, int]:
-    """Partition the array a so the sums left and right are closest.
-
-    Parameters
-    ----------
-    a : List[int]
-        List of integers to partition.
-    start : int, optional
-        Start index on the array to consider, by default 0
-    stop : int | None, optional
-        Exclusive stop index on the array to consider, by default None
-
-    Returns
-    -------
-    Tuple[int, int]
-        The left and right sum, sorted.
-
-    """
-    if stop is None:
-        stop = len(a)
-    csum = list(accumulate(a, initial=0))
-    # `csum` is longer than `a` by 1, with leading 0.
-    #  starting at second element, stopping at second to last.
-    l, h = start + 1, stop - 1
-    # (abs difference, min-sum)
-    mn = (csum[stop] - csum[start], csum[start])
-    while l <= h:
-        m = (l + h) // 2
-        ls = csum[m] - csum[start]
-        rs = csum[stop] - csum[m]
-        if ls < rs:
-            mn = min(mn, (rs - ls, ls))
-            l = m + 1
-        else:
-            mn = min(mn, (ls - rs, rs))
-            h = m - 1
-    return mn[1], sum(mn)
 
 
 def four_partitions_min_sum_difference(a: list[int]) -> int:

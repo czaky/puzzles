@@ -32,3 +32,64 @@ class TestSearch(unittest.TestCase):
             82 77 40 29 27 36 12 34 76 46""",
         )
         assert s.geek_cake_distribution(chunks, 27) == 125
+
+    def test_rotated_minimum(self):
+        """Test `rotated_minimum` function."""
+        assert s.rotated_minimum([1, 2, 3, 4]) == 1
+        assert s.rotated_minimum([5, 1, 2, 3, 4]) == 1
+        assert s.rotated_minimum([2, 3, 4, 5, 1]) == 1
+
+    def test_equilibrium_point(self):
+        """Test `equilibrium_point` function."""
+        assert s.equilibrium_point([1, 3, 5, 2, 2]) == 2
+        assert s.equilibrium_point([8, 2, 3, 1, 4]) == 1
+        assert s.equilibrium_point([1, 2, 3, 3]) == 2
+        assert s.equilibrium_point([1, 2, 3]) == -1
+
+    def test_bitonic_point(self):
+        """Test `bitonic_point` function."""
+        assert s.bitonic_point([1, 3, 5]) == 5
+        assert s.bitonic_point([1, 3, 5, 4]) == 5
+        assert s.bitonic_point([1]) == 1
+
+    def test_transition_point(self):
+        """Test `transition_point`."""
+        assert s.transition_point([1, 1, 1, 1]) == -1
+        assert s.transition_point([0, 1, 1, 1]) == 0
+        assert s.transition_point([0, 0, 1, 1]) == 1
+        assert s.transition_point([0, 0, 0, 1]) == 2
+        assert s.transition_point([0, 0, 0, 0]) == 3
+
+    def test_find_extra_element(self):
+        """Test `find_extra_element` function."""
+        assert s.find_extra_element([1], []) == 0
+        assert s.find_extra_element([1, 2], [1]) == 1
+        assert s.find_extra_element([1, 2], [2]) == 0
+        assert s.find_extra_element([1], [1, 2]) == 1
+        assert s.find_extra_element([2], [1, 2]) == 0
+        assert s.find_extra_element([1, 2, 3], [1, 2]) == 2
+        assert s.find_extra_element([1, 2, 3], [2, 3]) == 0
+        assert s.find_extra_element([1, 2, 3, 4, 5], [1, 2, 4, 5]) == 2
+
+    def test_duplicated_sorted_find_unique(self):
+        """Test `duplicated_sorted_find_unique` function."""
+        assert s.duplicated_sorted_find_unique([1, 1, 5, 8, 8]) == 5
+        assert s.duplicated_sorted_find_unique([1, 3, 3, 4, 4, 5, 5]) == 1
+        assert s.duplicated_sorted_find_unique([1, 1, 3]) == 3
+
+    def test_first_last(self):
+        """Test `first_last` function."""
+        assert s.first_last([1, 2, 3, 3, 3, 4], 1) == (0, 0)
+        assert s.first_last([1, 2, 3, 3, 3, 4], 3) == (2, 4)
+        assert s.first_last([1, 1, 2, 3, 3, 3, 4], 1) == (0, 1)
+        assert s.first_last([1, 1, 2, 3, 3, 3, 4], 4) == (6, 6)
+        assert s.first_last([1, 1, 2, 3, 4, 4, 4], 4) == (4, 6)
+        assert s.first_last([1, 1, 2, 3, 4, 4, 4], 5) == (-1, -1)
+
+    def test_partition_by_sum(self):
+        """Test `partition_by_sum`."""
+        assert s.partition_by_sum([]) == (0, 0)
+        assert s.partition_by_sum([2]) == (0, 2)
+        assert s.partition_by_sum([2, 2]) == (2, 2)
+        assert s.partition_by_sum([2, 2, 2]) == (2, 4)
+        assert s.partition_by_sum([2, 2, 2, 2]) == (4, 4)
