@@ -1,6 +1,7 @@
 """Test module for the search."""
 
 import unittest
+from itertools import accumulate
 
 import search as s
 from strings import splint
@@ -88,8 +89,9 @@ class TestSearch(unittest.TestCase):
 
     def test_partition_by_sum(self):
         """Test `partition_by_sum`."""
-        assert s.partition_by_sum([]) == (0, 0)
-        assert s.partition_by_sum([2]) == (0, 2)
-        assert s.partition_by_sum([2, 2]) == (2, 2)
-        assert s.partition_by_sum([2, 2, 2]) == (2, 4)
-        assert s.partition_by_sum([2, 2, 2, 2]) == (4, 4)
+        cs = lambda a: list(accumulate(a, initial=0))
+        assert s.partition_by_sum(cs([])) == (0, 0)
+        assert s.partition_by_sum(cs([2])) == (0, 2)
+        assert s.partition_by_sum(cs([2, 2])) == (2, 2)
+        assert s.partition_by_sum(cs([2, 2, 2])) == (2, 4)
+        assert s.partition_by_sum(cs([2, 2, 2, 2])) == (4, 4)
