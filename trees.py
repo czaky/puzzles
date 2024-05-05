@@ -961,18 +961,77 @@ def min_bst_with_a_sum(r: Node, target: int) -> int:
         Count of nodes in the subtree.
     """
 
+    # This solutions bubbles up the node count and
+    # the value sum in bottom-up DFS manner.
+    # The BST check is done separately.
     def dfs(n: Node):
+        # Returns:
+        #    min node count,
+        #    current tree node count,
+        #    current tree value sum,
         if not n:
             return inf, 0, 0
         lmc, lc, ls = dfs(n.left)
         rmc, rc, rs = dfs(n.right)
         mc = min(lmc, rmc)
         if mc < inf:
+            # Cannot get better
             return mc, 0, 0
         c, s = lc + rc + 1, ls + rs + n.data
         if s == target and is_bst(n):
+            # Found the target.
             return c, 0, 0
         return inf, c, s
+
+    mc = dfs(r)[0]
+    return int(mc) if mc < inf else -1
+
+
+def min_bst_with_a_sum_single_pass(r: Node, target: int) -> int:
+    """
+    Find a subtree under `r` that has a sum of nodes equal to `target`.
+
+    Return the count of nodes for a smallest tree like that.
+
+    Parameters
+    ----------
+    r : Node
+        Root node.
+    target : int
+        Searched sum of nodes for the subtree.
+
+    Returns
+    -------
+    int
+        Count of nodes in the subtree.
+    """
+
+    def dfs(n: Node):
+        if not n:
+            # Return inf min node count and generous interval.
+            # mnc, nc, sum, mn, mx
+            return inf, 0, 0, inf, -inf
+        lmc, lc, ls, lmn, lmx = dfs(n.left)
+        rmc, rc, rs, rmn, rmx = dfs(n.right)
+        mc = min(lmc, rmc)
+        nc = lc + rc + 1
+        if mc < inf:
+            # We found the min count under this node.
+            # mn, nc, sum, mx, mnc
+            return mc, 0, 0, 0, 0
+        if not lmx < n.data < rmn:
+            # This is not a BST.
+            # Return inf min node count and prohibitive interval.
+            # mnc, nc, sum, mn, mx
+            return inf, 0, 0, -inf, inf
+        s = ls + rs + n.data
+        if s == target:
+            # This node is a BST with fitting target sum.
+            # mn, nc, sum, mx, mnc
+            return nc, 0, 0, 0, 0
+        # Propagate info upwards.
+        # Handle interval brackets for missing children.
+        return inf, nc, s, min(lmn, n.data), max(rmx, n.data)
 
     mc = dfs(r)[0]
     return int(mc) if mc < inf else -1
