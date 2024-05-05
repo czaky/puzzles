@@ -95,3 +95,10 @@ class TestSearch(unittest.TestCase):
         assert s.partition_by_sum(cs([2, 2])) == (2, 2)
         assert s.partition_by_sum(cs([2, 2, 2])) == (2, 4)
         assert s.partition_by_sum(cs([2, 2, 2, 2])) == (4, 4)
+
+    def test_four_partitions_min_sum_difference(self):
+        """Test `four_partitions_min_sum_difference`."""
+        assert s.four_partitions_min_sum_difference([1, 2, 3, 4]) == 3
+        assert s.four_partitions_min_sum_difference([1, 2, 3, 3, 4]) == 1
+        ar = [16, 8, 11, 2, 12, 4, 11, 16, 15, 2, 5, 18, 7, 17]
+        assert s.four_partitions_min_sum_difference(ar) == 13

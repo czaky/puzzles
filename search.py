@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from itertools import accumulate
+from math import inf
 from typing import Any, Callable
 
 
@@ -229,3 +231,44 @@ def partition_by_sum(
             mn = min(mn, (ls - rs, rs))
             h = m - 1
     return mn[1], sum(mn)
+
+
+def four_partitions_min_sum_difference(a: list[int]) -> int:
+    """Partition `a` into four sub-lists.
+
+    Return sub-lists' minimum sum difference.
+    Sub-lists need to be non-empty and continuous.
+
+    Parameters
+    ----------
+    a : List[int]
+        A list of integers to partition.
+
+    Returns
+    -------
+    int
+        Minimum difference of sums in the partition.
+
+    """
+    n = len(a)
+    # Using csum to lover the search time to: O(N * log N)
+    csum = [0, *accumulate(a)]
+    # Min difference between max and min of all 4 subsets.
+    mn = inf
+    # Iterate through all the possible splits,
+    # and derive the minimum difference of sums of
+    # the four subsets.
+    # Since `[0, j)` needs at least 2 elements,
+    # `j` needs to start at 2.
+    # Since `[j, n)` needs at least 2 elements,
+    # `j` needs to stop at `n-2`.
+    for j in range(2, n - 1):
+        # partition [0, j)
+        w, x = partition_by_sum(csum, 0, j)
+        # partition [j, n)
+        y, z = partition_by_sum(csum, j, n)
+        # w, y are the minimum subset sums
+        # x, z are the maximum subset sums
+        mn = min(mn, max(x, z) - min(w, y))
+
+    return int(mn)
