@@ -254,7 +254,7 @@ class TestUnsortedArray(unittest.TestCase):
 
     def test_next_smallest_palindrome(self):
         """Test `next_smallest_palindrome` function."""
-        assert ar.next_smallest_palindrome_number([]) is []
+        assert not ar.next_smallest_palindrome_number([])
         assert [1] == ar.next_smallest_palindrome_number([0])
         assert [8] == ar.next_smallest_palindrome_number([7])
         assert [1, 1] == ar.next_smallest_palindrome_number([9])
