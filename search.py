@@ -2,49 +2,75 @@
 
 from __future__ import annotations
 
-from typing import Callable
+from typing import Any, Callable
 
 
-def binary(gt: Callable, l: int, h: int, i: int | None = None):
-    """Returns the index of an element which is NOT greater than (`gt`).
+def upper_index(predicate: Callable, l: int, h: int, result: Any = None) -> Any:
+    """Return the max index of an element which for which `predicate` is True.
 
-    Arguments:
-    ---------
-        gt  - greater than predicate; takes index of the element.
-        l   - lowest index to start search from (inclusive).
-        h   - highest index to start search from (inclusive).
-        i   - default index to return (`None` by default).
+    Search starts between `l` and `h` markers.
+    If `predicate` is True, `l` goes up, otherwise `h` goes down.
+    If `predicate` always returns False, default `result` value is returned.
 
-    """
-    while l <= h:
-        m = (l + h) // 2
-        if gt(m):
-            h = m - 1
-        else:
-            i = m
-            l = m + 1
-    return i
+    Parameters
+    ----------
+    predicate : Callable
+        True for element being searched; takes index of the element.
+    l : int
+        lowest index to start search from (inclusive).
+    h : int
+        highest index to start search from (inclusive).
+    result : Any, optional
+        a value to return by default if no element was found.
 
-
-def binary_lt(lt: Callable, l: int, h: int, i: int | None = None):
-    """Returns the index of an element which is NOT less than (`lt`).
-
-    Arguments:
-    ---------
-        lt  - less than predicate; takes index of the element.
-        l   - lowest index to start search from (inclusive).
-        h   - highest index to start search from (inclusive).
-        i   - default index to return (`None` by default).
+    Returns
+    -------
+    Any
+        The max index of an element which fulfills the predicate.
 
     """
     while l <= h:
         m = (l + h) // 2
-        if lt(m):
+        if predicate(m):
+            result = m
             l = m + 1
         else:
-            i = m
             h = m - 1
-    return i
+    return result
+
+
+def lower_index(predicate: Callable, l: int, h: int, result: Any = None) -> Any:
+    """Return the min index of an element which for which `predicate` is True.
+
+    Search starts between `l` and `h` markers.
+    If `predicate` is True, `h` goes down, otherwise `l` goes up.
+    If `predicate` always returns False, default `result` value is returned.
+
+    Parameters
+    ----------
+    predicate : Callable
+        True for element being searched; takes index of the element.
+    l : int
+        lowest index to start search from (inclusive).
+    h : int
+        highest index to start search from (inclusive).
+    result : Any, optional
+        a value to return by default if no element was found.
+
+    Returns
+    -------
+    Any
+        The max index of an element which fulfills the predicate.
+
+    """
+    while l <= h:
+        m = (l + h) // 2
+        if predicate(m):
+            result = m
+            h = m - 1
+        else:
+            l = m + 1
+    return result
 
 
 def largest_sum_cycle(edges: list[int]) -> int:
@@ -58,7 +84,7 @@ def largest_sum_cycle(edges: list[int]) -> int:
     # Contains the sums of the paths.
     v = [-1] * len(edges)
 
-    def visit(i: int, s: int):
+    def visit(i: int, s: int) -> int:
         if edges[i] < 0:
             return -1
         s += i
@@ -76,7 +102,7 @@ def largest_sum_cycle(edges: list[int]) -> int:
 
 
 def geek_cake_distribution(chunks: list[int], k: int) -> int:
-    """Divide the cake into k + 1 slices. Return the sweetness of the least sweet slice."""
+    """Divide a cake into k slices. Return the sweetness of the least sweet slice."""
 
     def slices(min_sweetness: int) -> int:
         sc = 0  # slices-count
@@ -88,4 +114,4 @@ def geek_cake_distribution(chunks: list[int], k: int) -> int:
                 ss = 0
         return sc
 
-    return binary(lambda m: k > slices(m), min(chunks), sum(chunks), 0) or 0
+    return upper_index(lambda m: k <= slices(m), min(chunks), sum(chunks), 0)

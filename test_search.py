@@ -20,6 +20,7 @@ class TestSearch(unittest.TestCase):
 
     def test_geek_cake_distribution(self):
         """Test `geek_cake_distribution`."""
+        assert s.geek_cake_distribution([1, 2, 3], 3) == 1
         assert s.geek_cake_distribution([6, 3, 2, 8, 7, 5], 3) == 9
         assert s.geek_cake_distribution([5, 6, 7, 8, 9, 1, 2, 3, 4], 9) == 1
         assert s.geek_cake_distribution([1, 2, 3, 4, 5, 6, 7, 8, 9], 6) == 6
