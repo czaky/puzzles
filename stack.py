@@ -11,6 +11,14 @@ class IndexStack(Sequence, Set):
     """A set that is also a stack. Keeps track of elements' positions."""
 
     def __init__(self, iterable=()) -> None:
+        """Create an IndexStack from `iterable`.
+
+        Parameters
+        ----------
+        iterable : tuple, optional
+            initialization values, by default ()
+
+        """
         self.stack = list(iterable)
         self.pos = {e: i + 1 for i, e in enumerate(self.stack)}
 
