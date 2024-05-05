@@ -418,3 +418,11 @@ class TestUnsortedArray(unittest.TestCase):
                 [1, 2, 3, 4, 5, 6, 6, 7], [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 7]
             ),
         )
+
+    def test_partition_by_sum(self):
+        "Test `partition_by_sum`."
+        self.assertEqual((0, 0), ar.partition_by_sum([]))
+        self.assertEqual((0, 2), ar.partition_by_sum([2]))
+        self.assertEqual((2, 2), ar.partition_by_sum([2, 2]))
+        self.assertEqual((2, 4), ar.partition_by_sum([2, 2, 2]))
+        self.assertEqual((4, 4), ar.partition_by_sum([2, 2, 2, 2]))

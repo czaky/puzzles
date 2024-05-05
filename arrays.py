@@ -926,3 +926,44 @@ def geek_roads(a: List[int], b: List[int]) -> int:
         l, r = lb + max(l + c, r + x), rb + max(r + c, l + x)
 
     return max(l, r)
+
+
+def partition_by_sum(
+    a: List[int], start: int = 0, stop: int | None = None
+) -> Tuple[int, int]:
+    """
+    Partition the array a so the sums left and right are closest.
+
+    Parameters
+    ----------
+    a : List[int]
+        List of integers to partition.
+    start : int, optional
+        Start index on the array to consider, by default 0
+    stop : int | None, optional
+        Exclusive stop index on the array to consider, by default None
+
+    Returns
+    -------
+    Tuple[int, int]
+        The left and right sum, sorted.
+    """
+    if stop is None:
+        stop = len(a)
+    csum = list(accumulate(a, initial=0))
+    # `csum` is longer than `a` by 1, with leading 0.
+    #  starting at second element, stopping at second to last.
+    l, h = start + 1, stop - 1
+    # (abs difference, min-sum)
+    mn = (csum[stop] - csum[start], csum[start])
+    while l <= h:
+        m = (l + h) // 2
+        ls = csum[m] - csum[start]
+        rs = csum[stop] - csum[m]
+        if ls < rs:
+            mn = min(mn, (rs - ls, ls))
+            l = m + 1
+        else:
+            mn = min(mn, (ls - rs, rs))
+            h = m - 1
+    return mn[1], sum(mn)
