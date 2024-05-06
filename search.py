@@ -8,7 +8,7 @@ from typing import Any, Callable
 
 
 def upper_index(predicate: Callable, l: int, h: int, result: Any = None) -> Any:
-    """Return the max index of an element which for which `predicate` is True.
+    """Return the max index of an element for which `predicate` is True.
 
     Search starts between `l` and `h` markers.
     If `predicate` is True, `l` goes up, otherwise `h` goes down.
@@ -42,7 +42,7 @@ def upper_index(predicate: Callable, l: int, h: int, result: Any = None) -> Any:
 
 
 def lower_index(predicate: Callable, l: int, h: int, result: Any = None) -> Any:
-    """Return the min index of an element which for which `predicate` is True.
+    """Return the min index of an element for which `predicate` is True.
 
     Search starts between `l` and `h` markers.
     If `predicate` is True, `h` goes down, otherwise `l` goes up.

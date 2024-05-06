@@ -3,25 +3,6 @@
 from __future__ import annotations
 
 
-def count_different_bit_pairs(a: list[int]) -> int:
-    """Count all bit differences for number pairs from array `a`.
-
-    For each pair of integers in the array `a` sum all the differences in bits.
-    """
-    # The idea is to find the number of zero bit at each position for all the numbers.
-    # This gives both the number of zero bits `z` and number of set bits `n-z`.
-    # When multiplying `z * (n-z)`, get the number of bit differences at this position.
-    # We sum this number of differences for all positions to get the overall diff count.
-    #
-    # Runs in O(N * log(max(n))).
-    # Determine the length of the array and the bit length of maximum number.
-    n, l = len(a), max(a, default=1).bit_length()
-    # Compute the count of zero bits at each bit position.
-    zeros = (sum(not x & b for x in a) for b in (1 << i for i in range(l)))
-    # Sum the product of zero bits and set bits for each position.
-    return sum((n - z) * z for z in zeros) * 2
-
-
 class BitTrie:
     """A trie sorting integers with nodes splitting for each bit.
 
@@ -93,6 +74,25 @@ def max_xor_sub_array(a: list) -> tuple[int, list]:
         nearest = trie.nearest(~cx)
         mx = max(mx, (cx ^ nearest[0], nearest[1] + 1, i + 1))
     return mx[0], a[mx[1] : mx[2]]
+
+
+def count_different_bit_pairs(a: list[int]) -> int:
+    """Count all bit differences for number pairs from array `a`.
+
+    For each pair of integers in the array `a` sum all the differences in bits.
+    """
+    # The idea is to find the number of zero bit at each position for all the numbers.
+    # This gives both the number of zero bits `z` and number of set bits `n-z`.
+    # When multiplying `z * (n-z)`, get the number of bit differences at this position.
+    # We sum this number of differences for all positions to get the overall diff count.
+    #
+    # Runs in O(N * log(max(n))).
+    # Determine the length of the array and the bit length of maximum number.
+    n, l = len(a), max(a, default=1).bit_length()
+    # Compute the count of zero bits at each bit position.
+    zeros = (sum(not x & b for x in a) for b in (1 << i for i in range(l)))
+    # Sum the product of zero bits and set bits for each position.
+    return sum((n - z) * z for z in zeros) * 2
 
 
 def max_xor_subset(a: list) -> int:
