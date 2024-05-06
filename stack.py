@@ -183,7 +183,7 @@ class CountedStack(Sequence):
         return self.counter[value]
 
     def index(self, value: object, start: int = 0, stop: Any = None) -> int:
-        """Index of the first occurrence of `value` in the stack."""
+        """Return the index of the first occurrence of `value` in the stack."""
         if self.counter[value] > 0:
             return self.stack.index(value, start, stop)
         msg = f"Element '{value}' not found in CountedStack."

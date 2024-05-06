@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 class TreeNode:
     """Node of a binary tree."""
 
-    def __init__(self, data: Any) -> None:  # noqa: ANN401
+    def __init__(self, data: Any) -> None:
         """Return a TreeNode.
 
         Parameters
@@ -444,7 +444,7 @@ def make_pre_order(s: str, none: str = "N") -> Node:
     return des(iter(s.split()))
 
 
-def make(s: str, order="level", none: str = "N") -> Node:
+def make(s: str, order: str = "level", none: str = "N") -> Any:
     """Make a binary tree from string `s` using terminating token `none`.
 
     Args:
@@ -462,9 +462,8 @@ def make(s: str, order="level", none: str = "N") -> Node:
         return make_level_order(s, none)
     if order in ("pre"):
         return make_pre_order(s, none)
-
-    assert order in ("level", "pre", "pre")  # , "post", "in")
-    return None
+    msg = f"Expected `order`(='{order}') to be one of: 'level' or 'pre'"
+    raise ValueError(msg)
 
 
 def inorder_postorder_tangle(inorder: list, post: list) -> Node:
@@ -486,7 +485,7 @@ def inorder_postorder_tangle(inorder: list, post: list) -> Node:
     # Make the index lookup: O(1)
     idx = {v: i for i, v in enumerate(inorder)}
 
-    def r(i: int, j: int):
+    def r(i: int, j: int) -> Node:
         if i < j:
             # We can just eat the post-order array here.
             n = TreeNode(post[-1])
@@ -517,13 +516,13 @@ def from_list(ln: lists.Node) -> Node:
     return tree(len(ln)) if ln else None
 
 
-def lvo(n: Node, nodes=False):
+def lvo(n: Node, *, nodes: bool = False) -> Iterator:
     """Yield nodes or values in breadth first, level order."""
     if n:
         yield from n.level_order(nodes=nodes)
 
 
-def ino(n: Node, nodes=False):
+def ino(n: Node, *, nodes: bool = False) -> Iterator:
     """Yield nodes or values in in-order traversal."""
     if n:
         yield from n.inorder(nodes=nodes)
@@ -577,7 +576,8 @@ def reversed_level_order(t: Node) -> list:
 
 
 def spiral_order(t: Node) -> list:
-    """Return the node values in spiral.
+    """Return the node values in spiral order.
+
     Spiral order is alternating from left to right on each level.
     """
     q = deque([t])
@@ -597,7 +597,7 @@ def spiral_order(t: Node) -> list:
     return o
 
 
-def insert_balanced(n: Node, value: int):
+def insert_balanced(n: Node, value: int) -> TreeNode:
     """Insert a node with `value`."""
     return n.insert_balanced(value) if n else TreeNode(value)
 
@@ -662,7 +662,7 @@ def largest(r: Node, k: int = 1, default: int = -1) -> int:
 
 
 def balanced(root: Node) -> bool:
-    """True if tree at `root` is balanced in height."""
+    """Return True if tree at `root` is balanced in height."""
 
     def rank_balance(n: Node) -> tuple[int, bool]:
         if not n:
@@ -677,7 +677,7 @@ def balanced(root: Node) -> bool:
 
 
 def identical(a: Node, b: Node) -> bool:
-    """True if `a` and `b` have identical structure and data."""
+    """Return True if `a` and `b` have identical structure and data."""
     return a == b or bool(
         a
         and b
@@ -696,25 +696,25 @@ def mirror(r: Node) -> None:
 
 
 def symmetric(r: Node) -> bool:
-    """True if tree starting at `r` is symmetric."""
+    """Return True if tree starting at `r` is symmetric."""
 
-    def sym(a, b):
+    def sym(a: Node, b: Node) -> bool:
         return a == b or (
-            a
-            and b
+            bool(a)
+            and bool(b)
             and a.data == b.data
             and sym(a.left, b.right)
             and sym(b.left, a.right)
         )
 
-    return bool(not r or sym(r.left, r.right))
+    return not r or sym(r.left, r.right)
 
 
 def flat(r: Node) -> bool:
-    """True if all leaves are at the same level."""
+    """Return True if all leaves are at the same level."""
     lvl = [-1]
 
-    def eql(n, cl):
+    def eql(n: Node, cl: int) -> bool:
         if not n:
             return True
         if not n.left and not n.right:
@@ -755,7 +755,7 @@ def no_siblings_nodes(t: Node) -> list:
     """Return nodes' values which have no sibling node from tree `t`."""
     singles = []
 
-    def enum(l, r) -> None:
+    def enum(l: Node, r: Node) -> None:
         l and (enum(l.left, l.right), r or singles.append(l.data))
         r and (enum(r.left, r.right), l or singles.append(r.data))
 
@@ -764,7 +764,7 @@ def no_siblings_nodes(t: Node) -> list:
 
 
 def has_path_sum(n: Node, s: int) -> bool:
-    """True if there is a path from root `n` to a leaf with sum = `s`."""
+    """Return True if there is a path from root `n` to a leaf with sum = `s`."""
     s -= n.data
     return (
         s > 0
@@ -796,7 +796,7 @@ def median(t: Node) -> float:
 def max_width(t: Node) -> int:
     """Max width at any level in tree `t`."""
 
-    def level_width():
+    def level_width() -> Iterator:
         q = deque([t])
         while q:
             yield len(q)
@@ -810,20 +810,21 @@ def max_width(t: Node) -> int:
 
 def max_path_sum(t: Node) -> int:
     """Return max path sum between nodes of rank 1."""
-    mx = [-inf]
+    mx = -inf
 
-    def rec(n):
+    def rec(n: Node) -> int:
+        nonlocal mx
         if not n:
             return 0
         ls = rec(n.left)
         rs = rec(n.right)
         if (n.left and n.right) or n == t:
-            mx[0] = max(mx[0], n.data + ls + rs)
+            mx = max(mx, n.data + ls + rs)
             return n.data + max(ls, rs)
         return n.data + ls + rs
 
     rec(t)
-    return int(mx[0])
+    return int(mx)
 
 
 def to_linked_list(r: Node) -> Node:
@@ -852,7 +853,7 @@ def nodes_at_distance(r: Node, target: int, k: int) -> list[int]:
         descend(r.left, kn - 1)
         descend(r.right, kn - 1)
 
-    def search(r: Node):
+    def search(r: Node) -> int | None:
         if not r:
             return None
         if r.data == target:
@@ -900,11 +901,11 @@ def merge_sorted(r1: Node, r2: Node) -> list:
     return out
 
 
-def tree_distance(root: Node, target) -> int:
+def tree_distance(root: Node, target: Any) -> int:
     """Return max distance to all nodes from the one with the `target` value."""
     # This puzzle is also known as `burning tree` puzzle.
 
-    def search(r):
+    def search(r: Any) -> tuple[int, int]:
         if not r:
             return 0, 0
 
@@ -912,6 +913,9 @@ def tree_distance(root: Node, target) -> int:
         # If not compute the max depth.
         fl, dl = search(r.left)
         fr, dr = search(r.right)
+        # return:
+        #    path-length since target if found else 0,
+        #    max distance to all nodes from the target
         return (
             fl
             and (fl + 1, max(fl + 1 + dr, dl))
@@ -939,7 +943,7 @@ def fix_two_nodes(root: Node) -> None:
     b: Node = None  # stores the last anomaly right node
 
     # Uses recursion (stack) for in-order traversal.
-    def rec(p: Node, n: Node):
+    def rec(p: Node, n: Node) -> Node:
         # recursive in-order descend
         # `p` tracks the most recent / previous node.
         nonlocal a, b
@@ -959,14 +963,14 @@ def fix_two_nodes(root: Node) -> None:
         a.data, b.data = b.data, a.data
 
 
-def candy_tree_equality(r: Node) -> int:
+def candy_tree_equality(r: TreeNode) -> int:
     """Equalize values in the tree to one. Count minimum number of moves."""
     # Idea is to do it bottom-up.
     # Candy is moved from parent to child if child's candy count is 0.
     # Candy is moved up to the parent if child's candy count is more than 1.
     moves = 0
 
-    def dfs(n) -> int:
+    def dfs(n: Node) -> int:
         nonlocal moves
         l = dfs(n.left) - 1 if n.left else 0
         r = dfs(n.right) - 1 if n.right else 0
@@ -976,8 +980,7 @@ def candy_tree_equality(r: Node) -> int:
         # Return candy balance for this node.
         return n.data + l + r
 
-    assert r
-    assert dfs(r) == 1
+    assert dfs(r) == 1  # noqa: S101
     return moves
 
 
@@ -1003,7 +1006,7 @@ def min_bst_with_a_sum(r: Node, target: int) -> int:
     # This solutions bubbles up the node count and
     # the value sum in bottom-up DFS manner.
     # The BST check is done separately.
-    def dfs(n: Node):
+    def dfs(n: Node) -> tuple[float, int, int]:
         # Returns:
         #    min node count,
         #    current tree node count,
@@ -1045,7 +1048,7 @@ def min_bst_with_a_sum_single_pass(r: Node, target: int) -> int:
 
     """
 
-    def dfs(n: Node):
+    def dfs(n: Node) -> tuple[float, int, int, float, float]:
         if not n:
             # Return inf min node count and generous interval.
             # mnc, nc, sum, mn, mx
