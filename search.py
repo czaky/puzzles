@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from itertools import accumulate
-from math import inf
 from typing import Any, Callable
 
 
@@ -217,20 +216,14 @@ def partition_by_sum(
     #    `csum = list(accumulate(a, initial=0))`
     # `csum` is longer than `a` by 1, with leading 0.
     #  starting at second element, stopping at second to last.
-    l, h = start + 1, stop - 1
-    # (abs difference, min-sum)
-    mn = (csum[stop] - csum[start], csum[start])
-    while l <= h:
-        m = (l + h) // 2
-        ls = csum[m] - csum[start]
-        rs = csum[stop] - csum[m]
-        if ls < rs:
-            mn = min(mn, (rs - ls, ls))
-            l = m + 1
-        else:
-            mn = min(mn, (ls - rs, rs))
-            h = m - 1
-    return mn[1], sum(mn)
+    msum2 = csum[start] + csum[stop]
+    # Closest point to `msum2 / 2`?
+    m = lower_index(lambda m: csum[m] << 1 >= msum2, start + 1, stop - 1, stop)
+    # Use the midpoint...
+    if csum[m - 1] + csum[m] < msum2:
+        return csum[stop] - csum[m], csum[m] - csum[start]
+    # or the point before it.
+    return csum[m - 1] - csum[start], csum[stop] - csum[m - 1]
 
 
 def four_partitions_min_sum_difference(a: list[int]) -> int:
@@ -253,22 +246,5 @@ def four_partitions_min_sum_difference(a: list[int]) -> int:
     n = len(a)
     # Using csum to lover the search time to: O(N * log N)
     csum = [0, *accumulate(a)]
-    # Min difference between max and min of all 4 subsets.
-    mn = inf
-    # Iterate through all the possible splits,
-    # and derive the minimum difference of sums of
-    # the four subsets.
-    # Since `[0, j)` needs at least 2 elements,
-    # `j` needs to start at 2.
-    # Since `[j, n)` needs at least 2 elements,
-    # `j` needs to stop at `n-2`.
-    for j in range(2, n - 1):
-        # partition [0, j)
-        w, x = partition_by_sum(csum, 0, j)
-        # partition [j, n)
-        y, z = partition_by_sum(csum, j, n)
-        # w, y are the minimum subset sums
-        # x, z are the maximum subset sums
-        mn = min(mn, max(x, z) - min(w, y))
-
-    return int(mn)
+    parts = lambda j: (*partition_by_sum(csum, 0, j), *partition_by_sum(csum, j, n))
+    return min(max(xyzw) - min(xyzw) for xyzw in map(parts, range(2, n - 1)))
