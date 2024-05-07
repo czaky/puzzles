@@ -25,3 +25,8 @@ class TestDP(unittest.TestCase):
         assert dp.prime_product_subset_count([10, 4, 1, 4, 10]) == 4
         assert dp.prime_product_subset_count([2, 2, 3]) == 5
         assert dp.prime_product_subset_count([1, 2, 3, 4]) == 6
+
+    def test_divide_number_into_groups(self):
+        """Test `divide_number_into_groups`."""
+        assert dp.divide_number_into_groups(4, 4) == 1
+        assert dp.divide_number_into_groups(8, 4) == 5

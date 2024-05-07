@@ -89,3 +89,35 @@ def prime_product_subset_count(a: list[int], mod: int = 10**9 + 7) -> int:
     for j in range(1, len(dp)):
         dp[j] = sum(dp[j ^ m] * c % mod for m, c in mcs if j ^ m < m == j & m)
     return (sum(dp) - 1) * 2 ** a.count(1)
+
+
+def divide_number_into_groups(n: int, k: int) -> int:
+    """Divide the number `n` into groups of `k` numbers summing to `n`.
+
+    The numbers in the groups are positive and non-decreasing.
+    Count all the groups of `k` length the sum to `n`.
+
+    Example
+    -------
+    n = 8, k = 4
+    [1, 1, 1, 5], [1, 1, 2, 4], [1, 1, 3, 3], [1, 2, 2, 3] and [2, 2, 2, 2].
+
+    Parameters
+    ----------
+    n : int
+        the number to divide
+    k : int
+        the count of numbers in the groups
+
+    Returns
+    -------
+    int
+        the count of groups
+
+    """
+
+    @lru_cache(None)
+    def r(j: int, p: int, s: int) -> int:
+        return j == 1 or sum(r(j - 1, v, s - v) for v in range(p, s // j + 1))
+
+    return int(r(k, 1, n))
