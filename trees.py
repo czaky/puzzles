@@ -44,8 +44,10 @@ class TreeNode:
         while q:
             n = q.popleft()
             yield (n if nodes else n.data)
-            n.left and q.append(n.left)
-            n.right and q.append(n.right)
+            if n.left:
+                q.append(n.left)
+            if n.right:
+                q.append(n.right)
 
     def __iter__(self) -> Iterator:
         """Return a level order iterator.
@@ -77,8 +79,10 @@ class TreeNode:
         while s:
             n = s.pop()
             yield (n if nodes else n.data)
-            n.right and s.append(n.right)
-            n.left and s.append(n.left)
+            if n.right:
+                s.append(n.right)
+            if n.left:
+                s.append(n.left)
 
     def inorder(self, *, nodes: bool = False) -> Iterator:
         """In-order, depth first (DFS) traversal of the binary tree.
@@ -756,10 +760,17 @@ def no_siblings_nodes(t: Node) -> list:
     singles = []
 
     def enum(l: Node, r: Node) -> None:
-        l and (enum(l.left, l.right), r or singles.append(l.data))
-        r and (enum(r.left, r.right), l or singles.append(r.data))
+        if l:
+            enum(l.left, l.right)
+            if not r:
+                singles.append(l.data)
+        if r:
+            enum(r.left, r.right)
+            if not l:
+                singles.append(r.data)
 
-    t and enum(t.left, t.right)
+    if t:
+        enum(t.left, t.right)
     return sorted(singles)
 
 
@@ -802,8 +813,10 @@ def max_width(t: Node) -> int:
             yield len(q)
             for _ in range(len(q)):
                 n = q.popleft()
-                n.left and q.append(n.left)
-                n.right and q.append(n.right)
+                if n.left:
+                    q.append(n.left)
+                if n.right:
+                    q.append(n.right)
 
     return reduce(max, level_width())
 
