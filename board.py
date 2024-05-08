@@ -11,10 +11,13 @@ def queens(n: int) -> list:
     def rec(r: int, invalid: int) -> None:
         place = 1 | 1 << (n + r) | 1 << (n * 4 - r)
         for s[r] in range(1, n + 1):
-            invalid & place or (
-                (r <= 0 or rec(r - 1, invalid | place)) and sols.append(s[:])
-            )
+            if not invalid & place:
+                if r == 0:
+                    sols.append(s[:])
+                else:
+                    rec(r - 1, invalid | place)
             place <<= 1
 
-    n > 0 and rec(n - 1, 0)
-    return sols
+    if n > 0:
+        rec(n - 1, 0)
+    return sorted(sols)
