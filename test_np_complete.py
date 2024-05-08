@@ -19,3 +19,12 @@ class TestNPComplete(unittest.TestCase):
             148,
             148,
         )
+
+    def test_just_add_operators(self):
+        """Test `just_add_operators`."""
+        assert npc.just_add_operators("2", 2) == ["2"]
+        assert npc.just_add_operators("232", 8) == ["2+3*2", "2*3+2"]
+        assert npc.just_add_operators("123", 6) == ["1+2+3", "1*2*3"]
+        assert not npc.just_add_operators("3216", 19)
+        assert npc.just_add_operators("1054", 4) == ["1*0*5+4"]
+        assert not npc.just_add_operators("33", 14)
