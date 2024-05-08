@@ -65,3 +65,7 @@ disable="""
         too-many-locals,
         too-many-lines
         """
+
+
+[tool.pyright]
+"reportOptionalMemberAccess" = false

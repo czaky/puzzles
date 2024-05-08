@@ -1,1 +1,1 @@
-"Programming Puzzles"
+"""Programming Puzzles."""
