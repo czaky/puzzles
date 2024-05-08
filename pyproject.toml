@@ -43,3 +43,25 @@ disable_error_code = [
     "operator",
     "arg-type"
 ]
+
+
+[tool.pylint."MESSAGES CONTROL"]
+
+# Disable the message, report, category or checker with the given id(s).
+disable="""
+        raw-checker-failed,
+        bad-inline-option,
+        locally-disabled,
+        file-ignored,
+        suppressed-message,
+        useless-suppression,
+        deprecated-pragma,
+        use-symbolic-message-instead,
+        unnecessary-lambda-assignment,
+        too-few-public-methods,
+        too-many-public-methods,
+        too-many-arguments,
+        too-many-statements,
+        too-many-locals,
+        too-many-lines
+        """
