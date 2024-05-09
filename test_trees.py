@@ -209,13 +209,23 @@ class TestTrees(unittest.TestCase):
         assert [2, 1, 3, 4] == seq(t.insert(t.make("2 1 N N 3", "pre"), 4))
         assert [5, 3, 6, 2, 4] == seq(t.insert(t.make("5 3 N 4 N N 6", "pre"), 2))
 
-    def test_find_ancestor(self):
-        """Test `find_ancestor` function."""
-        assert t.find_ancestor(t.make("2 1"), 1, 2).data == 2
-        assert t.find_ancestor(t.make("2 1 N N 3", "pre"), 3, 1).data == 2
-        assert t.find_ancestor(t.make("5 3 2 N N 4 N N 6", "pre"), 4, 6).data == 5
-        assert t.find_ancestor(t.make("5 3 2 N N 4 N N 6", "pre"), 3, 4).data == 3
-        assert t.find_ancestor(t.make("5 3 2 N N 4 N N 6", "pre"), 2, 4).data == 3
+    def test_find_bst_ancestor(self):
+        """Test `find_bst_ancestor` function."""
+        assert t.find_bst_ancestor(t.make("2 1"), 1, 2).data == 2
+        assert t.find_bst_ancestor(t.make("2 1 N N 3", "pre"), 3, 1).data == 2
+        assert t.find_bst_ancestor(t.make("5 3 2 N N 4 N N 6", "pre"), 4, 6).data == 5
+        assert t.find_bst_ancestor(t.make("5 3 2 N N 4 N N 6", "pre"), 3, 4).data == 3
+        assert t.find_bst_ancestor(t.make("5 3 2 N N 4 N N 6", "pre"), 2, 4).data == 3
+
+    def test_lowest_common_ancestor(self):
+        """Test `lowest_common_ancestor` function."""
+        assert t.lowest_common_ancestor(t.make("2 1"), 1, 2).data == 2
+        assert t.lowest_common_ancestor(t.make("1 2 3"), 2, 3).data == 1
+        assert t.lowest_common_ancestor(t.make("1 2 3"), 1, 3).data == 1
+        assert t.lowest_common_ancestor(t.make("1 2 3"), 1, 2).data == 1
+        assert t.lowest_common_ancestor(t.make("1 2 3 4 5 6 7"), 5, 6).data == 1
+        assert t.lowest_common_ancestor(t.make("1 2 3 4 5 6 7"), 4, 5).data == 2
+        assert t.lowest_common_ancestor(t.make("1 2 3 4 5 6 7"), 4, 7).data == 1
 
     def test_largest(self):
         """Test `largest` function."""
@@ -473,3 +483,14 @@ class TestTrees(unittest.TestCase):
             "3109 5378 3898 6654 2270 2614 8579 7243 8788",
         )
         assert t.min_bst_with_a_sum(r, 4125) == 1
+
+    def test_number_of_turns(self):
+        """Test `number_of_turns`."""
+        assert t.number_of_turns(t.make("1 2 3"), 2, 3) == 1
+        assert t.number_of_turns(t.make("1 2 3"), 3, 2) == 1
+        assert t.number_of_turns(t.make("1 2 3"), 1, 3) == 0
+        assert t.number_of_turns(t.make("1 2 3"), 2, 1) == 0
+        assert t.number_of_turns(t.make("1 2 N N 4"), 1, 4) == 1
+        assert t.number_of_turns(t.make("1 2 3 N 4 N N 5"), 1, 5) == 2
+        assert t.number_of_turns(t.make("1 2 3 4 5 6 7"), 5, 6) == 3
+        assert t.number_of_turns(t.make("1 2 3 4 5 6 7 8 N N N 9 10"), 5, 10) == 4

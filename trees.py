@@ -29,6 +29,18 @@ class TreeNode:
         self.right: TreeNode | None = None
         self.height: int = 1
 
+    def __bool__(self) -> bool:
+        """Return True."""
+        return True
+
+    def __len__(self) -> int:
+        """Compute the length starting at this node."""
+        return 1 + len(self.left or ()) + len(self.right or ())
+
+    def __contains__(self, x: object) -> bool:
+        """Return True if x is contained in this tree."""
+        return self.data == x or (x in (self.left or ())) or (x in (self.right or ()))
+
     # Iterators
 
     def level_order(self, *, nodes: bool = False) -> Iterator:
@@ -199,9 +211,13 @@ class TreeNode:
         mxl = 0
         for line in aux(self)[0]:
             mxl = max(mxl, len(line))
+            mxl = max(mxl, len(line))
+            print(line)  # noqa: T201
 
         if v:
-            pass
+            print("-" * mxl)  # noqa: T201
+            print(self)  # noqa: T201
+            print("-" * mxl)  # noqa: T201
 
     def serialize_level_order(self, none: str = "N") -> str:
         """Return a BFS, level-order string representation using none ('N') for None."""
@@ -352,7 +368,7 @@ class TreeNode:
     def left_skew(self) -> int:
         """Return how far to the left the node is skewed."""
         l, r = self.left, self.right
-        return (l and l.height or 0) - (r and r.height or 0)
+        return (l.height if l else 0) - (r.height if r else 0)
 
     def balance_node(self) -> TreeNode:
         """Balance this node. May return one of its descendants."""
@@ -405,7 +421,7 @@ Node = Optional[TreeNode]
 
 def height(n: Node) -> int:
     """Return the height of a Node `n` or 0 for NONE."""
-    return n and n.height or 0
+    return n.height if n else 0
 
 
 def make_level_order(s: str, none: str = "N") -> Node:
@@ -741,8 +757,8 @@ def insert(r: Node, value: int) -> Node:
     return r
 
 
-def find_ancestor(r: Node, a: int, b: int) -> Node | None:
-    """Find lowest common ancestor of `a` and `b` valued nodes."""
+def find_bst_ancestor(r: Node, a: int, b: int) -> Node:
+    """Find lowest common ancestor of `a` and `b` valued nodes in a BST."""
     mn = min(a, b)
     mx = max(a, b)
     while r:
@@ -753,6 +769,14 @@ def find_ancestor(r: Node, a: int, b: int) -> Node | None:
         else:
             break
     return r
+
+
+def lowest_common_ancestor(n: Node, a: int, b: int) -> Node:
+    """Find lowest common ancestor of `a` and `b` valued nodes in a tree."""
+    if n is None or n.data in (a, b):
+        return n
+    l, r = lowest_common_ancestor(n.left, a, b), lowest_common_ancestor(n.right, a, b)
+    return l and r and n or l or r
 
 
 def no_siblings_nodes(t: Node) -> list:
@@ -1090,3 +1114,48 @@ def min_bst_with_a_sum_single_pass(r: Node, target: int) -> int:
 
     mc = dfs(r)[0]
     return int(mc) if mc < inf else -1
+
+
+def number_of_turns(r: Node, a: int, b: int) -> int:
+    """Count number of turns between `a` and `b` in a tree starting at `r`.
+
+    Parameters
+    ----------
+    r : Node
+        Root node of the tree.
+    a : int
+        First node value.
+    b : int
+        Second node value.
+
+    Returns
+    -------
+    int
+        Number of turns on the path from `a` to `b`.
+
+    """
+    # The idea is to first find the lowest common ancesor.
+    # Then to compute the number of turns between `a` and `b`
+    # Starting from the `lca`.
+    # Finding `lca` makes it easier to calculate the turns
+
+    def turns(n: Node, target: int, d: str) -> int:
+        if n is None:
+            return -1
+        if n.data == target:
+            return 0
+        lt = turns(n.left, target, "L")
+        if lt >= 0:
+            return lt + (d == "R")
+        rt = turns(n.right, target, "R")
+        if rt >= 0:
+            return rt + (d == "L")
+        return -1
+
+    if r is None or a == b:
+        return -1
+    lca = lowest_common_ancestor(r, a, b)
+    if lca is None:
+        return -1
+
+    return turns(lca, a, "") + turns(lca, b, "") + (lca.data not in (a, b))
