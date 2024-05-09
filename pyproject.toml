@@ -18,15 +18,19 @@ unfixable = []
 
 # E741 - ambiguous variable name
 # E731 - lambda assignment
-# PLR2004 - magic value comparison
 # ERA001 - commented-out code
-# PLR0913 - too many function parameters
 # EXE002 - no shebang
+# PLR2004 - magic value comparison
+# PLR0911 - too many return statements
+# PLR0912 - too many branches
+# PLR0913 - too many function parameters
+# C901 - too complex
 # ANN101 - missing type annotation for self
 # ANN401 - ANY prohibited
 # PGH003 - use specific violation code when ignoring
-# C901 - too complex
-ignore = ["E741", "E731", "PLR2004", "ERA001", "PLR0913", "EXE002",
+ignore = [
+        "E741", "E731", "ERA001", "EXE002",
+        "PLR2004", "PLR0911", "PLR0912", "PLR0913",
         "ANN101", "ANN401", "PGH003", "C901"]
 
 [tool.ruff.lint.per-file-ignores]
@@ -34,14 +38,14 @@ ignore = ["E741", "E731", "PLR2004", "ERA001", "PLR0913", "EXE002",
 
 [tool.mypy]
 disable_error_code = [
-    "has-type",
-    "misc",
-    "union-attr",
-    "var-annotated",
-    "annotation-unchecked",
-    "func-returns-value",
-    "operator",
-    "arg-type"
+        "has-type",
+        "misc",
+        "union-attr",
+        "var-annotated",
+        "annotation-unchecked",
+        "func-returns-value",
+        "operator",
+        "arg-type"
 ]
 
 
@@ -69,3 +73,4 @@ disable="""
 
 [tool.pyright]
 "reportOptionalMemberAccess" = false
+"reportReturnType" = false
