@@ -775,7 +775,8 @@ def lowest_common_ancestor(n: Node, a: int, b: int) -> Node:
     """Find lowest common ancestor of `a` and `b` valued nodes in a tree."""
     if n is None or n.data in (a, b):
         return n
-    l, r = lowest_common_ancestor(n.left, a, b), lowest_common_ancestor(n.right, a, b)
+    l = lowest_common_ancestor(n.left, a, b)
+    r = lowest_common_ancestor(n.right, a, b)
     return l and r and n or l or r
 
 
@@ -1134,10 +1135,10 @@ def number_of_turns(r: Node, a: int, b: int) -> int:
         Number of turns on the path from `a` to `b`.
 
     """
-    # The idea is to first find the lowest common ancesor.
+    # The idea is to first find the lowest common ancestor.
     # Then to compute the number of turns between `a` and `b`
     # Starting from the `lca`.
-    # Finding `lca` makes it easier to calculate the turns
+    # Finding `lca` makes it easier to calculate the turns.
 
     def turns(n: Node, target: int, d: str) -> int:
         if n is None:
