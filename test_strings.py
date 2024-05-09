@@ -315,3 +315,45 @@ class TestStrings(unittest.TestCase):
         assert s.k_alphabet_string_with_all_substrings(3, 2) == "0001110100"
         assert s.k_alphabet_string_with_all_substrings(2, 3) == "0011210220"
         assert s.k_alphabet_string_with_all_substrings(1, 10) == "1234567890"
+
+    def test_longest_common_subsequence_length(self):
+        """Test `longest_common_subsequence_length`."""
+        assert s.longest_common_subsequence_length("", "bbb") == 0
+        assert s.longest_common_subsequence_length("b", "bbb") == 1
+        assert s.longest_common_subsequence_length("bb", "bbb") == 2
+        assert s.longest_common_subsequence_length("bbb", "bbb") == 3
+
+        assert s.longest_common_subsequence_length("aaa", "bbb") == 0
+        assert s.longest_common_subsequence_length("aba", "bbb") == 1
+        assert s.longest_common_subsequence_length("bab", "bbb") == 2
+        assert s.longest_common_subsequence_length("bbb", "bbb") == 3
+
+        assert s.longest_common_subsequence_length("caaa", "dbbb") == 0
+        assert s.longest_common_subsequence_length("caba", "dbbb") == 1
+        assert s.longest_common_subsequence_length("cbab", "dbbb") == 2
+        assert s.longest_common_subsequence_length("cbbb", "dbbb") == 3
+
+        assert s.longest_common_subsequence_length("aaae", "bbbf") == 0
+        assert s.longest_common_subsequence_length("abae", "bbbf") == 1
+        assert s.longest_common_subsequence_length("babe", "bbbf") == 2
+        assert s.longest_common_subsequence_length("bbbe", "bbbf") == 3
+
+        assert s.longest_common_subsequence_length("caaae", "dbbbf") == 0
+        assert s.longest_common_subsequence_length("cabae", "dbbbf") == 1
+        assert s.longest_common_subsequence_length("cbabe", "dbbbf") == 2
+        assert s.longest_common_subsequence_length("cbbbe", "dbbbf") == 3
+
+    def test_all_longest_common_subsequences(self):
+        """Test `all_longest_common_subsequences`."""
+        assert s.all_longest_common_subsequences("cfb", "aceba") == ["cb"]
+        assert s.all_longest_common_subsequences("abaaa", "abaaa") == ["abaaa"]
+        assert s.all_longest_common_subsequences("baabaca", "abaaa") == [
+            "aaaa",
+            "abaa",
+            "baaa",
+        ]
+        assert s.all_longest_common_subsequences("abaaa", "baabaca") == [
+            "aaaa",
+            "abaa",
+            "baaa",
+        ]

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections import Counter
 from functools import lru_cache, reduce
-from itertools import accumulate, combinations, islice
+from itertools import accumulate, combinations, islice, product
 from typing import Iterator, Sequence
 
 from future import pairwise
@@ -664,3 +664,35 @@ def k_alphabet_string_with_all_substrings(n: int, k: int) -> str:
         # else: The for loop may not add any new digit for a choice of
         # the alphabet or the initialization string.
     return o
+
+
+def longest_common_subsequence_length(a: str, b: str) -> int:
+    """Return the length of the longest common, non-continuous, subsequence."""
+    ll = [[0, 0] for _ in range(len(a) + 1)]
+    for j, i in product(range(len(b)), range(len(a))):
+        ll[i + 1][1 - j & 1] = (
+            1 + ll[i][j & 1]
+            if a[i] == b[j]
+            else max(ll[i + 1][j & 1], ll[i][1 - j & 1])
+        )
+    return max(ll[-1])
+
+
+def all_longest_common_subsequences(a: str, b: str) -> list:
+    """Return a storted list of all common, longest subsequences."""
+
+    def bt(si: int, sj: int, s: list, l: int) -> None:
+        if l == 0:
+            results.add("".join(a[i] for i in s))
+            return
+        for i in range(si, len(a)):
+            # find the next char in b that matches.
+            j = b.find(a[i], sj)
+            if j >= 0:
+                s.append(i)
+                bt(i + 1, j + 1, s, l - 1)
+                s.pop()
+
+    results = set()
+    bt(0, 0, [], longest_common_subsequence_length(a, b))
+    return sorted(results)
