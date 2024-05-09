@@ -488,6 +488,9 @@ class TestTrees(unittest.TestCase):
         """Test `number_of_turns`."""
         assert t.number_of_turns(t.make("1 2 3"), 2, 3) == 1
         assert t.number_of_turns(t.make("1 2 3"), 3, 2) == 1
+        assert t.number_of_turns(t.make("1 2 3"), 1, 1) == 0
+        assert t.number_of_turns(t.make("1 2 3"), 2, 2) == 0
+        assert t.number_of_turns(t.make("1 2 3"), 3, 3) == 0
         assert t.number_of_turns(t.make("1 2 3"), 1, 3) == 0
         assert t.number_of_turns(t.make("1 2 3"), 2, 1) == 0
         assert t.number_of_turns(t.make("1 2 N N 4"), 1, 4) == 1

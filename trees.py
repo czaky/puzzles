@@ -1140,23 +1140,12 @@ def number_of_turns(r: Node, a: int, b: int) -> int:
     # Starting from the `lca`.
     # Finding `lca` makes it easier to calculate the turns.
 
-    def turns(n: Node, target: int, d: str) -> int:
+    def c(n: Node, t: int, d: int) -> int:
         if n is None:
-            return -1
-        if n.data == target:
+            return -(10**9)
+        if n.data == t:
             return 0
-        lt = turns(n.left, target, "L")
-        if lt >= 0:
-            return lt + (d == "R")
-        rt = turns(n.right, target, "R")
-        if rt >= 0:
-            return rt + (d == "L")
-        return -1
+        return max(c(n.left, t, -1) + (d == 1), c(n.right, t, 1) + (d == -1))
 
-    if r is None or a == b:
-        return -1
-    lca = lowest_common_ancestor(r, a, b)
-    if lca is None:
-        return -1
-
-    return turns(lca, a, "") + turns(lca, b, "") + (lca.data not in (a, b))
+    lca = r and lowest_common_ancestor(r, a, b)
+    return c(lca, a, 0) + c(lca, b, 0) + (lca.data not in (a, b)) if lca else -1
