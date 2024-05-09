@@ -679,20 +679,27 @@ def longest_common_subsequence_length(a: str, b: str) -> int:
 
 
 def all_longest_common_subsequences(a: str, b: str) -> list:
-    """Return a storted list of all common, longest subsequences."""
+    """Return a sorted list of all common, longest subsequences."""
+    # This is much faster than determining the LCS length,
+    # and then using a backtracking approach.
+    # O(N^4) - worst case.  O(N^3) - average
 
-    def bt(si: int, sj: int, s: list, l: int) -> None:
-        if l == 0:
-            results.add("".join(a[i] for i in s))
-            return
-        for i in range(si, len(a)):
-            # find the next char in b that matches.
-            j = b.find(a[i], sj)
-            if j >= 0:
-                s.append(i)
-                bt(i + 1, j + 1, s, l - 1)
-                s.pop()
+    def maxlen(x: set, y: set) -> set:
+        """Return set with longer elements or the union of both."""
+        # O(N) - there are at most N subsequences of a given length.
+        lx, ly = len(next(iter(x))), len(next(iter(y)))
+        return x if lx > ly else y if lx < ly else x | y
 
-    results = set()
-    bt(0, 0, [], longest_common_subsequence_length(a, b))
-    return sorted(results)
+    # Only two columns are necessary.
+    ll = [[{""}, {""}] for _ in range(len(a) + 1)]
+    # O(N^2)
+    for j, i in product(range(len(b)), range(len(a))):
+        if a[i] == b[j]:
+            # Extend the set from `ll[i][j]` to `ll[i+1][j+1]`
+            # O(N^2)
+            ll[i + 1][j & 1] = {x + a[i] for x in ll[i][~j & 1]}
+        else:
+            # Choose between the two sets `ll[i][j+1]` and `ll[i+1][j]`
+            ll[i + 1][j & 1] = maxlen(ll[i][j & 1], ll[i + 1][~j & 1])
+
+    return sorted(maxlen(*ll[-1]))
