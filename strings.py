@@ -353,9 +353,7 @@ def palindromic_partitions(s: str) -> int:
     dp = [0] * n
     for j in range(n):
         dp[j] = int(isp(0, j)) or reduce(
-            min,
-            (dp[k] + 1 for k in range(1, j) if isp(k + 1, j)),
-            j + 1,
+            min, (dp[k] + 1 for k in range(1, j) if isp(k + 1, j)), j + 1
         )
 
     return (int(n == 0) or dp[n - 1]) - 1
@@ -438,7 +436,7 @@ def fix_palindrome(s: str) -> int:
                 count(i + 1, j - 1)
                 if s[i] == s[j]
                 else min(count(i + 1, j), count(i, j - 1)) + 1
-            ),
+            )
         )
 
     return count(0, len(s) - 1)
@@ -703,3 +701,43 @@ def all_longest_common_subsequences(a: str, b: str) -> list:
             ll[i + 1][j & 1] = maxlen(ll[i][j & 1], ll[i + 1][~j & 1])
 
     return sorted(maxlen(*ll[-1]))
+
+
+@lru_cache
+def scrambled(a: str, b: str) -> bool:
+    """Return True if `a` is a scrambled version of `b`.
+
+    A string gets scrambled by optional swapping its partitions,
+    in a recursive manner. Two scrambled strings have the
+    same length and are anagrams.
+
+    Parameters
+    ----------
+    a : str
+        input string
+    b : str
+        input string
+
+    Returns
+    -------
+    bool
+        True if `a` is a scrambled version of `b`.
+
+    Raises
+    ------
+    ValueError
+        If `a` and `b` have different lengths.
+
+    """
+    if len(a) != len(b):
+        msg = f"Expected equal lengths. Got: {len(a)} != {len(b)}. For '{a}', '{b}'."
+        raise ValueError(msg)
+    return a == b or (
+        # Anagram?
+        Counter(a) == Counter(b)
+        and any(
+            (scrambled(a[:i], b[:i]) and scrambled(a[i:], b[i:]))
+            or (scrambled(a[:i], b[-i:]) and scrambled(a[i:], b[:-i]))
+            for i in range(1, len(a))
+        )
+    )

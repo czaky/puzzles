@@ -74,7 +74,7 @@ class TestStrings(unittest.TestCase):
         assert s.max_distinct_char_substring("abba") == 2
         assert (
             s.max_distinct_char_substring(
-                "aldshflasghdfasgfkhgasdfasdgvfyweofyewyrtyefgv",
+                "aldshflasghdfasgfkhgasdfasdgvfyweofyewyrtyefgv"
             )
             == 10
         )
@@ -123,7 +123,7 @@ class TestStrings(unittest.TestCase):
         assert s.distinct_palindrome_substrings("abcdabbabcdfdccdgdc") == 15
         assert (
             s.distinct_palindrome_substrings(
-                "mdnvznwlylygvstwarpibrfgvdhkdcrlmfgqweveqyo",
+                "mdnvznwlylygvstwarpibrfgvdhkdcrlmfgqweveqyo"
             )
             == 26
         )
@@ -290,20 +290,16 @@ class TestStrings(unittest.TestCase):
     def test_word_parts(self):
         """Test `word_parts`."""
         assert ["cat"] == s.word_parts(
-            ["rat", "cats", "cat", "and", "sand", "dog"],
-            "cat",
+            ["rat", "cats", "cat", "and", "sand", "dog"], "cat"
         )
         assert [] == s.word_parts(
-            ["rat", "cats", "cat", "and", "sand", "dog"],
-            "catsandog",
+            ["rat", "cats", "cat", "and", "sand", "dog"], "catsandog"
         )
         assert ["cats and dog", "cat sand dog"] == s.word_parts(
-            ["rat", "cats", "cat", "and", "sand", "dog"],
-            "catsanddog",
+            ["rat", "cats", "cat", "and", "sand", "dog"], "catsanddog"
         )
         assert ["rat cats and dog", "rat cat sand dog"] == s.word_parts(
-            ["rat", "cats", "cat", "and", "sand", "dog"],
-            "ratcatsanddog",
+            ["rat", "cats", "cat", "and", "sand", "dog"], "ratcatsanddog"
         )
 
     def test_k_alphabet_string_with_all_substrings(self):
@@ -357,3 +353,10 @@ class TestStrings(unittest.TestCase):
             "abaa",
             "baaa",
         ]
+
+    def test_scrambled(self):
+        """test_scrambled."""
+        assert s.scrambled("coder", "ocder")
+        assert s.scrambled("coerd", "coder")
+        assert s.scrambled("coerd", "ocder")
+        assert not s.scrambled("abcde", "caebd")
