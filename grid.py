@@ -3,10 +3,16 @@
 from __future__ import annotations
 
 import math
+from collections import deque
 from heapq import heappop, heappush
 from itertools import product
 
 import mathematics
+
+
+def parse(s: str) -> list:
+    """Parse a matrix from string `s`."""
+    return [list(map(int, l.split())) for l in s.splitlines() if l]
 
 
 def dijkstra(grid: list[list[int]]) -> int:
@@ -40,12 +46,12 @@ def a_star(grid: list[list[int]]) -> int:
     m = [[math.inf] * n for _ in grid]
     m[0][0] = d
     while q:
-        _, px, py = heappop(q)
-        d = m[px][py]
-        if px == g and py == g:
+        _, i, j = heappop(q)
+        d = m[i][j]
+        if i == g and j == g:
             return int(d)
         for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1)):
-            cx, cy = px + dx, py + dy
+            cx, cy = i + dx, j + dy
             if not (0 <= cx < n and 0 <= cy < n):
                 continue
             dc = d + grid[cx][cy]
@@ -239,3 +245,97 @@ def grid_exit(g: list[list[int]]) -> tuple[int, int]:
         p += d
         y, x = ir(p)
     return ir(p - d)
+
+
+def shortest_path_with_walls_heap(g: list, k: int) -> int:
+    """Return the length of the shortest path punching through at most `k` walls.
+
+    Parameters
+    ----------
+    g : list
+        An NxM grid maze with passages marked as 0 and walls as 1.
+    k : int
+        Max number of walls to punch through.
+
+    Returns
+    -------
+    int
+        Length of a path through the `grid` maze.
+
+    """
+    # Surprisingly the heap version is faster than the `deque` version.
+    # It is also simpler, with regard to keeping the state.
+    # Here we store the path length in the visited array,
+    # with unvisited cells having an arbitrary high value: `m*n`.
+    # This is a basic Dijkstra's search, with added priority for
+    # count of walls that have been punched through.
+    n, m = len(g), len(g[0])
+    mn = m * n
+    v = [[mn] * m for _ in g]
+    q: list = [(0, g[0][0], 0, 0)]
+    while q:
+        ln, w, px, py = heappop(q)
+        if ln > v[px][py]:
+            # This happens if a new, better path was found below.
+            # This check speeds things up by 50%
+            continue
+        if px == n - 1 and py == m - 1:
+            # After checking for optimality, return the path length.
+            return ln
+        v[px][py] = ln
+        ln += 1
+        for x, y in ((px - 1, py), (px + 1, py), (px, py - 1), (px, py + 1)):
+            # Only replace the solution so far, if it is better and
+            # it did not go over the wall punch limit.
+            if 0 <= x < n and 0 <= y < m and v[x][y] > ln and w + g[x][y] <= k:
+                v[x][y] = ln
+                # States are sorted by path length and by the count of walls.
+                heappush(q, (ln, w + g[x][y], x, y))
+    return -1
+
+
+def shortest_path_with_walls_bfs(g: list, k: int) -> int:
+    """Return the length of the shortest path punching through at most `k` walls.
+
+    Parameters
+    ----------
+    g : list
+        An NxM grid maze with passages marked as 0 and walls as 1.
+    k : int
+        Max number of walls to punch through.
+
+    Returns
+    -------
+    int
+        Length of a path through the `grid` maze.
+
+    """
+    # Surprisingly the heap version is faster than this `deque` version.
+    # Here we store the corresponding search state in the visited array,
+    # with unvisited cells having an arbitrary high value: `(m*n, ...)`.
+    # This is a basic BFS search, with visited property, being decided
+    # by the path length so far and by the walls punched count.
+    n, m = len(g), len(g[0])
+    mn = m * n
+    v: list[list[tuple]] = [[(mn,)] * m for _ in g]
+    q: deque[tuple] = deque([(0, g[0][0], 0, 0)])
+    while q:
+        pv = ln, w, i, j = q.popleft()
+        if pv > v[i][j]:
+            # This happens, if the `pv` node was replaced below.
+            # The check speeds things up 3 times.
+            continue
+        if i == n - 1 and j == m - 1:
+            # Return `ln`, after checking that it is the best path above.
+            return ln
+        v[i][j] = pv
+        for x, y in ((i - 1, j), (i + 1, j), (i, j - 1), (i, j + 1)):
+            if 0 <= x < n and 0 <= y < m:
+                nv = (ln + 1, w + g[x][y], x, y)
+                # Override the node only if it was:
+                #   1.) Unvisited: `v[x][y] == (mn,)` or
+                #   2.) Costlier: length and walls count higher.
+                if v[x][y] > nv and nv[1] <= k:
+                    v[x][y] = nv
+                    q.append(nv)
+    return -1

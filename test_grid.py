@@ -1,15 +1,10 @@
 """Test module for the search."""
 
 import unittest
-from itertools import islice
+from typing import Callable
 
 import grid as g
-
-
-def parse(n: int, k: int, s: str) -> list:
-    """Parse a matrix `n x k` from string `s`."""
-    nums = map(int, s.split())
-    return [list(islice(nums, k)) for i in range(n)]
+from grid import parse
 
 
 class TestGrid(unittest.TestCase):
@@ -57,15 +52,13 @@ class TestGrid(unittest.TestCase):
         assert g.connect_islands([[1, 0], [1, 1]]) == 4
         assert g.connect_islands([[1, 1], [1, 1]]) == 4
 
-        mat = """\
+        m = parse("""\
         1 1 1 0 1 0
         1 0 1 0 0 0
         0 0 1 1 0 1
         1 1 0 0 0 0
         0 0 1 1 1 0
-        1 0 1 1 0 0"""
-
-        m = [list(map(int, l.split())) for l in mat.splitlines()]
+        1 0 1 1 0 0""")
 
         assert g.connect_islands(m) == 15
 
@@ -83,18 +76,16 @@ class TestGrid(unittest.TestCase):
     def test_sudoku(self):
         """Test `sudoku` puzzle solver."""
         grid = parse(
-            9,
-            9,
             """
-3 0 6 5 0 8 4 0 0
-5 2 0 0 0 0 0 0 0
-0 8 7 0 0 0 0 3 1
-0 0 3 0 1 0 0 8 0
-9 0 0 8 6 3 0 0 5
-0 5 0 0 9 0 6 0 0
-1 3 0 0 0 0 2 5 0
-0 0 0 0 0 0 0 7 4
-0 0 5 2 0 6 3 0 0""",
+            3 0 6 5 0 8 4 0 0
+            5 2 0 0 0 0 0 0 0
+            0 8 7 0 0 0 0 3 1
+            0 0 3 0 1 0 0 8 0
+            9 0 0 8 6 3 0 0 5
+            0 5 0 0 9 0 6 0 0
+            1 3 0 0 0 0 2 5 0
+            0 0 0 0 0 0 0 7 4
+            0 0 5 2 0 6 3 0 0""",
         )
         assert g.sudoku(grid)
         assert [
@@ -134,3 +125,94 @@ class TestGrid(unittest.TestCase):
         assert g.grid_exit([[0]]) == (0, 0)
         assert g.grid_exit([[0, 1, 0]]) == (0, 1)
         assert g.grid_exit([[0, 1, 0], [0, 1, 1], [0, 0, 0]]) == (1, 0)
+
+    def _test_shortest_path_with_walls(self, shortest_path: Callable) -> None:
+        """Test `shortest_path_with_walls`."""
+        gr = [
+            [0, 1, 1, 1, 1],
+            [0, 1, 0, 1, 0],
+            [0, 1, 0, 1, 0],
+            [0, 1, 0, 1, 0],
+            [1, 1, 1, 1, 0],
+        ]
+        assert shortest_path(gr, 2) == 8
+        gr = g.parse(
+            """\
+            0 0 1
+            1 0 0
+            0 0 0
+            0 0 0
+            1 1 0
+            0 0 0
+            0 0 0
+            0 1 0
+            0 0 0
+            0 0 1
+            0 0 0
+            0 0 0
+            1 0 0
+            0 0 0
+            0 0 0
+            0 0 0
+            0 0 1
+            1 0 0
+            0 0 0
+            0 0 0
+            0 0 0
+            0 0 0
+            0 0 0
+            0 0 0
+            1 0 0
+            0 0 1
+            0 0 0
+            0 0 0
+            0 0 1
+            0 1 0
+            1 0 0
+            0 0 0
+            0 0 0""",
+        )
+        assert shortest_path(gr, 4) == 34
+        gr = g.parse(
+            """
+            0 0 0 0 0 0 0 0 0 0 0 1 1 0 1 0 0
+            0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1
+            0 0 1 0 1 0 0 1 0 0 0 0 0 0 1 0 1
+            0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0 0 0 0 1 0 0 1 0 0
+            0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1
+            0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+            1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0
+            0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0
+            0 0 0 0 1 1 0 0 0 0 0 0 1 0 0 0 0
+            0 0 0 0 0 1 0 0 0 1 0 0 1 1 0 0 0
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+            0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0
+            0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+            0 0 1 0 0 0 0 0 1 1 0 0 0 1 1 1 0
+            0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+            0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0
+            0 0 0 0 0 0 0 1 0 0 0 1 0 1 1 1 0
+            0 0 0 0 0 0 0 0 0 0 1 0 0 1 0 0 0
+            0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+            0 0 1 0 1 1 0 0 0 0 0 0 0 0 0 0 0
+            0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0
+            1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+            0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0 0 0 0 1 1 1 0 0 0
+            0 0 0 1 0 0 1 0 0 1 0 0 0 0 0 0 0
+            0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1
+            0 1 1 0 0 1 0 1 0 0 1 1 0 0 0 0 0
+            0 0 0 0 0 0 0 0 1 0 0 1 1 0 0 0 0""",
+        )
+
+        assert shortest_path(gr, 0) == 45
+
+    def test_shortest_path_with_walls_heap(self):
+        """Test `shortest_path_with_walls (heap)."""
+        self._test_shortest_path_with_walls(g.shortest_path_with_walls_heap)
+
+    def test_shortest_path_with_walls_bfs(self):
+        """Test `shortest_path_with_walls (bfs)."""
+        self._test_shortest_path_with_walls(g.shortest_path_with_walls_bfs)
