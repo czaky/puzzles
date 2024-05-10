@@ -28,10 +28,11 @@ unfixable = []
 # ANN101 - missing type annotation for self
 # ANN401 - ANY prohibited
 # PGH003 - use specific violation code when ignoring
+# B023 - function definition does not bind loop variable
 ignore = [
         "E741", "E731", "ERA001", "EXE002",
         "PLR2004", "PLR0911", "PLR0912", "PLR0913",
-        "ANN101", "ANN401", "PGH003", "C901"]
+        "ANN101", "ANN401", "PGH003", "C901", "B023"]
 
 [tool.ruff.lint.per-file-ignores]
 "**/test_*" = ["S101", "ANN201"]
