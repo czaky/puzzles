@@ -7,7 +7,7 @@ from functools import lru_cache, reduce
 from itertools import accumulate, chain, islice, starmap
 from math import inf
 from operator import add, mul, neg
-from typing import Iterable, Iterator
+from typing import Any, Callable, Iterable, Iterator
 
 from search import lower_index, upper_index
 
@@ -227,9 +227,7 @@ def min_diff(a: list[int], k: int) -> int:
     """Smallest difference in a sublist of `a` of `k` elements."""
     a.sort()
     return reduce(
-        min,
-        (a[i + k - 1] - a[i] for i in range(len(a) + 1 - k)),
-        a[-1] - a[0],
+        min, (a[i + k - 1] - a[i] for i in range(len(a) + 1 - k)), a[-1] - a[0]
     )
 
 
@@ -912,3 +910,74 @@ def geek_roads(a: list[int], b: list[int]) -> int:
         l, r = lb + max(l + c, r + x), rb + max(r + c, l + x)
 
     return max(l, r)
+
+
+def next_element(p: Callable, a: list[int], default: Any = None) -> list:
+    """Return, for elements `e` in `a`, the next one `n` satisfying `p(n, e)`.
+
+    Example
+    -------
+
+    ar.next_element(op.gt, [6, 3, 4, 5], -1)
+        -> [-1, 4, 5, -1]
+
+    Parameters
+    ----------
+    p : Callable
+        Predicate taking two arguments.
+    a : list
+        A list of values.
+    default: Any
+        A value used instead of the next element value
+        if no subsequent element can satisfy `p`.
+
+    Returns
+    -------
+    list
+        A list of values indicating the next element satisiying `p`,
+        or `default` each time no such element can be found.
+
+    """
+    s = []
+    o = [default] * len(a)
+    for i, e in enumerate(a):
+        while s and p(e, a[s[-1]]):
+            o[s.pop()] = e
+        s.append(i)
+    return o
+
+
+def geeky_132_buildings(b: list[int]) -> bool:
+    """Return True if there are 3 building so that: `b[i1] < b[i3] < b[i2]`.
+
+    Finds 3 buildings with indexes `i1 < i2 < i3` such that the middle
+    one is larger that the other and the third one is larger than the first.
+
+    Parameters
+    ----------
+    b : list
+        List of buildings' sizes.
+
+    Returns
+    -------
+    bool
+        True if there are 3 buildings fitting the description.
+
+    """
+    # Let's declare the indexes of the solution to be: `x, y, z`
+    # The idea is to maintain the largest buildings' sizes, so far,
+    # on the stack in descending order. The last building's size
+    # on the stack is then considered to be `y` - the middle building.
+    # At the same time, we assign the largest size, smaller than `y`,
+    # popped from the stack to the variable `z`.
+    # While iterating in reverse the current element is considered as `x`,
+    # and becomes `y` by pushing it onto stack.
+    s = []  # `y` values in descending order
+    z = 0  # largest element smaller than y = s[-1]
+    for x in reversed(b):
+        if x < z:  # < y
+            return True
+        while s and x >= s[-1]:
+            z = s.pop()
+        s.append(x)  # becomes `y`
+    return False

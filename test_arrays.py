@@ -1,5 +1,6 @@
 """Test module for the array/list related puzzles."""
 
+import operator as op
 import unittest
 
 import arrays as ar
@@ -134,7 +135,6 @@ class TestUnsortedArray(unittest.TestCase):
         assert [2, 2, 2, 2] == ar.window_distinct_count([10, 3, 5, 6, 2], 2)
         assert [3, 4, 4, 3] == ar.window_distinct_count([1, 2, 1, 3, 4, 2, 3], 4)
 
-
     def test_pascal_triangle_row(self):
         """Test `test_pascal_triangle_row` function."""
         assert [1] == ar.pascal_triangle_row(1)
@@ -148,7 +148,6 @@ class TestUnsortedArray(unittest.TestCase):
         assert ar.min_diff([2, 30, 8, 11, 20, 1, 3], 4) == 7
         assert ar.min_diff([1, 7, 3], 2) == 2
 
-
     def test_max_equal_zero_and_one_length(self):
         """Test `max_equal_zero_and_one_length` function."""
         assert ar.max_equal_zero_and_one_length([1, 0, 1, 0, 1]) == 4
@@ -161,7 +160,6 @@ class TestUnsortedArray(unittest.TestCase):
         """Test `toys_with_budget` function."""
         assert ar.toys_with_budget([60, 5, 4, 3, 2, 20], 15) == 4
         assert ar.toys_with_budget([30, 20, 50], 100) == 3
-
 
     def test_merge_sorted(self):
         """Test `merge_sorted` function."""
@@ -213,7 +211,7 @@ class TestUnsortedArray(unittest.TestCase):
         assert [2, 4, 4, 2] == ar.next_smallest_palindrome_number([2, 3, 4, 5])
         assert [2, 3, 6, 3, 2] == ar.next_smallest_palindrome_number([2, 3, 5, 4, 5])
         assert [9, 4, 1, 8, 8, 0, 8, 8, 1, 4, 9] == ar.next_smallest_palindrome_number(
-            [9, 4, 1, 8, 7, 9, 7, 8, 3, 2, 2],
+            [9, 4, 1, 8, 7, 9, 7, 8, 3, 2, 2]
         )
 
     def test_aggressive_cows(self):
@@ -224,7 +222,7 @@ class TestUnsortedArray(unittest.TestCase):
     def test_smaller_on_right_counts(self):
         """Test `smaller_on_right_counts`."""
         assert [6, 1, 1, 1, 0, 1, 0] == ar.smaller_on_right_counts(
-            [12, 1, 2, 3, 0, 11, 4],
+            [12, 1, 2, 3, 0, 11, 4]
         )
         assert [0, 0, 0, 0] == ar.smaller_on_right_counts([1, 2, 3, 4])
         assert [0, 0, 0, 0, 0] == ar.smaller_on_right_counts([1, 2, 3, 4, 5])
@@ -256,7 +254,7 @@ class TestUnsortedArray(unittest.TestCase):
     def test_max_min_window(self):
         """Test `max_min_window`."""
         assert [70, 30, 20, 10, 10, 10, 10] == ar.max_min_window(
-            [10, 20, 30, 50, 10, 70, 30],
+            [10, 20, 30, 50, 10, 70, 30]
         )
 
     def test_candy(self):
@@ -347,8 +345,33 @@ class TestUnsortedArray(unittest.TestCase):
         assert ar.geek_roads([4, 5, 6, 7, 8, 8, 9], [1, 1, 8, 8, 8, 8, 8]) == 71
         assert (
             ar.geek_roads(
-                [1, 2, 3, 4, 5, 6, 6, 7],
-                [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 7],
+                [1, 2, 3, 4, 5, 6, 6, 7], [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 7]
             )
             == 49
         )
+
+    def test_next_element(self):
+        """Test `next_element`."""
+        assert ar.next_element(op.gt, [1, 3, 2, 4], -1) == [3, 4, 4, -1]
+        assert ar.next_element(op.gt, [1, 3, 4, 5], -1) == [3, 4, 5, -1]
+        assert ar.next_element(op.gt, [6, 3, 4, 5], -1) == [-1, 4, 5, -1]
+
+    def test_geeky_132_buildings(self):
+        """Test geeky_132_buildings."""
+        assert ar.geeky_132_buildings([2, 5, 4, 3, 1])
+        assert ar.geeky_132_buildings([2, 4, 1, 5, 3])
+        assert ar.geeky_132_buildings([13821, 30190, 3293, 20731])
+        assert ar.geeky_132_buildings([4, 17, 11, 5, 13, 2])
+        assert not ar.geeky_132_buildings([11, 11, 12, 9])
+        assert not ar.geeky_132_buildings([11, 11, 11])
+        assert not ar.geeky_132_buildings([11, 13, 11])
+        assert not ar.geeky_132_buildings([12, 13, 11])
+        assert not ar.geeky_132_buildings([14, 13, 11])
+        assert not ar.geeky_132_buildings([12, 13, 14])
+        assert ar.geeky_132_buildings([11, 13, 12])
+        assert ar.geeky_132_buildings([11, 13, 16, 12])
+        assert ar.geeky_132_buildings([11, 13, 10, 12])
+        assert ar.geeky_132_buildings([11, 16, 13, 12])
+        assert ar.geeky_132_buildings([11, 10, 13, 12])
+        assert ar.geeky_132_buildings([11, 10, 13, 16, 12])
+        assert ar.geeky_132_buildings([11, 16, 13, 10, 12])
