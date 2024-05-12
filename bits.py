@@ -2,6 +2,16 @@
 
 from __future__ import annotations
 
+from typing import Iterator
+
+
+def enum(x: int) -> Iterator[tuple[int, int]]:
+    """Enumerate bits in `x` yielding index and the bit value."""
+    while x:
+        lsb = x & -x
+        yield lsb.bit_length() - 1, lsb
+        x &= ~lsb
+
 
 class BitTrie:
     """A trie sorting integers with nodes splitting for each bit.
