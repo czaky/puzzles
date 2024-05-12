@@ -51,7 +51,7 @@ def tsp(cost: list[list[int]]) -> int:
         for i, b in bits.enum(unvisited):
             ih = h + cost[u][i]
             # Cut by the best solution found so far.
-            if ih <= mn:
+            if ih < mn:
                 s.append((ih, c + cost[u][i], unvisited & ~b, i))
 
     return mn
