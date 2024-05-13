@@ -2,20 +2,18 @@
 
 from __future__ import annotations
 
-import math
-
 import numpy as np
 
-LOG2_GOLDEN_RATIO = math.log((1.0 + 5.0**0.5) / 2.0, 2)
-LOG2_SQRT5 = math.log(5.0**0.5, 2)
+DD = np.longdouble
+
+LOG2_GOLDEN_RATIO = np.log2(1.0 + np.sqrt(5.0, dtype=DD), dtype=DD) - 1.0
+LOG2_SQRT5 = np.log2(5.0, dtype=DD) / 2.0
 
 
 def fib_by_rounding(n: int) -> int:
     """Fibonacci number: `(fib(n-1) + fib(n-2))`."""
-    if n == 0:
-        return 1
-    # Rounding formula. Works until n == 70.
-    return round(pow(2, LOG2_GOLDEN_RATIO * n - LOG2_SQRT5))
+    # Rounding formula. Works until n == 88 using (long double = 80bits).
+    return round(np.power(2, LOG2_GOLDEN_RATIO * n - LOG2_SQRT5, dtype=DD)) if n else 0
 
 
 def fib(n: int, m: int = 10**9 + 7) -> int:
