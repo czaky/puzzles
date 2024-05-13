@@ -12,15 +12,16 @@ LOG2_SQRT5 = np.log2(5.0, dtype=DD) / 2.0
 
 def fib_by_rounding(n: int) -> int:
     """Fibonacci number: `(fib(n-1) + fib(n-2))`."""
-    # Rounding formula. Works until n == 88 using (long double = 80bits).
+    # Rounding formula. Exact until n == 88 using (long double = 80bits).
+    # Approximate within: 10e-15 of the error/fin(n).
     return round(np.power(2, LOG2_GOLDEN_RATIO * n - LOG2_SQRT5, dtype=DD)) if n else 0
 
 
 def fib(n: int, m: int = 10**9 + 7) -> int:
     """Return fibonacci number: `(fib(n-1) + fib(n-2)) % m`."""  # noqa: D402
     # Runs in O(log N)
-    mat = np.array([[1, 1], [1, 0]], dtype=int)
-    res = np.array([1, 0], dtype=int)
+    mat = np.array([[1, 1], [1, 0]], dtype=object)
+    res = np.array([1, 0], dtype=object)
     n -= 2
     while n > 0:
         if n & 1:
