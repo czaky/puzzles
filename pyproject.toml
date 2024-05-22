@@ -1,6 +1,5 @@
 [tool.ruff]
-line-length = 88
-target-version = "py38"
+# line-length = 88
 unsafe-fixes = true
 exclude = ["builtins.pyi", "**/*.pyi"]
 
@@ -9,20 +8,13 @@ skip-magic-trailing-comma = true
 
 [tool.ruff.lint]
 select = ["ALL"]
-# select = ["E", "W", "N", "NPY", "PD",
-#     "PL", "F", "UP",  "I",
-#     "A", "B", "COM", "C4", "DTZ", "EM", "ISC", "ICN",
-#     "PIE", "T20", "PYI", "PT", "Q", "RSE", "RET", "SLF",
-#     "SLOT", "SIM", "TID", "TCH", "ARG", "PTH", "FIX", "TD",
-#     "ERA", "FLY", "PERF", "FURB", "RUF"]
 
 fixable = ["ALL"]
 unfixable = []
 
-# E741 - ambiguous variable name
 # E731 - lambda assignment
+# EXE002 - windows shares are all 777
 # ERA001 - commented-out code
-# EXE002 - no shebang
 # PLR2004 - magic value comparison
 # PLR0911 - too many return statements
 # PLR0912 - too many branches
@@ -30,42 +22,20 @@ unfixable = []
 # C901 - too complex
 # ANN101 - missing type annotation for self
 # ANN401 - ANY prohibited
-# PGH003 - use specific violation code when ignoring
 # B023 - function definition does not bind loop variable
 # COM812 - trailing comma missing
 ignore = [
-        "E741", "E731", "ERA001", "EXE002",
+        "E731", "EXE002", "ERA001",
         "PLR2004", "PLR0911", "PLR0912", "PLR0913",
         "ANN101", "ANN401", "PGH003", "C901", "B023", "COM812"]
 
 [tool.ruff.lint.per-file-ignores]
 "**/test_*" = ["S101", "ANN201"]
 
-[tool.mypy]
-disable_error_code = [
-        "has-type",
-        "misc",
-        "union-attr",
-        "var-annotated",
-        "annotation-unchecked",
-        "func-returns-value",
-        "operator",
-        "arg-type"
-]
-
-
 [tool.pylint."MESSAGES CONTROL"]
 
 # Disable the message, report, category or checker with the given id(s).
 disable="""
-        raw-checker-failed,
-        bad-inline-option,
-        locally-disabled,
-        file-ignored,
-        suppressed-message,
-        useless-suppression,
-        deprecated-pragma,
-        use-symbolic-message-instead,
         unnecessary-lambda-assignment,
         too-few-public-methods,
         too-many-public-methods,
