@@ -6,4 +6,8 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "charliermarsh.ruff",
     "notebook.formatOnSave.enabled": true,
+    "notebook.diff.ignoreMetadata": true,
+    "notebook.diff.ignoreOutputs": true,
+    "editor.language.brackets": [],
+    "gitlens.telemetry.enabled": false,
 }
