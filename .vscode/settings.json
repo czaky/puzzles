@@ -3,11 +3,20 @@
     "cSpell.autoFormatConfigFile": true,
     "autoDocstring.docstringFormat": "numpy",
     "editor.formatOnPaste": false,
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "charliermarsh.ruff",
-    "notebook.formatOnSave.enabled": true,
-    "notebook.diff.ignoreMetadata": true,
-    "notebook.diff.ignoreOutputs": true,
+    "editor.formatOnSave": false,
     "editor.language.brackets": [],
     "gitlens.telemetry.enabled": false,
+    "notebook.formatOnSave.enabled": true,
+    "notebook.codeActionsOnSave": {
+        "notebook.source.organizeImports": "explicit",
+        "notebook.source.fixAll": "explicit",
+    },
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit",
+            "source.fixAll": "explicit"
+        },
+    },
 }
