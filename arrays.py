@@ -37,9 +37,9 @@ def duplicates(a: list) -> list:
     return sorted((Counter(a) - Counter(set(a))).keys())
 
 
-def pairs_count(l: list, k: int) -> int:
-    """Return the number of pairs of elements from `l` with sum of `k`."""
-    c = Counter(l)
+def pairs_count(a: list, k: int) -> int:
+    """Return the number of pairs of elements from `a` with sum of `k`."""
+    c = Counter(a)
     return sum(c[a] * (c[k - a] - int(a + a == k)) for a in c) // 2
 
 
@@ -231,27 +231,6 @@ def min_diff(a: list[int], k: int) -> int:
     )
 
 
-def selection_sort(a: list[int]) -> None:
-    """Sort array `a` using selection sort."""
-    n = len(a)
-    for i in range(n - 1):
-        j = min(range(i, n), key=lambda j: a[j])
-        a[i], a[j] = a[j], a[i]
-
-
-def bubble_sort(a: list[int]) -> None:
-    """Sort array `a` using bubble sort."""
-    n = len(a)
-    for i in range(1, n):
-        swapped = False
-        for j in range(n - i):
-            if a[j] > a[j + 1]:
-                a[j], a[j + 1] = a[j + 1], a[j]
-                swapped = True
-        if not swapped:
-            break
-
-
 def max_equal_zero_and_one_length(a: list[int]) -> int:
     """Return the max length of a sublist containing equal number of 0 and 1."""
     d = {0: -1}
@@ -272,8 +251,8 @@ def toys_with_budget(a: list[int], b: int) -> int:
 
 def merge_sorted(a: list[int], b: list[int]) -> None:
     """Merge two sorted lists in place. `a` gets the lower elements."""
-    l = min(len(a), len(b))
-    a[: -l - 1 : -1], b[:l] = zip(*map(minmax, zip(reversed(a), b)))
+    n = min(len(a), len(b))
+    a[: -n - 1 : -1], b[:n] = zip(*map(minmax, zip(reversed(a), b)))
     a.sort()
     b.sort()
 
@@ -330,13 +309,13 @@ def median2(a: list[int], b: list[int]) -> float:
     n = len(a) + len(b)
     if n == 0:
         return 0
-    l, h = 0, len(a)
+    low, high = 0, len(a)
     p = (n + 1) // 2
-    if h == 0:
+    if high == 0:
         return b[p - 1] if n % 2 else (b[p - 1] + b[p]) / 2
 
-    while l <= h:
-        ma = (l + h) // 2
+    while low <= high:
+        ma = (low + high) // 2
         mb = p - ma
 
         la = a[ma - 1] if ma > 0 else -inf
@@ -349,9 +328,9 @@ def median2(a: list[int], b: list[int]) -> float:
             return y if n % 2 else (x + y) / 2
 
         if la > rb:
-            h = ma - 1
+            high = ma - 1
         else:
-            l = ma + 1
+            low = ma + 1
 
     return 0
 
@@ -539,20 +518,20 @@ def smaller_on_right_counts(arr: list) -> list:
     x = list(range(n))
     t = x[:]
 
-    def merge(l: int, m: int, h: int) -> None:
+    def merge(low: int, m: int, high: int) -> None:
         # k - number of sorted entries.
         # i - index into the first half.
         # j - index into the second half (m + 1).
-        k, i, j = l, l, m + 1
+        k, i, j = low, low, m + 1
         # Iterate through both halves.
-        while i <= m and j <= h:
+        while i <= m and j <= high:
             # The elements in both halves are sorted in reverse order.
             # IF element on the left is larger than on the right,
             if arr[t[i]] > arr[t[j]]:
                 # then remaining elements in the right half are smaller
                 # than `arr[t[i]]` as well and the number of unsorted elements
                 # is the number of remaining elements on the right.
-                o[t[i]] += h - j + 1
+                o[t[i]] += high - j + 1
                 # Keep track of sorted indexes.
                 x[k] = t[i]
                 i += 1
@@ -566,9 +545,9 @@ def smaller_on_right_counts(arr: list) -> list:
         # and all the elements on the right were sorted into `x`.
         # Otherwise, left was sorted into `x` and all the remaining
         # elements from the right are smaller than the rest.
-        x[k : h + 1] = t[i : m + 1] if i <= m else t[j : h + 1]
+        x[k : high + 1] = t[i : m + 1] if i <= m else t[j : high + 1]
         # Copy over this part into the temporary array.
-        t[l : h + 1] = x[l : h + 1]
+        t[low : high + 1] = x[low : high + 1]
 
     def split(i: int, j: int) -> None:
         if i < j:
@@ -588,21 +567,21 @@ def unsorted_pairs_count(a: list) -> int:
 
     t = a[:]
 
-    def merge(l: int, m: int, h: int) -> int:
+    def merge(low: int, m: int, high: int) -> int:
         o = 0
         # k - number of sorted entries.
         # i - index into the first half.
         # j - index into the second half (m + 1).
-        k, i, j = l, l, m + 1
+        k, i, j = low, low, m + 1
         # Iterate through both halves.
-        while i <= m and j <= h:
+        while i <= m and j <= high:
             # The elements in both halves are sorted in reverse order.
             # IF element on the left is larger than on the right,
             if t[i] > t[j]:
                 # then remaining elements in the right half are smaller
                 # than `arr[t[i]]` as well and the number of unsorted elements
                 # is the number of remaining elements on the right.
-                o += h - j + 1
+                o += high - j + 1
                 # Keep track of sorted indexes.
                 a[k] = t[i]
                 i += 1
@@ -616,9 +595,9 @@ def unsorted_pairs_count(a: list) -> int:
         # and all the elements on the right were sorted into `x`.
         # Otherwise, left was sorted into `x` and all the remaining
         # elements from the right are smaller than the rest.
-        a[k : h + 1] = t[i : m + 1] if i <= m else t[j : h + 1]
+        a[k : high + 1] = t[i : m + 1] if i <= m else t[j : high + 1]
         # Copy over this part into the temporary array.
-        t[l : h + 1] = a[l : h + 1]
+        t[low : high + 1] = a[low : high + 1]
         return o
 
     def split(i: int, j: int) -> int:
@@ -667,20 +646,20 @@ def max_min_window(a: list[int]) -> list[int]:
 
     n = len(a)
     # The left index of a smaller element is initialized with -1.
-    left = bracket([-1] * n, range(n))
+    left_indexes = bracket([-1] * n, range(n))
     # => [-1, 0, 1, 2, -1, 4, 4]
 
     # The right index is initialized with `n` (= 7).
-    right = bracket([n] * n, reversed(range(n)))
+    right_indexes = bracket([n] * n, reversed(range(n)))
     # => [7, 4, 4, 4, 7, 6, 7]
 
     wnd = [0] * n
-    for e, l, r in zip(a, left, right):
+    for e, left, right in zip(a, left_indexes, right_indexes):
         # Assign the element to the window size where it is the minimum.
         # It two elements share the same window size, take the maximum of both.
         # `(r - l - 2)` - size of the window with exclusive indexes `r` and `l`
         # minus one for the 0-based indexing.
-        wnd[r - l - 2] = max(wnd[r - l - 2], e)
+        wnd[right - left - 2] = max(wnd[right - left - 2], e)
     # => [70, 30, 20, 0, 0, 0, 10]
 
     for i in reversed(range(n - 1)):
@@ -893,7 +872,7 @@ def geek_roads(a: list[int], b: list[int]) -> int:
     assert len(lr) == len(rr)  # noqa: S101
 
     # Sum of the balls on the `a` (left) and `b` (right) roads.
-    l = r = 0
+    left = right = 0
     for (lb, v, lil), (rb, rv, ril) in zip(reversed(lr), reversed(rr)):
         # Assert that intersection values are aligned.
         assert v == rv  # noqa: S101
@@ -907,9 +886,9 @@ def geek_roads(a: list[int], b: list[int]) -> int:
         # Update the left and right path sums,
         # choosing the max for continuing on the same road
         # or crossing from the other one.
-        l, r = lb + max(l + c, r + x), rb + max(r + c, l + x)
+        left, right = lb + max(left + c, right + x), rb + max(right + c, left + x)
 
-    return max(l, r)
+    return max(left, right)
 
 
 def next_element(p: Callable, a: list[int], default: Any = None) -> list:
@@ -981,3 +960,13 @@ def geeky_132_buildings(b: list[int]) -> bool:
             z = s.pop()
         s.append(x)  # becomes `y`
     return False
+
+
+def k_smallest_element(a: list[int], k: int, default: int | None = None) -> int:
+    """Return `k` smallest element from `a`."""
+    # Binary search in `O(N * log E)`, where `E` is the span of numbers in a.
+
+    def less_or_equal(v: int) -> int:
+        return sum(e < v for e in a) <= k
+
+    return upper_index(less_or_equal, min(a), max(a), default)
