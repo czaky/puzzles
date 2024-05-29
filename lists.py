@@ -81,16 +81,16 @@ class ListNode(Sequence):
 Node = Optional[ListNode]
 
 
-def make(l: Iterable[Any], loop: int = -1) -> Node:
+def make(it: Iterable[Any], loop: int = -1) -> Node:
     """Make a linked list out of normal Python list `l`.
 
     If `loop` >= 0, add a loop at the end pointing to node `loop`.
     """
-    if not l:
+    if not it:
         return None
     n = h = ListNode(0)
     ln = None
-    for e in l:
+    for e in it:
         n.next = ListNode(e)
         n = n.next
         if loop == 0:
@@ -338,11 +338,11 @@ def subtract_lists(l1: Node, l2: Node) -> Node:
             h1, h2 = h1.next, h2.next
         return 0
 
-    def trim(l: Node) -> Node:
+    def trim(n: Node) -> Node:
         """Skip leading zeros."""
-        while l and l.data == 0:
-            l = l.next
-        return l
+        while n and n.data == 0:
+            n = n.next
+        return n
 
     # remove leading zeros
     l1, l2 = trim(l1), trim(l2)
