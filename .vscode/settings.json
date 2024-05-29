@@ -3,7 +3,7 @@
     "cSpell.autoFormatConfigFile": true,
     "autoDocstring.docstringFormat": "numpy",
     "editor.formatOnPaste": false,
-    "editor.formatOnSave": false,
+    "editor.formatOnSave": true,
     "editor.language.brackets": [],
     "gitlens.telemetry.enabled": false,
     "notebook.formatOnSave.enabled": true,
