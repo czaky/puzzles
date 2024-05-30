@@ -33,6 +33,12 @@ class TestSorting(unittest.TestCase):
         assert sort([2, 1, 2]) == [1, 2, 2]
         assert sort([2, 2, 1]) == [1, 2, 2]
 
+        assert sort([2, 3, 4, 5]) == [2, 3, 4, 5]
+        assert sort([7, 6, 5, 4]) == [4, 5, 6, 7]
+        assert sort([7, 7, 5, 3]) == [3, 5, 7, 7]
+        assert sort([8, 3, 4, 3]) == [3, 3, 4, 8]
+        assert sort([8, 3, 4, 4]) == [3, 4, 4, 8]
+
         assert sort([0, 1, 2, 3, 4, 5]) == [0, 1, 2, 3, 4, 5]
         assert sort([9, 8, 7, 6, 5, 4]) == [4, 5, 6, 7, 8, 9]
         assert sort([9, 8, 7, 7, 5, 3]) == [3, 5, 7, 7, 8, 9]
