@@ -30,7 +30,10 @@ ignore = [
         "ANN101", "ANN401", "PGH003", "C901", "B023", "COM812"]
 
 [tool.ruff.lint.per-file-ignores]
-"**/test_*" = ["S101", "ANN201"]
+# S101 - assert detected.
+# ANN201 - missing return type.
+# D102 - missing docstring for public method.
+"**/test_*" = ["S101", "ANN201", "D102"]
 
 [tool.pylint."MESSAGES CONTROL"]
 
