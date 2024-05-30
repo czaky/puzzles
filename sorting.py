@@ -58,8 +58,8 @@ def quick(a: list[int], start: int = 0, stop: int | None = None) -> None:
     def partition(i: int, j: int) -> None:
         # `i` and `j` are inclusive.
         # Divide the array a into two.
-        m = i + (i - j) // 2
-        # Sort a[i] <= a[m] <= a[j]
+        m = i + (j - i) // 2
+        # Sort a[i] <= a[m] <= a[j] and choose median.
         # a[m] - will be the 3-point median.
         if a[m] < a[i]:
             a[m], a[i] = a[i], a[m]
@@ -67,6 +67,7 @@ def quick(a: list[int], start: int = 0, stop: int | None = None) -> None:
             a[j], a[i] = a[i], a[j]
         if a[j] < a[m]:
             a[j], a[m] = a[m], a[j]
+        # Select median as pivot.
         p = a[m]
         while True:
             while a[i] < p:
@@ -76,13 +77,15 @@ def quick(a: list[int], start: int = 0, stop: int | None = None) -> None:
             if i >= j:
                 return j
             a[i], a[j] = a[j], a[i]
+            i += 1
+            j -= 1
 
     if stop is None:
         stop = len(a)
     if start < stop - 1:
-        pi = partition(start, stop - 1)
+        pi = partition(start, stop - 1) + 1
         quick(a, start, pi)
-        quick(a, pi + 1, stop)
+        quick(a, pi, stop)
 
 
 def quick_simple(a: list[int], start: int = 0, stop: int | None = None) -> None:
@@ -109,31 +112,7 @@ def quick_simple(a: list[int], start: int = 0, stop: int | None = None) -> None:
         quick_simple(a, start, pi)
         quick_simple(a, pi + 1, stop)
 
-
-def merge(a: list[int], start: int = 0, stop: int | None = None) -> None:
-    """Sort array `a` using top-down merge sort."""
-
-    def sort(a: list[int], start: int, stop: int, c: list[int]) -> None:
-        if start < stop - 1:
-            m = (start + stop) // 2
-            # Sort partitions.
-            sort(c, start, m, a)
-            sort(c, m, stop, a)
-            # Merge sorted partitions.
-            k, i, j = start, start, m
-            while i < m and j < stop:
-                if c[i] <= c[j]:
-                    a[k] = c[i]
-                    i += 1
-                else:
-                    a[k] = c[j]
-                    j += 1
-                k += 1
-            a[k:stop] = c[i:m] if i < m else c[j:stop]
-
-    sort(a, start, stop or len(a), a[:])
-
-def merge_bottom_up(a: list[int]) -> None:
+def merge(a: list[int]) -> None:
     """Sort array `a` using bottom-up merge sort."""
     n = len(a)
     w = 1
@@ -155,5 +134,29 @@ def merge_bottom_up(a: list[int]) -> None:
             b[k:stop] = c[i:m] if i < m else c[j:stop]
         b, c = c, b
         w *= 2
-    if b != a:
-        a[:] = b
+    if id(a) != id(c):
+        a[:] = c
+
+
+def merge_rec(a: list[int], start: int = 0, stop: int | None = None) -> None:
+    """Sort array `a` using top-down, recursive merge sort."""
+
+    def sort(a: list[int], start: int, stop: int, c: list[int]) -> None:
+        if start < stop - 1:
+            m = (start + stop) // 2
+            # Sort partitions.
+            sort(c, start, m, a)
+            sort(c, m, stop, a)
+            # Merge sorted partitions.
+            k, i, j = start, start, m
+            while i < m and j < stop:
+                if c[i] <= c[j]:
+                    a[k] = c[i]
+                    i += 1
+                else:
+                    a[k] = c[j]
+                    j += 1
+                k += 1
+            a[k:stop] = c[i:m] if i < m else c[j:stop]
+
+    sort(a, start, stop or len(a), a[:])
