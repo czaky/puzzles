@@ -242,13 +242,13 @@ class TestLinkedLists(unittest.TestCase):
 
     def test_nth(self):
         """Test `nth` function."""
-        l = ll.make([1, 2, 3, 4])
-        assert ll.nth(l, 0).data == 1
-        assert ll.nth(l, 3).data == 4
-        assert ll.nth(l, -1).data == 4
-        assert ll.nth(l, -4).data == 1
-        assert ll.nth(l, 4) is None
-        assert ll.nth(l, -5) is None
+        lst = ll.make([1, 2, 3, 4])
+        assert ll.nth(lst, 0).data == 1
+        assert ll.nth(lst, 3).data == 4
+        assert ll.nth(lst, -1).data == 4
+        assert ll.nth(lst, -4).data == 1
+        assert ll.nth(lst, 4) is None
+        assert ll.nth(lst, -5) is None
 
         e = ll.make([])
         assert ll.nth(e, 0) is None
@@ -307,8 +307,41 @@ class TestLinkedLists(unittest.TestCase):
                 ll.make(list(map(int, "12"))),
             ),
         )
-        l = ll.subtract_lists(
+        lst = ll.subtract_lists(
             ll.make(list(map(int, "020055383525634518999521060086463321841"))),
             ll.make(list(map(int, "10835173613544430215114275094755963004"))),
         )
-        assert "".join(map(str, l or [])) == "9220209912090088784406784991707358837"
+        assert "".join(map(str, lst or [])) == "9220209912090088784406784991707358837"
+
+    def test_reverse_groups(self):
+        assert not seq(ll.reverse_groups(ll.make([]), 0))
+        assert seq(ll.reverse_groups(ll.make(range(1)), 0)) == [0]
+        assert seq(ll.reverse_groups(ll.make(range(2)), 0)) == [0, 1]
+
+        assert not seq(ll.reverse_groups(ll.make([]), 1))
+        assert seq(ll.reverse_groups(ll.make(range(1)), 1)) == [0]
+        assert seq(ll.reverse_groups(ll.make(range(2)), 1)) == [0, 1]
+
+        assert not seq(ll.reverse_groups(ll.make([]), 2))
+        assert seq(ll.reverse_groups(ll.make(range(1)), 2)) == [0]
+        assert seq(ll.reverse_groups(ll.make(range(2)), 2)) == [1, 0]
+
+        assert seq(ll.reverse_groups(ll.make(range(3)), 2)) == [1, 0, 2]
+        assert seq(ll.reverse_groups(ll.make(range(4)), 2)) == [1, 0, 3, 2]
+        assert seq(ll.reverse_groups(ll.make(range(5)), 2)) == [1, 0, 3, 2, 4]
+
+        assert not seq(ll.reverse_groups(ll.make([]), 3))
+        assert seq(ll.reverse_groups(ll.make(range(1)), 3)) == [0]
+        assert seq(ll.reverse_groups(ll.make(range(2)), 3)) == [1, 0]
+
+        assert seq(ll.reverse_groups(ll.make(range(3)), 3)) == [2, 1, 0]
+        assert seq(ll.reverse_groups(ll.make(range(4)), 3)) == [2, 1, 0, 3]
+        assert seq(ll.reverse_groups(ll.make(range(5)), 3)) == [2, 1, 0, 4, 3]
+
+        assert seq(ll.reverse_groups(ll.make(range(6)), 3)) == [2, 1, 0, 5, 4, 3]
+        assert seq(ll.reverse_groups(ll.make(range(7)), 3)) == [2, 1, 0, 5, 4, 3, 6]
+        assert seq(ll.reverse_groups(ll.make(range(8)), 3)) == [2, 1, 0, 5, 4, 3, 7, 6]
+
+        assert seq(ll.reverse_groups(ll.make(range(6)), 4)) == [3, 2, 1, 0, 5, 4]
+        assert seq(ll.reverse_groups(ll.make(range(7)), 4)) == [3, 2, 1, 0, 6, 5, 4]
+        assert seq(ll.reverse_groups(ll.make(range(8)), 4)) == [3, 2, 1, 0, 7, 6, 5, 4]

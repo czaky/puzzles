@@ -73,6 +73,12 @@ class ListNode(Sequence):
             return result
         return None
 
+    def __str__(self) -> str:
+        """Return string representation of this node."""
+        if self.next:
+            return f"({self.data}, ...)"
+        return f"({self.data},)"
+
     def append(self, n: Node) -> None:
         """Append node `n` to this list."""
         self.next = n
@@ -255,6 +261,28 @@ def loop_length(head: Node) -> int:
         c += 1
         fast = fast.next
     return c
+
+def print_loop(head: Node) -> None:
+    """Print nodes in a loop."""
+    # detect loop
+    slow = head
+    fast = head
+    loop = False
+    print("[", end="")  # noqa: T201
+    while fast and fast.next:
+        print(slow.data, end=", ")  # noqa: T201
+        fast = fast.next.next
+        slow = slow.next
+        if fast == slow:
+            loop = True
+            break
+    if loop:
+        print(fast.data, end="*, ")  # noqa: T201
+        fast = fast.next
+        while fast != slow:
+            print(fast.data, end=", ")  # noqa: T201
+            fast = fast.next
+    print("]")  # noqa: T201
 
 
 def swap_pairs(h: Node) -> Node:
@@ -448,3 +476,36 @@ def rearrange_alphabet_list(h: Node) -> Node:
         v.next = ch
         return vh
     return ch
+
+def reverse_groups(n: Node, k: int) -> Node:
+    """Reverse the linked list starting at `n` in groups of `k` nodes.
+
+    Parameters
+    ----------
+    n : Node
+        Head node of the linked list.
+    k : int
+        Number of nodes to be reversed in each group.
+
+    Returns
+    -------
+    Node
+        The head node of the first reversed group.
+
+    """
+
+    def rev(n: Node) -> tuple[Node, Node]:
+        """Return: the head of the reversed group, next node after the group."""
+        prev = None
+        g = k
+        while n and g:
+            prev, n.next, n = n, prev, n.next
+            g -= 1
+        return prev, n
+
+    if n and k > 0:
+        h, n, prev = *rev(n), n
+        while n:
+            prev.next, n, prev = *rev(n), n
+        return h
+    return n
