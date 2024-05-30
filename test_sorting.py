@@ -16,7 +16,7 @@ class TestSorting(unittest.TestCase):
             algorithm(copy)
             return copy
 
-        assert sort([]) == []
+        assert not sort([])
         assert sort([1]) == [1]
         assert sort([1, 2]) == [1, 2]
         assert sort([2, 1]) == [1, 2]

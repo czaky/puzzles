@@ -35,6 +35,9 @@ ignore = [
 # D102 - missing docstring for public method.
 "**/test_*" = ["S101", "ANN201", "D102"]
 
+[tool.pylint.MASTER]
+load-plugins=["pylint_per_file_ignores"]
+
 [tool.pylint."MESSAGES CONTROL"]
 
 # Disable the message, report, category or checker with the given id(s).
@@ -47,7 +50,8 @@ disable="""
         too-many-locals,
         too-many-lines
         """
-
+# Requires RE expression for paths.
+per-file-ignores =[".*/test_.*$:missing-function-docstring"]
 
 [tool.pyright]
 "reportOptionalMemberAccess" = false
