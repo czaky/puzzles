@@ -53,7 +53,7 @@ def gnome(a: list[int]) -> None:
 
 
 def quick(a: list[int], start: int = 0, stop: int | None = None) -> None:
-    """Sort array `a` using quick sort on interval [start, stop."""
+    """Sort array `a` using quick sort on interval [start, stop)."""
 
     def partition(i: int, j: int) -> None:
         # `i` and `j` are inclusive.
