@@ -9,9 +9,9 @@
         "editor.formatOnSaveMode": "modifications"
     },
     "autoDocstring.docstringFormat": "numpy",
-    "cSpell.autoFormatConfigFile": true,
     "cSpell.enabled": true,
     "editor.formatOnPaste": false,
+    "editor.formatOnSave": true,
     "editor.formatOnSaveMode": "modifications",
     "editor.language.brackets": [],
     "gitlens.telemetry.enabled": false,
@@ -20,5 +20,5 @@
         "notebook.source.organizeImports": "explicit"
     },
     "notebook.formatOnSave.enabled": true,
-    "python.analysis.indexing": false,
+    "python.analysis.indexing": false
 }
