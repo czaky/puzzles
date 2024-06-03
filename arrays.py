@@ -9,7 +9,9 @@ from math import inf
 from operator import add, mul, neg
 from typing import Any, Callable, Iterable, Iterator
 
-from search import lower_index, upper_index
+import numpy as np
+
+from search import lower_bound, lower_index, upper_index
 
 
 def skip(it: Iterable, n: int = 1) -> Iterator:
@@ -970,3 +972,38 @@ def k_smallest_element(a: list[int], k: int, default: int | None = None) -> int:
         return sum(e < v for e in a) <= k
 
     return upper_index(less_or_equal, min(a), max(a), default)
+
+def find_smallest_max_diff_with_inserts(a: list[float], k: int) -> float:
+    """Return the smallest max diff between values in `a` using `k` additional ones.
+
+    Array `a` contains values sorted in ascending order.
+    By adding `k` values between values from `a` we can minimize the max
+    delta between subsequent values. Multiple new values can be inserted
+    between the values from `a`.
+
+    Parameters
+    ----------
+    a : list[float]
+        values in ascending order
+    k : int
+        number of additional values to insert
+
+    Returns
+    -------
+    float
+        Smallest max diff between two values from `a` (with addition of k new ones.)
+        The value is rounded to 2 decimal places.
+
+    """
+    # Use binary search to find the min width `w` that can be achieved
+    # with only `k` cuts.
+    #
+    # Deltas between values from `a`.
+    diffs = np.diff(np.array(a, dtype=float))
+    # Add extra `len(diffs)` existing values to `k` below.
+    k += len(diffs)
+    # True if all the deltas can be divided by `w` less than extra `k` times.
+    fits = lambda w: np.sum(np.ceil(diffs / w)) <= k
+    # Use lower bound search for the case where width `w` of the
+    # interval can still be achived with only `k` extra cuts.
+    return round(lower_bound(fits, 0.000001, max(diffs), e=0.000001), 2)
