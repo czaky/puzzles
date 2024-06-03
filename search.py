@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import math
+import sys
 from itertools import accumulate
 from typing import Any, Callable
 
@@ -107,7 +107,7 @@ def upper_bound(
         The max value which fulfills the predicate.
 
     """
-    e = e or max(math.ulp(low), math.ulp(high))
+    e = e or sys.float_info.epsilon
     while high - low > e:
         m = (low + high) / 2
         if predicate(m):
@@ -149,7 +149,7 @@ def lower_bound(
         The min value which fulfills the predicate.
 
     """
-    e = e or max(math.ulp(low), math.ulp(high))
+    e = e or sys.float_info.epsilon
     while high - low > e:
         m = (low + high) / 2
         if predicate(m):
