@@ -2,24 +2,25 @@
 
 from __future__ import annotations
 
+import math
 from itertools import accumulate
 from typing import Any, Callable
 
 
-def upper_index(predicate: Callable, l: int, h: int, result: Any = None) -> Any:
+def upper_index(predicate: Callable, low: int, high: int, result: Any = None) -> Any:
     """Return the max index of an element for which `predicate` is True.
 
-    Search starts between `l` and `h` markers.
-    If `predicate` is True, `l` goes up, otherwise `h` goes down.
+    Search starts between `low` and `high` markers.
+    If `predicate` is True, `low` goes up, otherwise `high` goes down.
     If `predicate` always returns False, default `result` value is returned.
 
     Parameters
     ----------
     predicate : Callable
         True for element being searched; takes index of the element.
-    l : int
+    low : int
         lowest index to start search from (inclusive).
-    h : int
+    high : int
         highest index to start search from (inclusive).
     result : Any, optional
         a value to return by default if no element was found.
@@ -30,30 +31,30 @@ def upper_index(predicate: Callable, l: int, h: int, result: Any = None) -> Any:
         The max index of an element which fulfills the predicate.
 
     """
-    while l <= h:
-        m = (l + h) // 2
+    while low <= high:
+        m = low + (high - low) // 2
         if predicate(m):
             result = m
-            l = m + 1
+            low = m + 1
         else:
-            h = m - 1
+            high = m - 1
     return result
 
 
-def lower_index(predicate: Callable, l: int, h: int, result: Any = None) -> Any:
+def lower_index(predicate: Callable, low: int, high: int, result: Any = None) -> Any:
     """Return the min index of an element for which `predicate` is True.
 
-    Search starts between `l` and `h` markers.
-    If `predicate` is True, `h` goes down, otherwise `l` goes up.
+    Search starts between `low` and `high` markers.
+    If `predicate` is True, `high` goes down, otherwise `low` goes up.
     If `predicate` always returns False, default `result` value is returned.
 
     Parameters
     ----------
     predicate : Callable
         True for element being searched; takes index of the element.
-    l : int
+    low : int
         lowest index to start search from (inclusive).
-    h : int
+    high : int
         highest index to start search from (inclusive).
     result : Any, optional
         a value to return by default if no element was found.
@@ -64,13 +65,97 @@ def lower_index(predicate: Callable, l: int, h: int, result: Any = None) -> Any:
         The max index of an element which fulfills the predicate.
 
     """
-    while l <= h:
-        m = (l + h) // 2
+    while low <= high:
+        m = low + (high - low) // 2
         if predicate(m):
             result = m
-            h = m - 1
+            high = m - 1
         else:
-            l = m + 1
+            low = m + 1
+    return result
+
+
+def upper_bound(
+    predicate: Callable,
+    low: float,
+    high: float,
+    result: Any = None,
+    e: float | None = None,
+) -> Any:
+    """Return the max value between `[low, high]` for which `predicate` is True.
+
+    Search starts between `low` and `high` markers.
+    If `predicate` is True, `low` goes up, otherwise `high` goes down.
+    If `predicate` always returns False, default `result` value is returned.
+
+    Parameters
+    ----------
+    predicate : Callable
+        True for element being searched; takes value between `[low, high]`.
+    low : float
+        lowest value to start search from (inclusive).
+    high : float
+        highest value to start search from (inclusive).
+    result : Any, optional
+        a value to return by default if no element was found.
+    e: float | None
+        epsilon value used in the search.
+
+    Returns
+    -------
+    Any
+        The max value which fulfills the predicate.
+
+    """
+    e = e or max(math.ulp(low), math.ulp(high))
+    while high - low > e:
+        m = (low + high) / 2
+        if predicate(m):
+            low = result = m
+        else:
+            high = m - e
+    return result
+
+
+def lower_bound(
+    predicate: Callable,
+    low: float,
+    high: float,
+    result: Any = None,
+    e: float | None = None,
+) -> Any:
+    """Return the min value between `[low, high]` for which `predicate` is True.
+
+    Search starts between `low` and `high` markers.
+    If `predicate` is True, `high` goes dow, otherwise `low` goes up.
+    If `predicate` always returns False, default `result` value is returned.
+
+    Parameters
+    ----------
+    predicate : Callable
+        True for element being searched; takes value between `[low, high]`.
+    low : float
+        lowest value to start search from (inclusive).
+    high : float
+        highest value to start search from (inclusive).
+    result : Any, optional
+        a value to return by default if no element was found.
+    e: float | None
+        epsilon value used in the search.
+
+    Returns
+    -------
+    Any
+        The min value which fulfills the predicate.
+
+    """
+    e = e or max(math.ulp(low), math.ulp(high))
+    while high - low > e:
+        m = (low + high) / 2
+        if predicate(m):
+            high = result = m
+        else:
+            low = m + e
     return result
 
 
