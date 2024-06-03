@@ -113,3 +113,47 @@ def powerset(iterable: Iterable) -> Iterator:
     for size in range(len(s)):
         yield from map(set, combinations(s, size))
     yield s
+
+
+def merge_email_accounts(accounts: list[list[str]]) -> list[list[str]]:
+    """Merge email accounts using email addresses.
+
+    The `accounts` is a list of accounts of this format:
+    ```
+       ["<name>", "<email_0>", "<email_1>", "<email_2>"]
+    ```
+
+    Accounts are merged if they share at least one email.
+    Merged accounts contain the union of email addresses.
+
+    Parameters
+    ----------
+    accounts : list[str]
+        A list of accounts containing name and email addresses.
+
+    Returns
+    -------
+    list[str]
+        A list of merged accounts with sorted email list.
+
+    """
+    n = len(accounts)
+    parents = list(range(n))
+
+    def parent(n: int) -> int:
+        """Find the parent of n. Compress the path."""
+        while n != parents[n]:
+            # Compress the set by halving.
+            n, parents[n] = parents[n], parents[parents[n]]
+        return n
+
+    emails = {}
+    for i, a in enumerate(accounts):
+        for e in a[1:]:
+            parents[i] = i = parent(emails.setdefault(e, i))  # noqa: PLW2901
+
+    merged = [[] for _ in range(n)]
+    for e, i in emails.items():
+        merged[parent(i)].append(e)
+    any(map(list.sort, merged))
+    return sorted([accounts[i][0], *m] for i, m in enumerate(merged) if m)
