@@ -29,6 +29,12 @@ class TestMatrixPuzzles(unittest.TestCase):
         assert m.optimum_multiplications([2, 40, 2, 40, 5]) == 580
         assert m.optimum_multiplications([40, 20, 30, 10, 30]) == 26000
 
+    def test_balloon_coin_popping(self):
+        assert m.balloon_coin_popping([]) == 0
+        assert m.balloon_coin_popping([5]) == 5
+        assert m.balloon_coin_popping([5, 10]) == 60
+        assert m.balloon_coin_popping([3, 1, 5, 8]) == 167
+
     def test_optimum_brackets(self):
         """Test `optimum_brackets`."""
         assert m.optimum_brackets([3, 3]) == "A"
