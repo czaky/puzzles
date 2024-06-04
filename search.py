@@ -333,3 +333,54 @@ def four_partitions_min_sum_difference(a: list[int]) -> int:
     csum = [0, *accumulate(a)]
     parts = lambda j: (*partition_by_sum(csum, 0, j), *partition_by_sum(csum, j, n))
     return min(max(xyzw) - min(xyzw) for xyzw in map(parts, range(2, n - 1)))
+
+def water_distribution(a: list[int], b: list[int], d: list[int]) -> list[tuple]:
+    """Return a summary of pipes going through houses and their min diameter.
+
+    Lists `a` to `b` describe the connectivity,
+    while list `d` describes the pipe diameter between $a_i$ to $b_i$.
+
+    Parameters
+    ----------
+    a : list
+        List with indexes of the starting house for each pipe.
+    b : list
+        List with indexes of the ending house for each pipe.
+    d : list
+        List with the diameter of the pipe between $a_i$ and $b_i$.
+
+    Returns
+    -------
+    list
+        A list of triples for each connected sequence of pipes with the info:
+          * starting house index
+          * ending house index
+          * minimum diameter of pipes between the start and end.
+
+    """
+    # This is a rather simple as there is only one pipe starting, going through,
+    # or ending at a specific house, thus there is no branching involved.
+    # The idea is to determine the starting index, with no upstream connection,
+    # and following the adjacency map to the end. At the same time the diameter
+    # for each sequence is minimized.
+
+    # Build adjacency maps and record diameter of outgoing pipes.
+    n = max(*a, *b)
+    adj = [0] * (n + 1)
+    dia = adj[:]
+    for x, y, z in zip(a, b, d):
+        adj[x] = y
+        dia[y] = z
+
+    pipes = []
+    # Find the starting point ...
+    for x, y in enumerate(adj):
+        if y == 0 or dia[x] != 0:
+            continue
+        s, e = x, y
+        md = dia[e]
+        while adj[e]:
+            e = adj[e]
+            md = min(md, dia[e])
+        pipes.append((s, e, md))
+    return pipes

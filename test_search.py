@@ -102,3 +102,13 @@ class TestSearch(unittest.TestCase):
         assert s.four_partitions_min_sum_difference([1, 2, 3, 3, 4]) == 1
         ar = [16, 8, 11, 2, 12, 4, 11, 16, 15, 2, 5, 18, 7, 17]
         assert s.four_partitions_min_sum_difference(ar) == 13
+
+    def test_water_distribution(self):
+        assert s.water_distribution(
+            [6, 4, 14, 17, 3, 15, 16, 5, 7, 11, 12],
+            [5, 7, 16, 12, 2, 13, 6, 17, 1, 4, 8],
+            [2, 2, 2, 4, 8, 2, 8, 8, 9, 9, 2],
+        ) == [(3, 2, 8), (11, 1, 2), (14, 8, 2), (15, 13, 2)]
+        assert s.water_distribution(
+            [7, 5, 4, 2, 9, 3], [4, 9, 6, 8, 7, 1], [98, 72, 10, 22, 17, 66]
+        ) == [(2, 8, 22), (3, 1, 66), (5, 6, 10)]
