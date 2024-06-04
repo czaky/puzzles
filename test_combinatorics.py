@@ -22,3 +22,14 @@ class TestMatrixPuzzles(unittest.TestCase):
     def test_generic_fib(self):
         """Test `generic_fib."""
         assert c.generic_fib(3, 3, 3, 3, 5) == 4
+
+    def test_sum_of_456_numbers(self):
+        assert c.sum_of_456_numbers(1, 0, 0) == 4
+        assert c.sum_of_456_numbers(0, 1, 0) == 5
+        assert c.sum_of_456_numbers(0, 0, 1) == 6
+        assert c.sum_of_456_numbers(1, 1, 0) == 108
+        assert c.sum_of_456_numbers(1, 0, 1) == 120
+        assert c.sum_of_456_numbers(0, 1, 1) == 132
+        assert c.sum_of_456_numbers(1, 1, 1) == 3675
+        assert c.sum_of_456_numbers(3, 2, 1) == 34431574
+        assert c.sum_of_456_numbers(1, 2, 3) == 39345806
