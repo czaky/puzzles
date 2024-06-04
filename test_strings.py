@@ -360,3 +360,11 @@ class TestStrings(unittest.TestCase):
         assert s.scrambled("coerd", "coder")
         assert s.scrambled("coerd", "ocder")
         assert not s.scrambled("abcde", "caebd")
+
+    def test_palindrome_pairs(self):
+        assert not s.palindrome_pairs(["l"])
+        assert s.palindrome_pairs(["abc", "xyxcba", "leekst", "or", "bc"])
+        assert not s.palindrome_pairs(["abc", "bc"])
+        assert s.palindrome_pairs(["abc", "ba"])
+        assert s.palindrome_pairs(["abc", "cba"])
+        assert s.palindrome_pairs(["leekf", "leeks", "or", "keel", "abc", "bc"])
