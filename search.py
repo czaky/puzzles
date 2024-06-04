@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sys
+from heapq import heappop, heappush
 from itertools import accumulate
 from typing import Any, Callable
 
@@ -384,3 +385,62 @@ def water_distribution(a: list[int], b: list[int], d: list[int]) -> list[tuple]:
             md = min(md, dia[e])
         pipes.append((s, e, md))
     return pipes
+
+
+def shortest_path_with_special_edge(edges: list, a: int, b: int) -> int:
+    """Return the shortest path distance from `a` to `b` using `edges`.
+
+    `edges` contains a list of edge specifications: `(n1, n2, w1, w2)`, where
+    `n1` and `n2` are the numeric nodes and `w1` and `w2` are weights of the
+    normal edge and a special ("curved") edge.
+
+    The search can only return path distances using at most one of the
+    special edges. The edges are considered unidirectional.
+
+    Parameters
+    ----------
+    edges : list
+        list of elements of the type `(n1, n2, w1, w2)`.
+    a : int
+        start node index
+    b : int
+        final node index
+
+    Returns
+    -------
+    int
+        minimum path distance using at most one special edge.
+
+    """
+    # Determine the size of the adjacency map.
+    n = max(max(e[0], e[1]) for e in edges) + 1
+    # Build up the adjacency map.
+    adj = [[] for _ in range(n)]
+    for e in edges:
+        adj[e[0]].append(e[1:])
+        adj[e[1]].append((e[0], e[2], e[3]))
+    # Initialize the minimum visited distance.
+    mx = sum(e[2] for e in edges) + 1
+    v = [[mx, mx] for _ in range(n)]
+    # Priority heap queue: distance, number of special edges, node
+    q = [(0, 0, a)]
+    while q:
+        # Distance, number of special edges, destination node.
+        d, s, n = heappop(q)
+        # Cut if shorter value found.
+        if v[n][s] <= d:
+            continue
+        # This will be the min distance to b.
+        if n == b:
+            return d
+        # Update minimum visited distance.
+        v[n][s] = v[n][1] = d
+        for c, e1, e2 in adj[n]:
+            # Cut, if there exists a better path.
+            if v[c][s] > d + e1:
+                heappush(q, (d + e1, s, c))
+                # In case we did not use the curved edge yet,
+                # and it is shorter than the straight one.
+                if s == 0 and e2 < e1 and v[c][1] > d + e2:
+                    heappush(q, (d + e2, 1, c))
+    return -1

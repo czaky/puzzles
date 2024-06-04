@@ -112,3 +112,33 @@ class TestSearch(unittest.TestCase):
         assert s.water_distribution(
             [7, 5, 4, 2, 9, 3], [4, 9, 6, 8, 7, 1], [98, 72, 10, 22, 17, 66]
         ) == [(2, 8, 22), (3, 1, 66), (5, 6, 10)]
+
+    def test_shortest_path_with_special_edge(self):
+        assert s.shortest_path_with_special_edge([[1, 2, 4, 1]], 1, 2) == 1
+        assert s.shortest_path_with_special_edge([[1, 2, 1, 4]], 1, 2) == 1
+        assert s.shortest_path_with_special_edge([[1, 2, 4, 1]], 2, 1) == 1
+        assert s.shortest_path_with_special_edge([[1, 2, 1, 4]], 2, 1) == 1
+        assert (
+            s.shortest_path_with_special_edge([[1, 2, 4, 1], [2, 3, 2, 1]], 1, 3) == 3
+        )
+        assert (
+            s.shortest_path_with_special_edge([[1, 2, 2, 1], [2, 3, 4, 1]], 1, 3) == 3
+        )
+        assert (
+            s.shortest_path_with_special_edge([[1, 2, 4, 1], [2, 3, 2, 1]], 3, 1) == 3
+        )
+        assert (
+            s.shortest_path_with_special_edge([[1, 2, 2, 1], [2, 3, 4, 1]], 3, 1) == 3
+        )
+        assert (
+            s.shortest_path_with_special_edge(
+                [[1, 2, 1, 4], [1, 3, 2, 4], [1, 4, 3, 1], [2, 4, 6, 5]], 2, 4
+            )
+            == 2
+        )
+        assert (
+            s.shortest_path_with_special_edge(
+                [[1, 2, 1, 4], [1, 3, 2, 4], [1, 4, 3, 1], [2, 4, 6, 5]], 4, 2
+            )
+            == 2
+        )
