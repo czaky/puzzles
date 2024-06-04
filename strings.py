@@ -765,7 +765,7 @@ def palindrome_pairs(a: list) -> bool:
     # the (true) prefixes and suffixes of those words.
     # While iterating over prefixes and suffixes, if a part of the word
     # is found reversed in the set of other words, then the other part
-    # needs to be a palindrome for the whole to  be a solution.
+    # needs to be a palindrome for the whole to be a solution.
     #
     # There is also a (different) solution to this problem based on a trie,
     # which basically replaces the `set` below with a trie with
