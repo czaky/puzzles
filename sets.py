@@ -191,34 +191,25 @@ def crazy_chemist_mix(mixes: list, explosive: list) -> list:
             x, parents[x] = parents[x], parents[parents[x]]
         return x
 
-    def minmax(a: int, b: int) -> tuple[int, int]:
-        return (a, b) if a <= b else (b, a)
-
-    explosive = {minmax(x, y) for x, y in explosive if x != y}
-    nmix = set()
+    emap = [set() for _ in range(n)]
+    for x, y in explosive:
+        emap[x].add(y)
+        emap[y].add(x)
     safety = []
     for a, b in mixes:
-        a, b = minmax(parent(a), parent(b))  # noqa: PLW2901
+        a, b = parent(a), parent(b)  # noqa: PLW2901
         if a == b:
             safety.append(1)
             continue
-        if (a, b) in nmix:
+        if a in emap[b] or b in emap[a]:
+            # mixing a and b would produce an explosive mix
             safety.append(0)
             continue
-        for x, y in explosive:
-            if x == a and y == b:
-                # mixing a and b would produce an explosive mix
-                safety.append(0)
-                nmix.add((a, b))
-                break
-        else:
-            if size[a] >= size[b]:
-                parents[b] = a
-                size[a] += size[b]
-            else:
-                parents[a] = b
-                size[b] += size[a]
-
-            explosive = {minmax(parent(x), parent(y)) for x, y in explosive}
-            safety.append(1)
+        safety.append(1)
+        if size[a] < size[b]:
+            a, b = b, a  # noqa: PLW2901
+        parents[b] = a
+        size[a] += size[b]
+        if emap[a] or emap[b]:
+            emap[a] = emap[b] = set(map(parent, chain(emap[a], emap[b])))
     return safety
