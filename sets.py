@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from itertools import combinations
+from itertools import chain, combinations
 from operator import itemgetter
 from typing import Iterable, Iterator, Sequence
 
@@ -157,3 +157,59 @@ def merge_email_accounts(accounts: list[list[str]]) -> list[list[str]]:
         merged[parent(i)].append(e)
     any(map(list.sort, merged))
     return sorted([accounts[i][0], *m] for i, m in enumerate(merged) if m)
+
+def crazy_chemist_mix(mixes: list, explosive: list) -> list[int]:
+    """Mix compounds from the `mixes` list. Avoid mixing `explosive` combinations.
+
+    Mixed ingredients build a joint set. Adding an ingredient to another,
+    adds it to the mix that the ingredient is already in. Ultimately,
+    this is a disjoint set problem resulting in sets that don't combine
+    any ingredients from the `explosive` list.
+
+    Parameters
+    ----------
+    mixes : list
+        pairs of ingredients to mix
+    explosive : list
+        pairs of ingredients to avoid
+
+    Returns
+    -------
+    list
+        a list of 0s and 1s, indicating when it is safe to mix ingredients
+        for each entry in the `mixes` list.
+
+    """
+    n = max(map(max, chain(mixes, explosive))) + 1
+    parents = list(range(n))
+    # Using union based on size or rank makes this 50% faster.
+    size = [1] * n
+
+    def parent(x: int) -> int:
+        """Find the parent of `x`. Compress the path."""
+        while x != parents[x]:
+            # Compress the set by halving.
+            x, parents[x] = parents[x], parents[parents[x]]
+        return x
+
+    safety = []
+    for a, b in mixes:
+        a, b = parent(a), parent(b)  # noqa: PLW2901
+        if a == b:
+            safety.append(1)
+            continue
+        for x, y in explosive:
+            x, y = parent(x), parent(y)  # noqa: PLW2901
+            if (x == a and y == b) or (x == b and y == a):
+                # mixing a and b would produce an explosive mix
+                safety.append(0)
+                break
+        else:
+            if size[a] >= size[b]:
+                parents[b] = a
+                size[a] += size[b]
+            else:
+                parents[a] = b
+                size[b] += size[a]
+            safety.append(1)
+    return safety

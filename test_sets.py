@@ -55,3 +55,13 @@ class TestSets(unittest.TestCase):
             ["Hanzo", "Hanzo0@m.co", "Hanzo1@m.co", "Hanzo3@m.co"],
             ["Kevin", "Kevin0@m.co", "Kevin3@m.co", "Kevin5@m.co"],
         ]
+
+    def test_crazy_chemist_mix(self):
+        assert s.crazy_chemist_mix([[1, 2], [2, 3], [1, 3]], [[1, 2], [1, 3]]) == [
+            0,
+            1,
+            0,
+        ]
+        assert s.crazy_chemist_mix(
+            [[1, 2], [2, 3], [4, 5], [3, 5], [2, 4]], [[1, 3], [4, 2]]
+        ) == [1, 0, 1, 1, 0]
