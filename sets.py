@@ -158,7 +158,7 @@ def merge_email_accounts(accounts: list[list[str]]) -> list[list[str]]:
     any(map(list.sort, merged))
     return sorted([accounts[i][0], *m] for i, m in enumerate(merged) if m)
 
-def crazy_chemist_mix(mixes: list, explosive: list) -> list[int]:
+def crazy_chemist_mix(mixes: list, explosive: list) -> list:
     """Mix compounds from the `mixes` list. Avoid mixing `explosive` combinations.
 
     Mixed ingredients build a joint set. Adding an ingredient to another,
@@ -180,9 +180,8 @@ def crazy_chemist_mix(mixes: list, explosive: list) -> list[int]:
         for each entry in the `mixes` list.
 
     """
-    n = max(map(max, chain(mixes, explosive))) + 1
+    n = max(max(a, b) for a, b in chain(mixes, explosive)) + 1
     parents = list(range(n))
-    # Using union based on size or rank makes this 50% faster.
     size = [1] * n
 
     def parent(x: int) -> int:
@@ -192,17 +191,25 @@ def crazy_chemist_mix(mixes: list, explosive: list) -> list[int]:
             x, parents[x] = parents[x], parents[parents[x]]
         return x
 
+    def minmax(a: int, b: int) -> tuple[int, int]:
+        return (a, b) if a <= b else (b, a)
+
+    explosive = {minmax(x, y) for x, y in explosive if x != y}
+    nmix = set()
     safety = []
     for a, b in mixes:
-        a, b = parent(a), parent(b)  # noqa: PLW2901
+        a, b = minmax(parent(a), parent(b))  # noqa: PLW2901
         if a == b:
             safety.append(1)
             continue
+        if (a, b) in nmix:
+            safety.append(0)
+            continue
         for x, y in explosive:
-            x, y = parent(x), parent(y)  # noqa: PLW2901
-            if (x == a and y == b) or (x == b and y == a):
+            if x == a and y == b:
                 # mixing a and b would produce an explosive mix
                 safety.append(0)
+                nmix.add((a, b))
                 break
         else:
             if size[a] >= size[b]:
@@ -211,5 +218,7 @@ def crazy_chemist_mix(mixes: list, explosive: list) -> list[int]:
             else:
                 parents[a] = b
                 size[b] += size[a]
+
+            explosive = {minmax(parent(x), parent(y)) for x, y in explosive}
             safety.append(1)
     return safety
