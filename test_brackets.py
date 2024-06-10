@@ -15,3 +15,7 @@ class TestBrackets(unittest.TestCase):
         assert not b.balanced("{}[]()[")
         assert not b.balanced("){}[]()")
         assert not b.balanced("{)[]()")
+
+    def test_longest_balanced_parenthesis_substring(self):
+        assert b.longest_balanced_parenthesis_substring("(()(") == 2
+        assert b.longest_balanced_parenthesis_substring("()(())(") == 6
