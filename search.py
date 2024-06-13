@@ -8,8 +8,8 @@ from itertools import accumulate
 from typing import Any, Callable
 
 
-def upper_index(predicate: Callable, low: int, high: int, result: Any = None) -> Any:
-    """Return the max index of an element for which `predicate` is True.
+def upper_int(predicate: Callable, low: int, high: int, result: Any = None) -> Any:
+    """Find the max int from between `low` and `high` for which `predicate` is True.
 
     Search starts between `low` and `high` markers.
     If `predicate` is True, `low` goes up, otherwise `high` goes down.
@@ -42,8 +42,8 @@ def upper_index(predicate: Callable, low: int, high: int, result: Any = None) ->
     return result
 
 
-def lower_index(predicate: Callable, low: int, high: int, result: Any = None) -> Any:
-    """Return the min index of an element for which `predicate` is True.
+def lower_int(predicate: Callable, low: int, high: int, result: Any = None) -> Any:
+    """Find the min int from between `low` and `high` for which `predicate` is True.
 
     Search starts between `low` and `high` markers.
     If `predicate` is True, `high` goes down, otherwise `low` goes up.
@@ -201,12 +201,12 @@ def geek_cake_distribution(chunks: list[int], k: int) -> int:
                 ss = 0
         return sc
 
-    return upper_index(lambda m: k <= slices(m), min(chunks), sum(chunks), 0)
+    return upper_int(lambda m: k <= slices(m), min(chunks), sum(chunks), 0)
 
 
 def find_rotation(a: list[int]) -> int:
     """Find the rotation index in O(log N) of a sorted, then rotated list `a`."""
-    return upper_index(lambda m: a[m] > a[-1], 0, len(a) - 1, -1) + 1
+    return upper_int(lambda m: a[m] > a[-1], 0, len(a) - 1, -1) + 1
 
 
 def rotated_minimum(a: list) -> int:
@@ -217,23 +217,23 @@ def rotated_minimum(a: list) -> int:
 def bitonic_point(a: list[int]) -> int:
     """Maximum of strictly increasing array then maybe strictly decreasing."""
     # Runs in O(log N)
-    return a[upper_index(lambda m: a[m - 1] <= a[m], 1, len(a) - 1, len(a) - 1)]
+    return a[upper_int(lambda m: a[m - 1] <= a[m], 1, len(a) - 1, len(a) - 1)]
 
 
 def transition_point(a: list) -> int:
     """Transition index in sorted list `a` of '0's and '1's."""
-    return upper_index(lambda m: a[m] != 1, 0, len(a) - 1, -1)
+    return upper_int(lambda m: a[m] != 1, 0, len(a) - 1, -1)
 
 
 def floor_element(a: list[int], x: int) -> int:
     """Return the largest element smaller or equal to `x` from sorted `a`."""
-    return upper_index(lambda m: a[m] <= x, 0, len(a) - 1, -1)
+    return upper_int(lambda m: a[m] <= x, 0, len(a) - 1, -1)
 
 
 def find_extra_element(a: list[int], b: list[int]) -> int:
     """Return index of an extra element in sorted arrays `a` and `b`."""
     # Runs in O(log N)
-    return upper_index(lambda m: a[m] == b[m], 0, min(len(a), len(b)) - 1, -1) + 1
+    return upper_int(lambda m: a[m] == b[m], 0, min(len(a), len(b)) - 1, -1) + 1
 
 
 def duplicated_sorted_find_unique(a: list[int]) -> int:
@@ -241,34 +241,34 @@ def duplicated_sorted_find_unique(a: list[int]) -> int:
     # 1 1 2 2 3 4 4 5 5
     # 1=1 2=2 3<4 4<5 5
     return a[
-        upper_index(lambda m: a[2 * m] == a[2 * m + 1], 0, len(a) // 2 - 1, -1) * 2 + 2
+        upper_int(lambda m: a[2 * m] == a[2 * m + 1], 0, len(a) // 2 - 1, -1) * 2 + 2
     ]
 
 
 def first_last(a: list[int], x: int) -> tuple[int, int]:
     """Return the first and last index of `x` in a sorted array `a`."""
-    l: int = lower_index(lambda m: a[m] >= x, 0, len(a) - 1, len(a))
-    h: int = upper_index(lambda m: a[m] <= x, l, len(a) - 1, -1)
-    return (l, h) if l <= h else (-1, -1)
+    low: int = lower_int(lambda m: a[m] >= x, 0, len(a) - 1, len(a))
+    high: int = upper_int(lambda m: a[m] <= x, low, len(a) - 1, -1)
+    return (low, high) if low <= high else (-1, -1)
 
 
 def equilibrium_point(a: list) -> int:
     """Index in `a` where sums of elements before and after are equal."""
     # O(N)
     # See partition_by sum for O(log N) approach.
-    l = 0
-    h = len(a) - 1
+    low = 0
+    high = len(a) - 1
     l_sum = 0
     h_sum = 0
-    while l < h:
+    while low < high:
         if l_sum < h_sum:
-            l_sum += a[l]
-            l += 1
+            l_sum += a[low]
+            low += 1
         else:
-            h_sum += a[h]
-            h -= 1
+            h_sum += a[high]
+            high -= 1
     if l_sum == h_sum:
-        return l
+        return low
     return -1
 
 
@@ -304,7 +304,7 @@ def partition_by_sum(
     #  starting at second element, stopping at second to last.
     msum2 = csum[start] + csum[stop]
     # Closest point to `msum2 / 2`?
-    m = lower_index(lambda m: csum[m] << 1 >= msum2, start + 1, stop - 1, stop)
+    m = lower_int(lambda m: csum[m] << 1 >= msum2, start + 1, stop - 1, stop)
     # Use the midpoint...
     if csum[m - 1] + csum[m] < msum2:
         return csum[stop] - csum[m], csum[m] - csum[start]
@@ -444,3 +444,54 @@ def shortest_path_with_special_edge(edges: list, a: int, b: int) -> int:
                 if s == 0 and e2 < e1 and v[c][1] > d + e2:
                     heappush(q, (d + e2, 1, c))
     return -1
+
+def flower_gardening(a: list[int], k: int, w: int) -> int:
+    """Return the maximum length of the shortest flower in a after `k` days of watering.
+
+    The flowers of height `a` are watered every of the `k` days, but each day
+    only successive `w` flowers can be watered.
+
+    Parameters
+    ----------
+    a : list[int]
+        Array of initial flower heights.
+    k : int
+        Number of days the flowers are watered.
+    w : int
+        The width of the window used each day to water the flowers.
+
+    Returns
+    -------
+    int
+        The maximum hight of the shortest flower after `k` days.
+
+    """
+    # The idea is to find the upper bound of the flower height
+    # for flowers that can grow up to h.
+    # This is done by introducing a predicate function `can grow`
+    # and applying binary search.
+    # Overall: O(n * ln k) time complexity.
+    n = len(a)
+
+    def can_grow(h: int) -> bool:
+        """Determine if plants can grow up to `h` in `k` days."""
+        # The function uses a sliding window where each flower is
+        # watered for as many days as needed to reach `h`.
+        # The additional height is propagated to the next flower.
+        # In order to only water `w` flowers for `diff` days,
+        # the same `diff` number is subtracted from the `i + w` flower.
+        # O(n) time complexity.
+        aux = [0] * (n + 1)
+        days = 0
+        for i, e in enumerate(a):
+            h += aux[i]
+            diff = h - e - days
+            if diff <= 0:
+                continue
+            days += diff
+            if days > k:
+                return False
+            aux[min(i + w, n)] = diff
+        return True
+
+    return upper_int(can_grow, min(a), min(a) + k)

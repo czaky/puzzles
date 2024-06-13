@@ -142,3 +142,9 @@ class TestSearch(unittest.TestCase):
             )
             == 2
         )
+
+    def test_flower_gardening(self):
+        assert s.flower_gardening([4, 7, 6, 10, 1, 8, 1, 2], 5, 6) == 5
+        assert s.flower_gardening([8, 4], 2, 2) == 6
+        assert s.flower_gardening([2, 2, 2, 2, 1, 1], 2, 3) == 2
+        assert s.flower_gardening([5, 8], 5, 1) == 9

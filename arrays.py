@@ -11,7 +11,7 @@ from typing import Any, Callable, Iterable, Iterator
 
 import numpy as np
 
-from search import lower_bound, lower_index, upper_index
+from search import lower_bound, lower_int, upper_int
 
 
 def skip(it: Iterable, n: int = 1) -> Iterator:
@@ -495,7 +495,7 @@ def aggressive_cows(stalls: list, cows: int) -> int:
     stalls.sort()
     ac = lambda d: lambda a, s: s - a[1] >= d and (a[0] + 1, s) or a
     le = lambda d: cows <= reduce(ac(d), stalls, (1, stalls[0]))[0]
-    return upper_index(le, 1, stalls[-1] - stalls[0])
+    return upper_int(le, 1, stalls[-1] - stalls[0])
 
 
 def min_sum_split(a: list, k: int) -> int:
@@ -506,7 +506,7 @@ def min_sum_split(a: list, k: int) -> int:
     # Assure that the number of splits is less or equal to k
     fit = lambda mx: k >= reduce(acc(mx), a, (0, 1))[1]
     # Use binary search to find the maximum sub-sum.
-    return lower_index(fit, max(a), sum(a))
+    return lower_int(fit, max(a), sum(a))
 
 
 def smaller_on_right_counts(arr: list) -> list:
@@ -971,7 +971,8 @@ def k_smallest_element(a: list[int], k: int, default: int | None = None) -> int:
     def less_or_equal(v: int) -> int:
         return sum(e < v for e in a) <= k
 
-    return upper_index(less_or_equal, min(a), max(a), default)
+    return upper_int(less_or_equal, min(a), max(a), default)
+
 
 def find_smallest_max_diff_with_inserts(a: list[float], k: int) -> float:
     """Return the smallest max diff between values in `a` using `k` additional ones.
