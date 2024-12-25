@@ -64,6 +64,38 @@ def optimum_multiplications(a: list[int]) -> int:
 
     return sub(1, len(a) - 1)
 
+def balloon_coin_popping(a: list[int]) -> int:
+    """Return the maximum number of coins that can be gained if popping balloons.
+
+    If a k'th balloon is popped, it will produce a[k-1] * a[k] * a[k+1] coins.
+    The `k-1` and `k+1` balloons are then considered adjacent.
+
+    For simplicity assume that there is a balloon with value 1 on each end.
+
+    Parameters
+    ----------
+    a : list[int]
+        A list of balloon values.
+
+    Returns
+    -------
+    int
+        Sum of coins gained by popping each ballooon.
+
+    """
+    a = [1, *a, 1]
+
+    @lru_cache(None)
+    def sub(i: int, j: int) -> int:
+        # Choose the maximum by popping balloons between `(i, j)` - exclusive.
+        # Sub-problems also pop balloons between `(i, k)` or `(k, j)`.
+        # Finally, multiply by coins in `i`, `k`, `j`.
+        return i + 1 < j and max(
+            sub(i, k) + a[i] * a[k] * a[j] + sub(k, j) for k in range(i + 1, j)
+        )
+
+    return sub(0, len(a) - 1)
+
 
 A = ord("A")
 

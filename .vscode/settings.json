@@ -1,10 +1,24 @@
 {
-    "cSpell.enabled": true,
-    "cSpell.autoFormatConfigFile": true,
+    "[python]": {
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit",
+            "source.organizeImports": "explicit"
+        },
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnSave": true,
+        "editor.formatOnSaveMode": "modifications"
+    },
     "autoDocstring.docstringFormat": "numpy",
+    "cSpell.enabled": true,
     "editor.formatOnPaste": false,
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSaveMode": "modifications",
+    "gitlens.telemetry.enabled": false,
+    "notebook.codeActionsOnSave": {
+        "notebook.source.fixAll": "explicit",
+        "notebook.source.organizeImports": "explicit"
+    },
     "notebook.formatOnSave.enabled": true,
     "gitlens.telemetry.enabled": false,
+    "python.analysis.indexing": false
 }

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from functools import lru_cache
+
 import numpy as np
 
 DD = np.longdouble
@@ -59,3 +61,51 @@ def separated_ones(n: int, m: int = 10**9 + 7) -> int:
 
     """
     return fib(n + 2, m)
+
+def sum_of_456_numbers(x: int, y: int, z: int, mod: int = 10**9 + 7) -> int:
+    """Return the sum of numbers having at most x 4s, y 5s, and z 6s digits.
+
+    Example
+    -------
+    X = Y = Z = 1
+    sum = 4 + 5 + 6 + 45 + 54 + 56 + 65 + 46 + 64 + 456 + 465 + 546 + 564 + 645 + 654
+        = 3675
+
+    Parameters
+    ----------
+    x : int
+        count of 4s
+    y : int
+        count of 5s
+    z : int
+        count of 6s
+    mod : int, optional
+        modulus for the calculation, by default 10**9 + 7
+
+    Returns
+    -------
+    int
+        sum of numbers with the above described property modulo `mod`.
+
+    """
+
+    @lru_cache(None)
+    def f(x: int, y: int, z: int) -> tuple[int, int]:
+        """Sum numbers with exact digit counts and the count of such numbers."""
+        nonlocal s
+        if x + y + z == 0:
+            # Initial state.
+            return 0, 1
+
+        s1, n1 = f(x - 1, y, z) if x else (0, 0)
+        s2, n2 = f(x, y - 1, z) if y else (0, 0)
+        s3, n3 = f(x, y, z - 1) if z else (0, 0)
+
+        r = (10 * (s1 + s2 + s3) + 4 * n1 + 5 * n2 + 6 * n3) % mod
+        # Update the total sum for counts with *at most* specified digit count.
+        s = (s + r) % mod
+        return r, (n1 + n2 + n3) % mod
+
+    s = 0
+    f(x, y, z)
+    return s

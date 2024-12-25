@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from itertools import combinations
+from itertools import chain, combinations
 from operator import itemgetter
 from typing import Iterable, Iterator, Sequence
 
@@ -113,3 +113,103 @@ def powerset(iterable: Iterable) -> Iterator:
     for size in range(len(s)):
         yield from map(set, combinations(s, size))
     yield s
+
+
+def merge_email_accounts(accounts: list[list[str]]) -> list[list[str]]:
+    """Merge email accounts using email addresses.
+
+    The `accounts` is a list of accounts of this format:
+    ```
+       ["<name>", "<email_0>", "<email_1>", "<email_2>"]
+    ```
+
+    Accounts are merged if they share at least one email.
+    Merged accounts contain the union of email addresses.
+
+    Parameters
+    ----------
+    accounts : list[str]
+        A list of accounts containing name and email addresses.
+
+    Returns
+    -------
+    list[str]
+        A list of merged accounts with sorted email list.
+
+    """
+    n = len(accounts)
+    parents = list(range(n))
+
+    def parent(n: int) -> int:
+        """Find the parent of n. Compress the path."""
+        while n != parents[n]:
+            # Compress the set by halving.
+            n, parents[n] = parents[n], parents[parents[n]]
+        return n
+
+    emails = {}
+    for i, a in enumerate(accounts):
+        for e in a[1:]:
+            parents[i] = i = parent(emails.setdefault(e, i))  # noqa: PLW2901
+
+    merged = [[] for _ in range(n)]
+    for e, i in emails.items():
+        merged[parent(i)].append(e)
+    any(map(list.sort, merged))
+    return sorted([accounts[i][0], *m] for i, m in enumerate(merged) if m)
+
+def crazy_chemist_mix(mixes: list, explosive: list) -> list:
+    """Mix compounds from the `mixes` list. Avoid mixing `explosive` combinations.
+
+    Mixed ingredients build a joint set. Adding an ingredient to another,
+    adds it to the mix that the ingredient is already in. Ultimately,
+    this is a disjoint set problem resulting in sets that don't combine
+    any ingredients from the `explosive` list.
+
+    Parameters
+    ----------
+    mixes : list
+        pairs of ingredients to mix
+    explosive : list
+        pairs of ingredients to avoid
+
+    Returns
+    -------
+    list
+        a list of 0s and 1s, indicating when it is safe to mix ingredients
+        for each entry in the `mixes` list.
+
+    """
+    n = max(max(a, b) for a, b in chain(mixes, explosive)) + 1
+    parents = list(range(n))
+    size = [1] * n
+
+    def parent(x: int) -> int:
+        """Find the parent of `x`. Compress the path."""
+        while x != parents[x]:
+            # Compress the set by halving.
+            x, parents[x] = parents[x], parents[parents[x]]
+        return x
+
+    emap = [set() for _ in range(n)]
+    for x, y in explosive:
+        emap[x].add(y)
+        emap[y].add(x)
+    safety = []
+    for a, b in mixes:
+        a, b = parent(a), parent(b)  # noqa: PLW2901
+        if a == b:
+            safety.append(1)
+            continue
+        if a in emap[b] or b in emap[a]:
+            # mixing a and b would produce an explosive mix
+            safety.append(0)
+            continue
+        safety.append(1)
+        if size[a] < size[b]:
+            a, b = b, a  # noqa: PLW2901
+        parents[b] = a
+        size[a] += size[b]
+        if emap[a] or emap[b]:
+            emap[a] = emap[b] = set(map(parent, chain(emap[a], emap[b])))
+    return safety

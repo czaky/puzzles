@@ -51,3 +51,42 @@ def max_valid_len(s: str) -> int:
         *scan(2 * int(c == "(") - 1 for c in s),
         *scan(2 * int(c == ")") - 1 for c in reversed(s)),
     )
+
+def longest_balanced_parenthesis_substring(s: str) -> int:
+    """Find the longest substring in `s` with a valid, balanced parentheses.
+
+    Parameters
+    ----------
+    s : str
+        A string that contains only: "()".
+
+    Returns
+    -------
+    int
+        The length of the longest substring with valid parentheses.
+
+    """
+    # There is absolutely no need for pushing stack, given that there is only one and
+    # the same token pushed and we only need the depth of stack, so this solution
+    # uses a counter for this. The idea is to loop over from left (and also from right)
+    # while keeping the counter of open parentheses. Each time time counter falls
+    # below 0, reset the starting position on the string and the counter to 0.
+
+    def longest(s: Iterable, oc: str = "()") -> int:
+        op, cl = oc
+        open_count = 0
+        mx = 0
+        start = -1
+        for i, c in enumerate(s):
+            if c == op:
+                open_count += 1
+            elif c == cl:
+                open_count -= 1
+                if open_count == 0:
+                    mx = max(mx, i - start)
+                elif open_count < 0:
+                    start = i
+                    open_count = 0
+        return mx
+
+    return max(longest(s), longest(reversed(s), oc=")("))

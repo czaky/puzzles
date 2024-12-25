@@ -102,3 +102,49 @@ class TestSearch(unittest.TestCase):
         assert s.four_partitions_min_sum_difference([1, 2, 3, 3, 4]) == 1
         ar = [16, 8, 11, 2, 12, 4, 11, 16, 15, 2, 5, 18, 7, 17]
         assert s.four_partitions_min_sum_difference(ar) == 13
+
+    def test_water_distribution(self):
+        assert s.water_distribution(
+            [6, 4, 14, 17, 3, 15, 16, 5, 7, 11, 12],
+            [5, 7, 16, 12, 2, 13, 6, 17, 1, 4, 8],
+            [2, 2, 2, 4, 8, 2, 8, 8, 9, 9, 2],
+        ) == [(3, 2, 8), (11, 1, 2), (14, 8, 2), (15, 13, 2)]
+        assert s.water_distribution(
+            [7, 5, 4, 2, 9, 3], [4, 9, 6, 8, 7, 1], [98, 72, 10, 22, 17, 66]
+        ) == [(2, 8, 22), (3, 1, 66), (5, 6, 10)]
+
+    def test_shortest_path_with_special_edge(self):
+        assert s.shortest_path_with_special_edge([[1, 2, 4, 1]], 1, 2) == 1
+        assert s.shortest_path_with_special_edge([[1, 2, 1, 4]], 1, 2) == 1
+        assert s.shortest_path_with_special_edge([[1, 2, 4, 1]], 2, 1) == 1
+        assert s.shortest_path_with_special_edge([[1, 2, 1, 4]], 2, 1) == 1
+        assert (
+            s.shortest_path_with_special_edge([[1, 2, 4, 1], [2, 3, 2, 1]], 1, 3) == 3
+        )
+        assert (
+            s.shortest_path_with_special_edge([[1, 2, 2, 1], [2, 3, 4, 1]], 1, 3) == 3
+        )
+        assert (
+            s.shortest_path_with_special_edge([[1, 2, 4, 1], [2, 3, 2, 1]], 3, 1) == 3
+        )
+        assert (
+            s.shortest_path_with_special_edge([[1, 2, 2, 1], [2, 3, 4, 1]], 3, 1) == 3
+        )
+        assert (
+            s.shortest_path_with_special_edge(
+                [[1, 2, 1, 4], [1, 3, 2, 4], [1, 4, 3, 1], [2, 4, 6, 5]], 2, 4
+            )
+            == 2
+        )
+        assert (
+            s.shortest_path_with_special_edge(
+                [[1, 2, 1, 4], [1, 3, 2, 4], [1, 4, 3, 1], [2, 4, 6, 5]], 4, 2
+            )
+            == 2
+        )
+
+    def test_flower_gardening(self):
+        assert s.flower_gardening([4, 7, 6, 10, 1, 8, 1, 2], 5, 6) == 5
+        assert s.flower_gardening([8, 4], 2, 2) == 6
+        assert s.flower_gardening([2, 2, 2, 2, 1, 1], 2, 3) == 2
+        assert s.flower_gardening([5, 8], 5, 1) == 9

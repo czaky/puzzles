@@ -741,3 +741,47 @@ def scrambled(a: str, b: str) -> bool:
             for i in range(1, len(a))
         )
     )
+
+def palindrome_pairs(a: list) -> bool:
+    """Return True if `a` contains two words which connect to form a palindrome.
+
+    For this problem formulation we also need to return `True` if there is
+    a reversed copy of a word, which would allow to build a palindrome using
+    two different words. A single palindrome duplicated is not a solution for
+    this particular problem. I.e. `["aba"]` is not a solution, but `["aba", "aba"]` is.
+
+    Parameters
+    ----------
+    a : list
+        a list of words.
+
+    Returns
+    -------
+    bool
+        True if there are two words from `a` forming a palindrome.
+
+    """
+    # The idea is to build a set of reversed words and then iterate through
+    # the (true) prefixes and suffixes of those words.
+    # While iterating over prefixes and suffixes, if a part of the word
+    # is found reversed in the set of other words, then the other part
+    # needs to be a palindrome for the whole to be a solution.
+    #
+    # There is also a (different) solution to this problem based on a trie,
+    # which basically replaces the `set` below with a trie with
+    # pointers to substrings deemed to be a palindrome.
+
+    # Build the set of words.
+    words = set()
+    for word in a:
+        # Watch for palindromic copies.
+        if word in words:
+            return True
+        words.add(word[::-1])
+    # Iterate through prefixes and suffixes.
+    for word in a:
+        for j in range(1, len(word)):
+            p, s = word[:j], word[j:]
+            if p in words and s == s[::-1] or s in words and p == p[::-1]:
+                return True
+    return False
