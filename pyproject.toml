@@ -2,6 +2,7 @@
 # line-length = 88
 unsafe-fixes = true
 exclude = ["builtins.pyi", "**/*.pyi"]
+indent-width = 2
 
 [tool.ruff.format]
 skip-magic-trailing-comma = true
