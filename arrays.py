@@ -15,7 +15,7 @@ from search import lower_bound, lower_int, upper_int
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
-    from typing import Callable
+    from typing import Any, Callable
 
 
 def parse(a: str) -> list[int]:
@@ -502,7 +502,7 @@ def next_smallest_palindrome_number(num: list) -> list:
 def aggressive_cows(stalls: list, cows: int) -> int:
     """Return maximum possible distance between `cows` when placed into the `stalls`."""
     stalls.sort()
-    ac = lambda d: lambda a, s: s - a[1] >= d and (a[0] + 1, s) or a
+    ac = lambda d: lambda a, s: (s - a[1] >= d and (a[0] + 1, s)) or a
     le = lambda d: cows <= reduce(ac(d), stalls, (1, stalls[0]))[0]
     return upper_int(le, 1, stalls[-1] - stalls[0])
 
@@ -720,9 +720,9 @@ def candy(r: list[int]) -> int:
     n = len(r)
     # Start with 0 candies as bottom line for each kid.
     # Accumulate number of candies if rewards are increasing, otherwise reset to 0
-    c = accumulate(range(n), lambda a, i: i and r[i] > r[i - 1] and a + 1 or 0)
+    c = accumulate(range(n), lambda a, i: (i and r[i] > r[i - 1] and a + 1) or 0)
     # The same in reverse.
-    d = accumulate(range(n), lambda a, i: i and r[-i - 1] > r[-i] and a + 1 or 0)
+    d = accumulate(range(n), lambda a, i: (i and r[-i - 1] > r[-i] and a + 1) or 0)
     # Take the maximum of both heaps of candies (and add an extra candy for each kid).
     return sum(max(x, y) for x, y in zip(c, reversed(list(d)))) + n
 
@@ -754,7 +754,7 @@ def max_profit(prices: list[int], k: int) -> int:
             balance[t] = max(balance[t], (t and profit[t - 1]) - p)
             profit[t] = max(profit[t], p + balance[t])
 
-    return len(profit) and profit[-1] or 0
+    return (len(profit) and profit[-1]) or 0
 
 
 def count_changes_to_make_strict(a: list) -> int:
