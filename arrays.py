@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections import Counter, deque
 from functools import lru_cache, reduce
+from heapq import heappop, heappush
 from itertools import accumulate, chain, islice, starmap
 from math import inf
 from operator import add, mul, neg
@@ -1088,3 +1089,85 @@ def majority_element(a: list) -> int:
   """Return element which occurs more than the half of time."""
   n2 = len(a) // 2
   return next((v for v, c in Counter(a).items() if c > n2), -1)
+
+
+def kth_smallest_using_heap(a: list, k: int) -> int:
+  """Return the k-th smallest element from the list `a`.
+
+  Using a heap limitted to k elements.
+
+  """
+  h = []
+  for e in a:
+    heappush(h, -e)
+    if len(h) > k:
+      heappop(h)
+  return -heappop(h)
+
+
+def kth_smallest_using_hash(a: list, k: int) -> int:
+  """Return the k-th smallest element from the list `a`.
+
+  Uses a hashmap to count all the values.
+
+  Parameters
+  ----------
+  a : list
+      Array of unsorted values.
+  k : int
+      Selects the k-th smallest number.
+
+  Returns
+  -------
+  int
+      The k-th smallest number.
+
+  """
+  c = Counter(a)
+  s = 0
+  for e in range(min(a), max(a) + 1):
+    s += c[e]
+    if s >= k:
+      return e
+  return -1
+
+
+def min_tower_diff(a: list, k: int) -> int:
+  """Add or subtract k from values in a and return min difference.
+
+  Values in a represent tower heights. By adding or subtracting k
+  to each tower height, we arrive at a new landscape where
+  the difference between the highest and lowest tower should be
+  minimized.
+
+  The approach is to sort the towers and find index i
+  where the difference is minimal.
+  Note that the `min(a[0]+k, a[i]-k)` will be the minimal height
+  at this point.
+  The `max(a[-1] - k, a[i - 1] + k)` is the value of the max tower
+
+  Parameters
+  ----------
+  a : list
+      Integers describing tower heights.
+  k : int
+      The number of layers to add or subtract from each tower.
+
+  Returns
+  -------
+  int
+      The minimum difference between highest and lowest tower
+      after the modification.
+
+  """
+  a = sorted(a)
+  diff = a[-1] - a[0]
+  first = a[0] + k
+  last = a[-1] - k
+  start = next((i for i, v in enumerate(a) if v >= k), len(a))
+  print(start)
+  for i in range(start, len(a)):
+    mn = min(first, a[i] - k)
+    mx = max(last, a[i - 1] + k)
+    diff = min(diff, mx - mn)
+  return diff
