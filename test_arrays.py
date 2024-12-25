@@ -379,10 +379,10 @@ class TestUnsortedArray(unittest.TestCase):
 
     def test_sub_array_sum(self) -> None:
         """Test sub_array_sum."""
-        assert ar.sub_array_sum([1, 2, 3, 7, 5], target=12) == (2, 4)
-        assert ar.sub_array_sum([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], target=15) == (1, 5)
-        assert ar.sub_array_sum([7, 2, 1], target=2) == (2, 2)
-        assert ar.sub_array_sum(splint("12 18 5 11 30 5"), target=69) == (2, 6)
+        assert ar.sub_array_sum([1, 2, 3, 7, 5], target=12) == (1, 3)
+        assert ar.sub_array_sum([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], target=15) == (0, 4)
+        assert ar.sub_array_sum([7, 2, 1], target=2) == (1, 1)
+        assert ar.sub_array_sum(splint("12 18 5 11 30 5"), target=69) == (1, 5)
 
     def test_min_jumps(self) -> None:
         """Test min_jumps."""
@@ -395,7 +395,8 @@ class TestUnsortedArray(unittest.TestCase):
         assert f([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 9) == 0.5
         assert f([3, 6, 12, 19, 33, 44, 67, 72, 89, 95], 2) == 14.0
 
-        astr = """74 284 316 461 485 587 589 731 755 843 881 943 1065 1183 1185 1305 1347
+        astr = """
+        74 284 316 461 485 587 589 731 755 843 881 943 1065 1183 1185 1305 1347
         1362 1467 1515 1637 1836 2106 2296 2382 3096 3301 3394 3397 3557 3563 3592 3643
         4057 4084 4101 4176 4204 4218 4226 4321 4511 4595 4770 4829 4831 4856 4984 5019
         5026 5032 5039 5052 5167 5215 5266 5283 5289 5362 5475 5538 5655 5661 5895 6214

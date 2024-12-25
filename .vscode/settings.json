@@ -20,5 +20,10 @@
     },
     "notebook.formatOnSave.enabled": true,
     "gitlens.telemetry.enabled": false,
-    "python.analysis.indexing": false
+    "python.analysis.indexing": false,
+    "python.testing.pytestArgs": [
+        "."
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 }

@@ -974,7 +974,7 @@ def geeky_132_buildings(b: list[int]) -> bool:
 
 
 def sub_array_sum(a: list, target: int) -> tuple:
-    """Retrun the indices of the first range in A summing to target.
+    """Return the indices of the first range in A summing to target.
 
     Search through the array a to find indices of the first interval
     with sum equal to the target value.
@@ -997,9 +997,9 @@ def sub_array_sum(a: list, target: int) -> tuple:
     """
     s = 0
     h = {}
-    for j in range(len(a)):
+    for j, aj in enumerate(a):
         h[s] = j + 1
-        s += a[j]
+        s += aj
         i = h.get(s - target)
         if i:
             return i - 1, j
@@ -1053,7 +1053,7 @@ def k_smallest_element(a: list[int], k: int, default: int | None = None) -> int:
     return upper_int(less_or_equal, min(a), max(a), default)
 
 
-def find_smallest_max_diff_with_inserts(a: list[float], k: int) -> float:
+def find_smallest_max_diff_with_inserts(a: list, k: int) -> float:
     """Return the smallest max diff between values in `a` using `k` additional ones.
 
     Array `a` contains values sorted in ascending order.
