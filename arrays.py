@@ -7,9 +7,18 @@ from functools import lru_cache, reduce
 from itertools import accumulate, chain, islice, starmap
 from math import inf
 from operator import add, mul, neg
-from typing import Any, Callable, Iterable, Iterator
+from typing import TYPE_CHECKING
 
 from search import lower_index, upper_index
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Iterator
+    from typing import Callable
+
+
+def parse(a: str) -> list[int]:
+    """Split the string and return as integers."""
+    return list(map(int, a.split()))
 
 
 def skip(it: Iterable, n: int = 1) -> Iterator:
@@ -359,7 +368,7 @@ def median2(a: list[int], b: list[int]) -> float:
 def max_sub_sum(a: Iterable[int]) -> int:
     """Return the max sum of a sub-array from `a`."""
     # Kadane`s Algorithm
-    return max(accumulate(a, lambda x, y: max(0, x + y), initial=0))
+    return max(accumulate(a, lambda x, y: max(0, x) + y))
 
 
 def max_circular_sub_sum(a: list[int]) -> int:
@@ -981,3 +990,73 @@ def geeky_132_buildings(b: list[int]) -> bool:
             z = s.pop()
         s.append(x)  # becomes `y`
     return False
+
+
+def sub_array_sum(a: list, target: int) -> tuple:
+    """Retrun the indices of the first range in A summing to target.
+
+    Search through the array a to find indices of the first interval
+    with sum equal to the target value.
+
+    The algorithm below uses a hash table to find the `value - target`
+    computed in previous iterations.
+
+    Parameters
+    ----------
+    a : list
+        List of numbers.
+    target : int
+        The target sum value.
+
+    Returns
+    -------
+    tuple
+        Two indices into the array or (-1,)
+
+    """
+    s = 0
+    h = {}
+    for j in range(len(a)):
+        h[s] = j + 1
+        s += a[j]
+        i = h.get(s - target)
+        if i:
+            return i - 1, j
+    return (-1,)
+
+
+def min_jumps(a: list) -> int:
+    """Iterate over array `a` and jump up to a[i] spaces.
+
+    a[i] contains the possible jump distance.
+
+    Parameters
+    ----------
+    a : list
+        An array of maximum jump steps.
+
+    Example
+    -------
+    [1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9]
+    Jump to 3, then jump to 9, then jump over the array.
+    => 3 jumps
+
+    Returns
+    -------
+    int
+       The lowest number of jumps or -1
+
+    """
+    jumps = 0
+    j, k, n = 0, 0, len(a)
+    for i in range(n):
+        k = max(k, a[i] + i)
+        if i != j:
+            continue
+        jumps += 1
+        if k >= n - 1:
+            return jumps
+        if k == i:
+            return -1
+        j = k
+    return jumps

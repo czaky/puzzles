@@ -4,6 +4,7 @@ import operator as op
 import unittest
 
 import arrays as ar
+from strings import splint
 
 
 class TestRotatedArray(unittest.TestCase):
@@ -375,3 +376,16 @@ class TestUnsortedArray(unittest.TestCase):
         assert ar.geeky_132_buildings([11, 10, 13, 12])
         assert ar.geeky_132_buildings([11, 10, 13, 16, 12])
         assert ar.geeky_132_buildings([11, 16, 13, 10, 12])
+
+    def test_sub_array_sum(self) -> None:
+        """Test sub_array_sum."""
+        assert ar.sub_array_sum([1, 2, 3, 7, 5], target=12) == (2, 4)
+        assert ar.sub_array_sum([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], target=15) == (1, 5)
+        assert ar.sub_array_sum([7, 2, 1], target=2) == (2, 2)
+        assert ar.sub_array_sum(splint("12 18 5 11 30 5"), target=69) == (2, 6)
+
+    def test_min_jumps(self) -> None:
+        """Test min_jumps."""
+        assert ar.min_jumps([1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9]) == 3
+        assert ar.min_jumps([1, 4, 3, 2, 6, 7]) == 2
+        assert ar.min_jumps([1, 0, 1]) == -1

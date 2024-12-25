@@ -6,4 +6,5 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "charliermarsh.ruff",
     "notebook.formatOnSave.enabled": true,
+    "gitlens.telemetry.enabled": false,
 }
