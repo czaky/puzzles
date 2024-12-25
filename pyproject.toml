@@ -56,6 +56,7 @@ disable = """
         unnecessary-lambda-assignment,
         too-few-public-methods,
         too-many-public-methods,
+        too-many-positional-arguments,
         too-many-arguments,
         too-many-statements,
         too-many-locals,
