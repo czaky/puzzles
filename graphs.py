@@ -4,11 +4,14 @@ from __future__ import annotations
 
 from collections import deque
 from functools import reduce
-from typing import Any, Iterable
+from typing import TYPE_CHECKING, Any
 
 from sequences import find_if
 from sets import powerset
 from stack import IndexStack
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 
 def breadth_first(adj: list[list[int]], start: int = 0) -> list[int]:

@@ -4,7 +4,10 @@ from __future__ import annotations
 
 from itertools import chain, combinations
 from operator import itemgetter
-from typing import Iterable, Iterator, Sequence
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Iterator, Sequence
 
 
 class Disjoint:

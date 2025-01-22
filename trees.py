@@ -6,10 +6,12 @@ from collections import deque
 from functools import reduce
 from itertools import islice
 from math import inf
-from typing import TYPE_CHECKING, Any, Iterator, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 if TYPE_CHECKING:
-    import lists
+  from collections.abc import Iterator
+
+  import lists
 
 
 class TreeNode:
@@ -76,25 +78,25 @@ class TreeNode:
     # Depth first traversals.
 
     def preorder(self, *, nodes: bool = False) -> Iterator:
-        """Pre-order, depth first (DFS) traversal of the binary tree.
+      """Pre-order, depth first (DFS) traversal of the binary tree.
 
-        Useful to create a copy of the tree and generate prefix expressions.
-        Nodes are enumerated top-down.
+      Useful to create a copy of the tree and generate prefix expressions.
+      Nodes are enumerated top-down.
 
-        Args:
-        ----
-            nodes (bool, optional): It true, yield nodes instead of value.
+      Args:
+      ----
+          nodes (bool, optional): It true, yield nodes instead of value.
 
-        """
-        r: TreeNode = self
-        s = [r]
-        while s:
-            n = s.pop()
-            yield (n if nodes else n.data)
-            if n.right:
-                s.append(n.right)
-            if n.left:
-                s.append(n.left)
+      """
+      r: TreeNode = self
+      s: list[TreeNode] = [r]
+      while s:
+        n = s.pop()
+        yield (n if nodes else n.data)
+        if n.right:
+          s.append(n.right)
+        if n.left:
+          s.append(n.left)
 
     def inorder(self, *, nodes: bool = False) -> Iterator:
         """In-order, depth first (DFS) traversal of the binary tree.
@@ -366,9 +368,9 @@ class TreeNode:
         return y
 
     def left_skew(self) -> int:
-        """Return how far to the left the node is skewed."""
-        l, r = self.left, self.right
-        return (l.height if l else 0) - (r.height if r else 0)
+      """Return how far to the left the node is skewed."""
+      left, right = self.left, self.right
+      return (left.height if left else 0) - (right.height if right else 0)
 
     def balance_node(self) -> TreeNode:
         """Balance this node. May return one of its descendants."""
@@ -399,13 +401,13 @@ class TreeNode:
     def delete_balanced(self, value: int) -> Node:
         """Delete the `value` from a self-balancing AVL tree."""
         if value == self.data:
-            if not (self.right and self.left):
-                return self.left or self.right
+          if not (self.right and self.left):
+            return self.left or self.right
 
-            # Find the next in-order successor ...
-            min_node = lambda n: n.left and min_node(n.left) or n
-            # and use its value.
-            value = self.data = min_node(self.right).data
+          # Find the next in-order successor ...
+          min_node = lambda n: (n.left and min_node(n.left)) or n
+          # and use its value.
+          value = self.data = min_node(self.right).data
             # The `next_node` will be deleted recursively below.
 
         if value < self.data:
@@ -772,53 +774,54 @@ def find_bst_ancestor(r: Node, a: int, b: int) -> Node:
 
 
 def lowest_common_ancestor(n: Node, a: int, b: int) -> Node:
-    """Find lowest common ancestor of `a` and `b` valued nodes in a tree."""
-    if n is None or n.data in (a, b):
-        return n
-    l = lowest_common_ancestor(n.left, a, b)
-    r = lowest_common_ancestor(n.right, a, b)
-    return l and r and n or l or r
+  """Find lowest common ancestor of `a` and `b` valued nodes in a tree."""
+  if n is None or n.data in (a, b):
+    return n
+  left = lowest_common_ancestor(n.left, a, b)
+  right = lowest_common_ancestor(n.right, a, b)
+  return (left and right and n) or left or right
 
 
 def no_siblings_nodes(t: Node) -> list:
-    """Return nodes' values which have no sibling node from tree `t`."""
-    singles = []
+  """Return nodes' values which have no sibling node from tree `t`."""
+  singles = []
 
-    def enum(l: Node, r: Node) -> None:
-        if l:
-            enum(l.left, l.right)
-            if not r:
-                singles.append(l.data)
-        if r:
-            enum(r.left, r.right)
-            if not l:
-                singles.append(r.data)
+  def enum(left: Node, right: Node) -> None:
+    if left:
+      enum(left.left, left.right)
+      if not right:
+        singles.append(left.data)
+    if right:
+      enum(right.left, right.right)
+      if not left:
+        singles.append(right.data)
 
-    if t:
-        enum(t.left, t.right)
-    return sorted(singles)
+  if t:
+    enum(t.left, t.right)
+  return sorted(singles)
 
 
 def has_path_sum(n: Node, s: int) -> bool:
     """Return True if there is a path from root `n` to a leaf with sum = `s`."""
     s -= n.data
     return (
-        s > 0
-        and (n.left and has_path_sum(n.left, s) or n.right and has_path_sum(n.right, s))
-        or (s == 0 and not n.left and not n.right)
-    )
+      s > 0
+      and (
+        (n.left and has_path_sum(n.left, s)) or (n.right and has_path_sum(n.right, s))
+      )
+    ) or (s == 0 and not n.left and not n.right)
 
 
-def count_in_range(n: Node, l: int, h: int) -> int:
+def count_in_range(n: Node, low: int, high: int) -> int:
     """Count number of nodes form `n` in range (`l`...`h`)."""
     return (
-        (
-            int(l <= n.data <= h)
-            + (count_in_range(n.left, l, h) if n.data > l else 0)
-            + (count_in_range(n.right, l, h) if n.data < h else 0)
-        )
-        if n
-        else 0
+      (
+        int(low <= n.data <= high)
+        + (count_in_range(n.left, low, high) if n.data > low else 0)
+        + (count_in_range(n.right, low, high) if n.data < high else 0)
+      )
+      if n
+      else 0
     )
 
 
@@ -955,11 +958,9 @@ def tree_distance(root: Node, target: Any) -> int:
         #    path-length since target if found else 0,
         #    max distance to all nodes from the target
         return (
-            fl
-            and (fl + 1, max(fl + 1 + dr, dl))
-            or fr
-            and (fr + 1, max(fr + 1 + dl, dr))
-            or (int(r.data == target), max(dl, dr) + 1)
+          (fl and (fl + 1, max(fl + 1 + dr, dl)))
+          or (fr and (fr + 1, max(fr + 1 + dl, dr)))
+          or (int(r.data == target), max(dl, dr) + 1)
         )
 
     return search(root)[1] - 1
@@ -1009,14 +1010,14 @@ def candy_tree_equality(r: TreeNode) -> int:
     moves = 0
 
     def dfs(n: Node) -> int:
-        nonlocal moves
-        l = dfs(n.left) - 1 if n.left else 0
-        r = dfs(n.right) - 1 if n.right else 0
+      nonlocal moves
+      left = dfs(n.left) - 1 if n.left else 0
+      right = dfs(n.right) - 1 if n.right else 0
 
-        # Add moves related to the child nodes.
-        moves += abs(l) + abs(r)
-        # Return candy balance for this node.
-        return n.data + l + r
+      # Add moves related to the child nodes.
+      moves += abs(left) + abs(right)
+      # Return candy balance for this node.
+      return n.data + left + right
 
     assert dfs(r) == 1  # noqa: S101
     return moves
